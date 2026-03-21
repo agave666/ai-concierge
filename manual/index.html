@@ -123,6 +123,22 @@ section h2 { font-size:1.6rem; color:var(--navy); margin-bottom:1.5rem; padding-
 /* ===== SLACK SECTION ===== */
 .slack-example { background:#fff; border-radius:var(--radius); box-shadow:var(--card-shadow); padding:1.5rem; font-family:"Courier New",monospace; font-size:0.85rem; line-height:1.8; border-left:4px solid #611f69; }
 
+/* ===== FAQ EMBED ===== */
+.faq-embed { margin-top:1rem; }
+.faq-category { margin-bottom:0.8rem; }
+.faq-category-title { font-size:0.85rem; font-weight:700; color:var(--navy); padding:0.4rem 0.8rem; background:#e8eaf6; border-radius:6px; margin-bottom:0.4rem; cursor:pointer; display:flex; justify-content:space-between; align-items:center; }
+.faq-category-title .arrow { transition:transform .3s; font-size:0.7rem; }
+.faq-category.open .faq-category-title .arrow { transform:rotate(180deg); }
+.faq-list { max-height:0; overflow:hidden; transition:max-height .4s ease; }
+.faq-category.open .faq-list { max-height:5000px; }
+.faq-item { padding:0.4rem 0.8rem; border-bottom:1px solid #f0f0f0; font-size:0.8rem; }
+.faq-item:last-child { border-bottom:none; }
+.faq-q { font-weight:600; color:var(--dark); }
+.faq-a { color:var(--gray); margin-top:0.15rem; }
+.faq-count { font-size:0.7rem; color:var(--gray); font-weight:400; margin-left:0.5rem; }
+.faq-search { width:100%; padding:0.5rem 0.8rem; border:2px solid #e0e0e0; border-radius:8px; font-size:0.85rem; margin-bottom:0.8rem; outline:none; transition:border-color .2s; }
+.faq-search:focus { border-color:var(--sakura-dark); }
+
 /* ===== FOOTER ===== */
 footer { text-align:center; padding:2rem; color:var(--gray); font-size:0.8rem; background:#fff; margin-top:2rem; }
 </style>
@@ -280,11 +296,136 @@ footer { text-align:center; padding:2rem; color:var(--gray); font-size:0.8rem; b
       <div class="emoji-title">🏨 Hotel（ホテルコンシェルジュ）</div>
       <ul class="features">
         <li>ホテルFAQデータベースに基づいた回答のみ <span class="tag tag-faq">FAQ検索</span></li>
-        <li>FAQ以外の質問には回答しない仕様</li>
+        <li>FAQ以外の質問には回答しない仕様（全114件対応）</li>
         <li>チェックイン/アウト、駐車場、支払い、施設案内等に対応</li>
-        <li><a href="https://agave666.github.io/nbs-hotel-concierge/hotelfaq/" target="_blank">対応FAQ一覧はこちら</a></li>
       </ul>
       <div class="alert alert-warn">Hotelモード選択時、LINEにFAQ一覧のURLと制限事項の説明が自動送信されます。</div>
+      <div class="faq-embed">
+        <input type="text" class="faq-search" id="faqSearch" placeholder="🔍 FAQを検索（例: チェックイン、駐車場、Wi-Fi）">
+        <div id="faqContainer">
+          <div class="faq-category open">
+            <div class="faq-category-title" onclick="toggleFaqCat(this)">🔑 チェックイン・チェックアウト<span class="faq-count">5件</span><span class="arrow">▼</span></div>
+            <div class="faq-list">
+              <div class="faq-item"><div class="faq-q">セルフチェックインはできますか？</div><div class="faq-a">1階ロビーのAIチェックインKioskをご利用いただけます。予約情報をもとに手続きが可能です。</div></div>
+              <div class="faq-item"><div class="faq-q">チェックイン時間は？</div><div class="faq-a">15:00から。お部屋の準備が整っていれば早めのチェックインも可能です。</div></div>
+              <div class="faq-item"><div class="faq-q">チェックアウト時間は？</div><div class="faq-a">11:00まで。正午以降のご利用は追加料金が発生する場合があります。</div></div>
+              <div class="faq-item"><div class="faq-q">チェックイン前に荷物を預けられますか？</div><div class="faq-a">フロントおよびベルデスクで朝からお預かり可能です。</div></div>
+              <div class="faq-item"><div class="faq-q">フロントでのチェックイン対応は？</div><div class="faq-a">カウンターでの対応も可能です。混雑時はKioskの方がスムーズです。</div></div>
+            </div>
+          </div>
+          <div class="faq-category">
+            <div class="faq-category-title" onclick="toggleFaqCat(this)">💳 お支払い<span class="faq-count">12件</span><span class="arrow">▼</span></div>
+            <div class="faq-list">
+              <div class="faq-item"><div class="faq-q">支払い方法は？</div><div class="faq-a">現金、主要クレジットカード、交通系IC、QRコード決済に対応しています。</div></div>
+              <div class="faq-item"><div class="faq-q">QRコード決済で追加料金を支払えますか？</div><div class="faq-a">ご利用可能です。一部端末では制限がある場合があります。</div></div>
+              <div class="faq-item"><div class="faq-q">クレジットカードで追加料金を支払えますか？</div><div class="faq-a">追加料金のカード払いに対応しています。</div></div>
+              <div class="faq-item"><div class="faq-q">デポジットは必要ですか？</div><div class="faq-a">ご予約内容やお支払い方法により、お預かりする場合があります。</div></div>
+              <div class="faq-item"><div class="faq-q">事前精算済みの予約に追加料金を加算できますか？</div><div class="faq-a">はい、追加料金は現地でお支払いいただけます。</div></div>
+              <div class="faq-item"><div class="faq-q">交通系ICで追加料金を支払えますか？</div><div class="faq-a">ご利用可能です。一部端末では制限がある場合があります。</div></div>
+              <div class="faq-item"><div class="faq-q">法人向けの請求書フォーマットは？</div><div class="faq-a">任意の社名での発行が可能です。Kioskでは仮発行、フロントで正式発行となります。</div></div>
+              <div class="faq-item"><div class="faq-q">法人請求（後払い）は可能ですか？</div><div class="faq-a">事前審査のうえ、対象のお客様にご利用いただけます。</div></div>
+              <div class="faq-item"><div class="faq-q">法人請求書で追加料金を支払えますか？</div><div class="faq-a">ご利用可能です。一部端末では制限がある場合があります。</div></div>
+              <div class="faq-item"><div class="faq-q">現金で支払えますか？</div><div class="faq-a">ご利用可能です。一部プランでは条件が異なる場合があります。</div></div>
+              <div class="faq-item"><div class="faq-q">現金で追加料金を支払えますか？</div><div class="faq-a">ご利用可能です。</div></div>
+              <div class="faq-item"><div class="faq-q">電子マネーで追加料金を支払えますか？</div><div class="faq-a">ご利用可能です。一部端末では制限がある場合があります。</div></div>
+            </div>
+          </div>
+          <div class="faq-category">
+            <div class="faq-category-title" onclick="toggleFaqCat(this)">🛏️ 客室・設備<span class="faq-count">20件</span><span class="arrow">▼</span></div>
+            <div class="faq-list">
+              <div class="faq-item"><div class="faq-q">客室のWi-Fiは？</div><div class="faq-a">全館無料Wi-Fi完備。SSID・パスワードは客室内のご案内をご確認ください。</div></div>
+              <div class="faq-item"><div class="faq-q">喫煙できる部屋はありますか？</div><div class="faq-a">全室禁煙です。1階屋外の喫煙スペースをご利用ください。</div></div>
+              <div class="faq-item"><div class="faq-q">ルームサービスはありますか？</div><div class="faq-a">17:00から22:00まで一部メニューをご利用いただけます。</div></div>
+              <div class="faq-item"><div class="faq-q">加湿空気清浄機はありますか？</div><div class="faq-a">数量限定でご用意しています。フロントまたはKioskからリクエストしてください。</div></div>
+              <div class="faq-item"><div class="faq-q">エキストラベッドを追加できますか？</div><div class="faq-a">一部の客室タイプで追加可能です。空き状況により異なります。</div></div>
+              <div class="faq-item"><div class="faq-q">ベビーベッドのレンタルは？</div><div class="faq-a">対象年齢のお子様に無料で貸出可能です。事前予約をおすすめします。</div></div>
+              <div class="faq-item"><div class="faq-q">子供と添い寝できますか？</div><div class="faq-a">未就学児1名まで1ベッドにつき無料で添い寝が可能です。</div></div>
+              <div class="faq-item"><div class="faq-q">子供用アメニティはありますか？</div><div class="faq-a">歯ブラシ、スリッパ、ボディスポンジ等をご用意しています。</div></div>
+              <div class="faq-item"><div class="faq-q">変換プラグの貸出は？</div><div class="faq-a">各種プラグ変換アダプタを無料で貸出しています（数量限定）。</div></div>
+              <div class="faq-item"><div class="faq-q">客室の設備が故障した場合は？</div><div class="faq-a">状況を確認のうえ、お部屋の変更または修理手配をいたします。</div></div>
+              <div class="faq-item"><div class="faq-q">カードキーを紛失した場合は？</div><div class="faq-a">ご本人確認のうえ、既存キーを無効化し新しいカードキーを再発行いたします。</div></div>
+              <div class="faq-item"><div class="faq-q">冷蔵・冷凍品の預かりは？</div><div class="faq-a">一部お預かりできないものがあります。事前にフロントへご相談ください。</div></div>
+              <div class="faq-item"><div class="faq-q">スタンダードシングルのアメニティは？</div><div class="faq-a">タオル、ナイトウェア、歯ブラシ、ドライヤー、電気ケトル等の基本セットをご用意。</div></div>
+              <div class="faq-item"><div class="faq-q">スタンダードツインのアメニティは？</div><div class="faq-a">タオル、ナイトウェア、歯ブラシ、ドライヤー、電気ケトル等の基本セットをご用意。</div></div>
+              <div class="faq-item"><div class="faq-q">スーペリアダブルのアメニティは？</div><div class="faq-a">タオル、ナイトウェア、歯ブラシ、ドライヤー、電気ケトル等の基本セットをご用意。</div></div>
+              <div class="faq-item"><div class="faq-q">デラックスツインのアメニティは？</div><div class="faq-a">タオル、ナイトウェア、歯ブラシ、ドライヤー、電気ケトル等の基本セットをご用意。</div></div>
+              <div class="faq-item"><div class="faq-q">プレミアキングのアメニティは？</div><div class="faq-a">タオル、ナイトウェア、歯ブラシ、ドライヤー、電気ケトル等の基本セットをご用意。</div></div>
+              <div class="faq-item"><div class="faq-q">ビューバススイートのアメニティは？</div><div class="faq-a">タオル、ナイトウェア、歯ブラシ、ドライヤー、電気ケトル等の基本セットをご用意。</div></div>
+              <div class="faq-item"><div class="faq-q">ファミリースイートのアメニティは？</div><div class="faq-a">タオル、ナイトウェア、歯ブラシ、ドライヤー、電気ケトル等の基本セットをご用意。</div></div>
+              <div class="faq-item"><div class="faq-q">ユニバーサルルームのアメニティは？</div><div class="faq-a">タオル、ナイトウェア、歯ブラシ、ドライヤー、電気ケトル等の基本セットをご用意。</div></div>
+            </div>
+          </div>
+          <div class="faq-category">
+            <div class="faq-category-title" onclick="toggleFaqCat(this)">🏢 館内施設<span class="faq-count">22件</span><span class="arrow">▼</span></div>
+            <div class="faq-list">
+              <div class="faq-item"><div class="faq-q">朝食会場は？</div><div class="faq-a">2階レストランNBSにて。混雑時間帯は早めのご来場をおすすめします。</div></div>
+              <div class="faq-item"><div class="faq-q">朝食時間は？</div><div class="faq-a">6:30から10:00まで。最終入店は9:30です。</div></div>
+              <div class="faq-item"><div class="faq-q">レストランNBSの場所は？</div><div class="faq-a">2階。営業時間は6:30から22:00です。</div></div>
+              <div class="faq-item"><div class="faq-q">オールデイダイニングラウンジNBSの営業時間は？</div><div class="faq-a">6:00から21:30（イベント・メンテナンスにより変更の場合あり）。</div></div>
+              <div class="faq-item"><div class="faq-q">ラウンジNBSの場所は？</div><div class="faq-a">3階。営業時間は6:00から21:30です。</div></div>
+              <div class="faq-item"><div class="faq-q">スカイラウンジの営業時間は？</div><div class="faq-a">10:00から22:00（イベント・メンテナンスにより変更の場合あり）。</div></div>
+              <div class="faq-item"><div class="faq-q">スカイラウンジの場所は？</div><div class="faq-a">16階。営業時間は10:00から22:00です。</div></div>
+              <div class="faq-item"><div class="faq-q">スカイラウンジの利用条件は？</div><div class="faq-a">対象プランまたはクラブフロアのお客様がご利用いただけます。</div></div>
+              <div class="faq-item"><div class="faq-q">ルーフトップバーの営業時間は？</div><div class="faq-a">18:00から24:00（イベント・メンテナンスにより変更の場合あり）。</div></div>
+              <div class="faq-item"><div class="faq-q">ルーフトップバーの場所は？</div><div class="faq-a">16階。営業時間は18:00から24:00です。</div></div>
+              <div class="faq-item"><div class="faq-q">大浴場の営業時間は？</div><div class="faq-a">17:00から25:00。最終入場は24:30です。</div></div>
+              <div class="faq-item"><div class="faq-q">大浴場の場所は？</div><div class="faq-a">15階。営業時間は17:00から25:00です。</div></div>
+              <div class="faq-item"><div class="faq-q">サウナはありますか？</div><div class="faq-a">15階の大浴場エリアにドライサウナがございます。</div></div>
+              <div class="faq-item"><div class="faq-q">フィットネスジムは24時間ですか？</div><div class="faq-a">はい、ご宿泊者専用で24時間ご利用可能です。室内シューズをご持参ください。</div></div>
+              <div class="faq-item"><div class="faq-q">フィットネスジムの場所は？</div><div class="faq-a">15階。24時間利用可能です。</div></div>
+              <div class="faq-item"><div class="faq-q">キッズルームはありますか？</div><div class="faq-a">6階にご宿泊者専用キッズルームがございます（保護者同伴必須）。</div></div>
+              <div class="faq-item"><div class="faq-q">キッズルームの場所は？</div><div class="faq-a">6階。営業時間は9:00から20:00です。</div></div>
+              <div class="faq-item"><div class="faq-q">コインランドリーの場所は？</div><div class="faq-a">7階。24時間ご利用いただけます。</div></div>
+              <div class="faq-item"><div class="faq-q">自販機の場所は？</div><div class="faq-a">7階。24時間ご利用いただけます。</div></div>
+              <div class="faq-item"><div class="faq-q">製氷機の場所は？</div><div class="faq-a">7階。24時間ご利用いただけます。</div></div>
+              <div class="faq-item"><div class="faq-q">会議室はありますか？</div><div class="faq-a">小会議室は5階、宴会場は4階にございます。</div></div>
+              <div class="faq-item"><div class="faq-q">最上階の設備は？</div><div class="faq-a">スカイラウンジ、フィットネスジム、大浴場がございます。</div></div>
+            </div>
+          </div>
+          <div class="faq-category">
+            <div class="faq-category-title" onclick="toggleFaqCat(this)">🚗 アクセス・交通<span class="faq-count">12件</span><span class="arrow">▼</span></div>
+            <div class="faq-list">
+              <div class="faq-item"><div class="faq-q">最寄り駅は？</div><div class="faq-a">ゆりかもめ「NBS駅」から徒歩約7分です。</div></div>
+              <div class="faq-item"><div class="faq-q">駐車場はありますか？</div><div class="faq-a">ホテル地下および屋外提携駐車場がございます（先着順）。</div></div>
+              <div class="faq-item"><div class="faq-q">駐車場料金は？</div><div class="faq-a">1泊1台あたり2,000円です。一部プランでは無料駐車場付きもあります。</div></div>
+              <div class="faq-item"><div class="faq-q">空港からのアクセスは？</div><div class="faq-a">羽田空港からリムジンバスまたは電車でアクセス可能です。最適ルートをご案内します。</div></div>
+              <div class="faq-item"><div class="faq-q">NBSセントラル駅への行き方は？</div><div class="faq-a">公共交通機関またはタクシーをご利用ください。フロントで時刻表をご案内します。</div></div>
+              <div class="faq-item"><div class="faq-q">NBSパーク駅への行き方は？</div><div class="faq-a">公共交通機関またはタクシーをご利用ください。</div></div>
+              <div class="faq-item"><div class="faq-q">お台場への行き方は？</div><div class="faq-a">公共交通機関またはタクシーをご利用ください。</div></div>
+              <div class="faq-item"><div class="faq-q">有明アリーナへの行き方は？</div><div class="faq-a">公共交通機関またはタクシーをご利用ください。</div></div>
+              <div class="faq-item"><div class="faq-q">東京ビッグサイトへの行き方は？</div><div class="faq-a">公共交通機関またはタクシーをご利用ください。</div></div>
+              <div class="faq-item"><div class="faq-q">羽田空港への行き方は？</div><div class="faq-a">公共交通機関またはタクシーをご利用ください。</div></div>
+              <div class="faq-item"><div class="faq-q">豊洲市場への行き方は？</div><div class="faq-a">公共交通機関またはタクシーをご利用ください。</div></div>
+              <div class="faq-item"><div class="faq-q">銀座への行き方は？</div><div class="faq-a">公共交通機関またはタクシーをご利用ください。</div></div>
+            </div>
+          </div>
+          <div class="faq-category">
+            <div class="faq-category-title" onclick="toggleFaqCat(this)">🆘 トラブル・その他<span class="faq-count">10件</span><span class="arrow">▼</span></div>
+            <div class="faq-list">
+              <div class="faq-item"><div class="faq-q">体調が悪くなったら？</div><div class="faq-a">緊急相談窓口や近隣の医療機関をご案内いたします。</div></div>
+              <div class="faq-item"><div class="faq-q">忘れ物をした場合は？</div><div class="faq-a">一時的にお預かりしています。チェックイン日とお部屋番号をお伝えください。</div></div>
+              <div class="faq-item"><div class="faq-q">アレルギー対応は？</div><div class="faq-a">可能な範囲で対応いたします。重度のアレルギーの場合は事前にご連絡ください。</div></div>
+              <div class="faq-item"><div class="faq-q">火災報知器が作動したら？</div><div class="faq-a">館内放送とスタッフの指示に従ってください。エレベーターは使用せず階段をご利用ください。</div></div>
+              <div class="faq-item"><div class="faq-q">荷物を送れますか？</div><div class="faq-a">1階ベルデスクから国内配送が可能です。</div></div>
+              <div class="faq-item"><div class="faq-q">外貨両替はできますか？</div><div class="faq-a">館内では対応しておりません。近隣の両替所や銀行をご案内します。</div></div>
+              <div class="faq-item"><div class="faq-q">パスポートは必要ですか？</div><div class="faq-a">日本国内に住所のない外国籍のお客様はパスポートの提示が必要です。</div></div>
+              <div class="faq-item"><div class="faq-q">プロジェクターの貸出は？</div><div class="faq-a">プロジェクター、スクリーン、マイクを有料オプションでご用意しています。</div></div>
+              <div class="faq-item"><div class="faq-q">研修イベントの昼食手配は？</div><div class="faq-a">ご予算に応じてお弁当や宴会場でのお食事をご用意できます。</div></div>
+              <div class="faq-item"><div class="faq-q">多言語対応は？</div><div class="faq-a">日本語・英語でのサポートに対応。中国語・韓国語の資料もご用意しています。</div></div>
+            </div>
+          </div>
+          <div class="faq-category">
+            <div class="faq-category-title" onclick="toggleFaqCat(this)">👥 ゲスト別サービス<span class="faq-count">5件</span><span class="arrow">▼</span></div>
+            <div class="faq-list">
+              <div class="faq-item"><div class="faq-q">ファミリー向けサービスは？</div><div class="faq-a">館内案内、周辺情報、貸出備品、レストラン予約などを組み合わせたご提案が可能です。</div></div>
+              <div class="faq-item"><div class="faq-q">ビジネスゲスト向けサービスは？</div><div class="faq-a">施設案内、周辺情報、備品貸出、レストラン予約を承ります。</div></div>
+              <div class="faq-item"><div class="faq-q">海外ゲスト向けサービスは？</div><div class="faq-a">多言語での施設案内、アクセス情報、お食事情報をご提供します。</div></div>
+              <div class="faq-item"><div class="faq-q">長期滞在ゲスト向けサービスは？</div><div class="faq-a">施設案内、交通情報、お食事情報をカスタマイズしてご案内します。</div></div>
+              <div class="faq-item"><div class="faq-q">特別な記念日のご案内は？</div><div class="faq-a">カスタマイズサービス、周辺案内、お食事のご提案が可能です。</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="tab-panel" id="tab-senior">
       <div class="emoji-title">👴 Senior（シニア向けコンシェルジュ）</div>
@@ -530,6 +671,27 @@ document.querySelectorAll('.acc-header').forEach(header => {
     }
   });
 });
+
+// FAQ category toggle
+function toggleFaqCat(el) {
+  el.parentElement.classList.toggle('open');
+}
+
+// FAQ search
+const faqSearch = document.getElementById('faqSearch');
+if (faqSearch) {
+  faqSearch.addEventListener('input', function() {
+    const q = this.value.toLowerCase();
+    document.querySelectorAll('.faq-item').forEach(item => {
+      const text = item.textContent.toLowerCase();
+      item.style.display = text.includes(q) ? '' : 'none';
+    });
+    // Show all categories when searching
+    if (q) {
+      document.querySelectorAll('.faq-category').forEach(c => c.classList.add('open'));
+    }
+  });
+}
 
 // Smooth scroll
 document.querySelectorAll('nav a[href^="#"]').forEach(a => {
