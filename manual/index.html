@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Concierge SAKURA - User Manual</title>
+<style>
+:root {
+  --sakura: #e8a0bf;
+  --sakura-light: #fce4ec;
+  --sakura-dark: #c2185b;
+  --navy: #1a237e;
+  --navy-light: #283593;
+  --dark: #212121;
+  --gray: #616161;
+  --light: #fafafa;
+  --card-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  --radius: 12px;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: "Segoe UI","Hiragino Sans","Meiryo",sans-serif; color:var(--dark); line-height:1.7; background:#f5f5f5; }
+a { color:var(--navy-light); text-decoration:none; }
+
+/* ===== NAV ===== */
+nav { position:fixed; top:0; left:0; right:0; z-index:100; background:rgba(26,35,126,0.95); backdrop-filter:blur(10px); padding:0 2rem; display:flex; align-items:center; height:56px; }
+nav .logo { color:#fff; font-weight:700; font-size:1.1rem; margin-right:2rem; }
+nav .nav-links { display:flex; gap:1.2rem; flex-wrap:wrap; }
+nav .nav-links a { color:rgba(255,255,255,0.85); font-size:0.85rem; transition:color .2s; }
+nav .nav-links a:hover { color:#fff; }
+@media(max-width:768px){ nav .nav-links { display:none; } }
+
+/* ===== HERO ===== */
+.hero { margin-top:56px; background:linear-gradient(135deg,var(--navy) 0%,var(--navy-light) 50%,var(--sakura-dark) 100%); color:#fff; padding:4rem 2rem 3rem; text-align:center; }
+.hero h1 { font-size:2.5rem; margin-bottom:0.5rem; }
+.hero .subtitle { font-size:1.1rem; opacity:0.9; margin-bottom:1.5rem; }
+.hero .badge { display:inline-block; background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3); padding:0.3rem 1rem; border-radius:20px; font-size:0.85rem; }
+
+/* ===== SECTIONS ===== */
+section { max-width:960px; margin:0 auto; padding:3rem 1.5rem; }
+section h2 { font-size:1.6rem; color:var(--navy); margin-bottom:1.5rem; padding-bottom:0.5rem; border-bottom:3px solid var(--sakura); display:inline-block; }
+
+/* ===== ARCH DIAGRAM ===== */
+.arch-diagram { background:#fff; border-radius:var(--radius); box-shadow:var(--card-shadow); padding:2rem; overflow-x:auto; }
+.arch-flow { display:flex; align-items:center; justify-content:center; gap:0; flex-wrap:wrap; padding:1rem 0; }
+.arch-node { text-align:center; padding:1rem 1.2rem; border-radius:var(--radius); min-width:120px; position:relative; }
+.arch-node .icon { font-size:2rem; margin-bottom:0.3rem; }
+.arch-node .label { font-size:0.8rem; font-weight:600; }
+.arch-node .sub { font-size:0.65rem; color:var(--gray); margin-top:0.2rem; }
+.arch-node.user { background:#e3f2fd; border:2px solid #1565c0; }
+.arch-node.bridge { background:#fff3e0; border:2px solid #e65100; }
+.arch-node.ai { background:#f3e5f5; border:2px solid #7b1fa2; }
+.arch-node.ue5 { background:#e8f5e9; border:2px solid #2e7d32; }
+.arch-node.stream { background:#fce4ec; border:2px solid var(--sakura-dark); }
+.arch-arrow { font-size:1.5rem; color:var(--gray); padding:0 0.3rem; flex-shrink:0; }
+@media(max-width:600px){ .arch-flow { flex-direction:column; } .arch-arrow { transform:rotate(90deg); } }
+
+/* ===== STEP CARDS ===== */
+.steps { display:grid; gap:1rem; }
+.step-card { background:#fff; border-radius:var(--radius); box-shadow:var(--card-shadow); padding:1.5rem; display:flex; gap:1rem; align-items:flex-start; transition:transform .2s,box-shadow .2s; }
+.step-card:hover { transform:translateY(-2px); box-shadow:0 8px 30px rgba(0,0,0,0.12); }
+.step-num { width:48px; height:48px; border-radius:50%; background:linear-gradient(135deg,var(--navy),var(--sakura-dark)); color:#fff; display:flex; align-items:center; justify-content:center; font-size:1.2rem; font-weight:700; flex-shrink:0; }
+.step-content h3 { font-size:1rem; margin-bottom:0.3rem; color:var(--navy); }
+.step-content p { font-size:0.9rem; color:var(--gray); }
+.step-content .note { background:var(--sakura-light); padding:0.4rem 0.8rem; border-radius:6px; font-size:0.8rem; margin-top:0.5rem; display:inline-block; }
+
+/* ===== TABS ===== */
+.tab-container { background:#fff; border-radius:var(--radius); box-shadow:var(--card-shadow); overflow:hidden; }
+.tab-nav { display:flex; border-bottom:2px solid #eee; overflow-x:auto; }
+.tab-btn { padding:0.8rem 1.2rem; border:none; background:none; cursor:pointer; font-size:0.85rem; font-weight:600; color:var(--gray); transition:all .2s; white-space:nowrap; border-bottom:3px solid transparent; margin-bottom:-2px; }
+.tab-btn.active { color:var(--navy); border-bottom-color:var(--sakura-dark); }
+.tab-btn:hover { background:#f5f5f5; }
+.tab-panel { display:none; padding:1.5rem; animation:fadeIn .3s; }
+.tab-panel.active { display:block; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+.tab-panel .emoji-title { font-size:1.3rem; margin-bottom:0.5rem; }
+.tab-panel .features { list-style:none; padding:0; }
+.tab-panel .features li { padding:0.4rem 0; padding-left:1.5rem; position:relative; font-size:0.9rem; }
+.tab-panel .features li::before { content:""; position:absolute; left:0; top:50%; width:8px; height:8px; border-radius:50%; background:var(--sakura-dark); transform:translateY(-50%); }
+.tag { display:inline-block; padding:0.15rem 0.6rem; border-radius:10px; font-size:0.7rem; font-weight:600; margin-left:0.3rem; }
+.tag-search { background:#e3f2fd; color:#1565c0; }
+.tag-faq { background:#fff3e0; color:#e65100; }
+.tag-news { background:#f3e5f5; color:#7b1fa2; }
+.tag-monitor { background:#e8f5e9; color:#2e7d32; }
+
+/* ===== COMPARE TABLE ===== */
+.compare-table { width:100%; border-collapse:separate; border-spacing:0; background:#fff; border-radius:var(--radius); overflow:hidden; box-shadow:var(--card-shadow); }
+.compare-table th { background:var(--navy); color:#fff; padding:0.8rem 1rem; text-align:left; font-size:0.85rem; }
+.compare-table td { padding:0.7rem 1rem; border-bottom:1px solid #eee; font-size:0.85rem; }
+.compare-table tr:last-child td { border-bottom:none; }
+.compare-table tr:hover td { background:#f5f5f5; }
+.badge-ok { color:#2e7d32; font-weight:600; }
+.badge-warn { color:#e65100; font-weight:600; }
+.badge-na { color:#9e9e9e; }
+
+/* ===== ACCORDION ===== */
+.accordion { background:#fff; border-radius:var(--radius); box-shadow:var(--card-shadow); overflow:hidden; }
+.acc-item { border-bottom:1px solid #eee; }
+.acc-item:last-child { border-bottom:none; }
+.acc-header { width:100%; padding:1rem 1.5rem; border:none; background:none; cursor:pointer; text-align:left; font-size:0.95rem; font-weight:600; color:var(--dark); display:flex; justify-content:space-between; align-items:center; transition:background .2s; }
+.acc-header:hover { background:#f5f5f5; }
+.acc-header .arrow { transition:transform .3s; font-size:0.8rem; }
+.acc-item.open .acc-header .arrow { transform:rotate(180deg); }
+.acc-body { max-height:0; overflow:hidden; transition:max-height .3s ease; }
+.acc-body-inner { padding:0 1.5rem 1rem; font-size:0.9rem; color:var(--gray); line-height:1.8; }
+.acc-body-inner .solution { background:#e8f5e9; padding:0.6rem 1rem; border-radius:8px; margin-top:0.5rem; border-left:4px solid #2e7d32; }
+
+/* ===== ALERT BOXES ===== */
+.alert { padding:1rem 1.2rem; border-radius:8px; margin:1rem 0; font-size:0.9rem; }
+.alert-info { background:#e3f2fd; border-left:4px solid #1565c0; }
+.alert-warn { background:#fff3e0; border-left:4px solid #e65100; }
+.alert-success { background:#e8f5e9; border-left:4px solid #2e7d32; }
+
+/* ===== REPAIR FLOW ===== */
+.flow-diagram { display:flex; flex-direction:column; gap:0.5rem; align-items:center; padding:1.5rem; }
+.flow-box { padding:0.8rem 1.5rem; border-radius:8px; text-align:center; font-size:0.85rem; font-weight:600; min-width:250px; }
+.flow-box.action { background:var(--navy); color:#fff; }
+.flow-box.check { background:#fff3e0; color:#e65100; border:2px solid #e65100; }
+.flow-box.result-ok { background:#e8f5e9; color:#2e7d32; border:2px solid #2e7d32; }
+.flow-box.result-ng { background:#fce4ec; color:var(--sakura-dark); border:2px solid var(--sakura-dark); }
+.flow-arrow-down { font-size:1.2rem; color:var(--gray); }
+.flow-branch { display:flex; gap:2rem; justify-content:center; flex-wrap:wrap; }
+
+/* ===== SLACK SECTION ===== */
+.slack-example { background:#fff; border-radius:var(--radius); box-shadow:var(--card-shadow); padding:1.5rem; font-family:"Courier New",monospace; font-size:0.85rem; line-height:1.8; border-left:4px solid #611f69; }
+
+/* ===== FOOTER ===== */
+footer { text-align:center; padding:2rem; color:var(--gray); font-size:0.8rem; background:#fff; margin-top:2rem; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">SAKURA Manual</div>
+  <div class="nav-links">
+    <a href="#architecture">構成</a>
+    <a href="#flow">利用フロー</a>
+    <a href="#types">タイプ一覧</a>
+    <a href="#ai">AI比較</a>
+    <a href="#notes">注意点</a>
+    <a href="#trouble">トラブル</a>
+    <a href="#repair">自動復旧</a>
+    <a href="#slack">Slack通知</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <h1>AI Concierge SAKURA</h1>
+  <p class="subtitle">AIコンシェルジュ デモ操作マニュアル</p>
+  <span class="badge">社内デモ担当者向け v1.0 | 2026-03-22</span>
+</div>
+
+<!-- ARCHITECTURE -->
+<section id="architecture">
+  <h2>システム構成</h2>
+  <div class="arch-diagram">
+    <div class="arch-flow">
+      <div class="arch-node user">
+        <div class="icon">📱</div>
+        <div class="label">ブラウザ</div>
+        <div class="sub">マイク入力</div>
+      </div>
+      <div class="arch-arrow">&#10132;</div>
+      <div class="arch-node bridge">
+        <div class="icon">🔗</div>
+        <div class="label">Python Bridge</div>
+        <div class="sub">EC2 (g4dn.xlarge)</div>
+      </div>
+      <div class="arch-arrow">&#10132;</div>
+      <div class="arch-node ai">
+        <div class="icon">🧠</div>
+        <div class="label">AI Engine</div>
+        <div class="sub">Gemini / Nova Sonic 2</div>
+      </div>
+      <div class="arch-arrow">&#10132;</div>
+      <div class="arch-node ue5">
+        <div class="icon">🎮</div>
+        <div class="label">UE5 MetaHuman</div>
+        <div class="sub">リップシンク + 表情</div>
+      </div>
+      <div class="arch-arrow">&#10132;</div>
+      <div class="arch-node stream">
+        <div class="icon">🌸</div>
+        <div class="label">Pixel Streaming</div>
+        <div class="sub">ai.ncinc.jp</div>
+      </div>
+    </div>
+    <div class="alert alert-info" style="margin-top:1rem;">
+      全操作はLINE Botから行います。EC2上でBridge/UE5/Pixel Streamingが連携し、ブラウザに映像+音声を配信します。
+    </div>
+  </div>
+</section>
+
+<!-- FLOW -->
+<section id="flow">
+  <h2>利用フロー</h2>
+  <div class="steps">
+    <div class="step-card">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <h3>AWS起動</h3>
+        <p>LINEメニューから「AWS起動」をタップ。EC2インスタンスが起動します。</p>
+        <span class="note">初回のみ必要。約3分で「準備完了しました」とpush通知が届きます。</span>
+      </div>
+    </div>
+    <div class="step-card">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <h3>デモを行う</h3>
+        <p>LINEメニューから「デモを行う」をタップ。コンシェルジュタイプの選択画面が表示されます。</p>
+      </div>
+    </div>
+    <div class="step-card">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <h3>コンシェルジュタイプ選択</h3>
+        <p>NC / Hotel / Senior / Interview / NewsCaster から用途に応じて選択します。</p>
+        <span class="note">各タイプの詳細は「タイプ一覧」セクションを参照</span>
+      </div>
+    </div>
+    <div class="step-card">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <h3>AI選択</h3>
+        <p>Gemini（安定・高品質日本語）または Nova Sonic 2（高速・東京リージョン）を選択します。</p>
+        <span class="note">迷ったらGeminiを推奨</span>
+      </div>
+    </div>
+    <div class="step-card">
+      <div class="step-num">5</div>
+      <div class="step-content">
+        <h3>アクセス &amp; 会話開始</h3>
+        <p>LINEにアクセスURL + QRコードが届きます。URLをタップまたはQRコードを読み取ってブラウザでアクセスし、音声会話を開始します。</p>
+        <span class="note">アクセスコードはURL内に含まれるため入力不要</span>
+      </div>
+    </div>
+    <div class="step-card">
+      <div class="step-num">6</div>
+      <div class="step-content">
+        <h3>デモ終了</h3>
+        <p>LINEメニューから「デモ終了」をタップ。Bridge/UE5プロセスが停止します。</p>
+      </div>
+    </div>
+    <div class="step-card">
+      <div class="step-num">7</div>
+      <div class="step-content">
+        <h3>AWS停止</h3>
+        <p>LINEメニューから「AWS停止」をタップ。EC2インスタンスが停止し、課金が止まります。</p>
+        <span class="note">使い終わったら必ず停止してください（g4dn.xlarge: 約$0.71/時間）</span>
+      </div>
+    </div>
+  </div>
+  <div class="alert alert-warn" style="margin-top:1rem;">
+    <strong>タイプ変更:</strong> デモ中にタイプを変更したい場合は「タイプ変更」ボタンを使用してください。Bridge+UE5が自動で再起動されます（約30秒）。
+  </div>
+</section>
+
+<!-- CONCIERGE TYPES -->
+<section id="types">
+  <h2>コンシェルジュタイプ一覧</h2>
+  <div class="tab-container">
+    <div class="tab-nav">
+      <button class="tab-btn active" data-tab="nc">🏢 NC</button>
+      <button class="tab-btn" data-tab="hotel">🏨 Hotel</button>
+      <button class="tab-btn" data-tab="senior">👴 Senior</button>
+      <button class="tab-btn" data-tab="interview">💼 Interview</button>
+      <button class="tab-btn" data-tab="newscaster">📺 NewsCaster</button>
+    </div>
+    <div class="tab-panel active" id="tab-nc">
+      <div class="emoji-title">🏢 NC（会社紹介コンシェルジュ）</div>
+      <ul class="features">
+        <li>会社紹介をベースとした会話が可能</li>
+        <li>Google検索連携 <span class="tag tag-search">Google検索</span> でグルメ・ニュース・一般知識も検索可能</li>
+        <li>最も汎用的なタイプ — デモのデフォルト</li>
+        <li>会話終了時にSlackへ要約を自動投稿</li>
+      </ul>
+    </div>
+    <div class="tab-panel" id="tab-hotel">
+      <div class="emoji-title">🏨 Hotel（ホテルコンシェルジュ）</div>
+      <ul class="features">
+        <li>ホテルFAQデータベースに基づいた回答のみ <span class="tag tag-faq">FAQ検索</span></li>
+        <li>FAQ以外の質問には回答しない仕様</li>
+        <li>チェックイン/アウト、駐車場、支払い、施設案内等に対応</li>
+        <li><a href="https://agave666.github.io/nbs-hotel-concierge/hotelfaq/" target="_blank">対応FAQ一覧はこちら</a></li>
+      </ul>
+      <div class="alert alert-warn">Hotelモード選択時、LINEにFAQ一覧のURLと制限事項の説明が自動送信されます。</div>
+    </div>
+    <div class="tab-panel" id="tab-senior">
+      <div class="emoji-title">👴 Senior（シニア向けコンシェルジュ）</div>
+      <ul class="features">
+        <li>Yahooニュース30件をプリフェッチして話題提供 <span class="tag tag-news">ニュース</span></li>
+        <li>Google検索連携 <span class="tag tag-search">Google検索</span> でリアルタイム情報も取得可能</li>
+        <li>高齢者に寄り添った丁寧な会話スタイル</li>
+      </ul>
+    </div>
+    <div class="tab-panel" id="tab-interview">
+      <div class="emoji-title">💼 Interview（面談コンシェルジュ）</div>
+      <ul class="features">
+        <li>固定の質問による面談形式</li>
+        <li>ツールは会話終了通知のみ — 最もシンプルで高速</li>
+        <li>面談結果はSlackに記録</li>
+      </ul>
+    </div>
+    <div class="tab-panel" id="tab-newscaster">
+      <div class="emoji-title">📺 NewsCaster（ニュースキャスター）</div>
+      <ul class="features">
+        <li>Yahooニュース30件をベースに会話 <span class="tag tag-news">ニュース</span></li>
+        <li>ニュース画像をモニターに表示 <span class="tag tag-monitor">モニター表示</span></li>
+        <li>ディスプレイ連携時にニュース画像を自動表示</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- AI COMPARISON -->
+<section id="ai">
+  <h2>AI エンジン比較</h2>
+  <table class="compare-table">
+    <thead>
+      <tr><th>項目</th><th>Gemini</th><th>Nova Sonic 2</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>日本語品質</td><td class="badge-ok">高品質（ネイティブ音声生成）</td><td class="badge-warn">実用レベル（公式非対応）</td></tr>
+      <tr><td>応答速度</td><td class="badge-warn">1.4〜1.8秒（USリージョン）</td><td class="badge-ok">高速（東京リージョン）</td></tr>
+      <tr><td>安定性</td><td class="badge-ok">安定</td><td class="badge-warn">割り込み時に不安定な場合あり</td></tr>
+      <tr><td>Google検索</td><td class="badge-ok">対応</td><td class="badge-na">非対応</td></tr>
+      <tr><td>推奨用途</td><td>デモ全般（推奨）</td><td>応答速度重視の検証</td></tr>
+    </tbody>
+  </table>
+  <div class="alert alert-info" style="margin-top:1rem;">
+    迷ったら <strong>Gemini</strong> を選択してください。日本語の発音精度と安定性で優位です。
+  </div>
+</section>
+
+<!-- NOTES -->
+<section id="notes">
+  <h2>AI特性の注意点</h2>
+  <div class="steps">
+    <div class="step-card">
+      <div class="step-num" style="background:var(--sakura-dark);">!</div>
+      <div class="step-content">
+        <h3>初回起動時はAIから挨拶しません</h3>
+        <p>EC2起動後の最初の「デモを行う」では挨拶しません。2回目以降の「デモを行う」では挨拶します。</p>
+      </div>
+    </div>
+    <div class="step-card">
+      <div class="step-num" style="background:var(--sakura-dark);">!</div>
+      <div class="step-content">
+        <h3>挨拶しない場合がある</h3>
+        <p>状況によりオープニングで挨拶しないケースがあります。その際は <strong>こちらから声をかけてください</strong>。話し始めます。</p>
+      </div>
+    </div>
+    <div class="step-card">
+      <div class="step-num" style="background:var(--sakura-dark);">!</div>
+      <div class="step-content">
+        <h3>会話終了のトリガー</h3>
+        <p>「ありがとう」「以上です」「さようなら」等の <strong>終わりの言葉</strong> を発すると会話が終了し、Slackに会話ログが記録されます。</p>
+        <span class="note">2分間無音の場合は自動終了します</span>
+      </div>
+    </div>
+    <div class="step-card">
+      <div class="step-num" style="background:var(--sakura-dark);">!</div>
+      <div class="step-content">
+        <h3>ボタン連打に注意</h3>
+        <p>各操作には <strong>15秒のクールダウン</strong> があります。連続でボタンを押すとプロセスが競合し、ストリーミングが止まる場合があります。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TROUBLESHOOTING -->
+<section id="trouble">
+  <h2>トラブルシューティング</h2>
+  <div class="accordion">
+    <div class="acc-item">
+      <button class="acc-header">
+        <span>「ストリーミング準備中」で止まる</span>
+        <span class="arrow">&#9660;</span>
+      </button>
+      <div class="acc-body"><div class="acc-body-inner">
+        <p>cirrus.js、TURNサーバー、またはUE5が停止している可能性があります。</p>
+        <div class="solution">
+          <strong>対処:</strong> LINEから「ステータス確認」をタップしてください。障害が検出された場合、自動的に復旧を試みます。復旧完了後にpush通知が届きます。
+        </div>
+      </div></div>
+    </div>
+    <div class="acc-item">
+      <button class="acc-header">
+        <span>AIが挨拶しない / 無反応</span>
+        <span class="arrow">&#9660;</span>
+      </button>
+      <div class="acc-body"><div class="acc-body-inner">
+        <p>初回起動時や特定の状況では挨拶しない場合があります。</p>
+        <div class="solution">
+          <strong>対処:</strong> こちらから「こんにちは」等と声をかけてください。AIが応答を開始します。
+        </div>
+      </div></div>
+    </div>
+    <div class="acc-item">
+      <button class="acc-header">
+        <span>タイプ変更後に動かない</span>
+        <span class="arrow">&#9660;</span>
+      </button>
+      <div class="acc-body"><div class="acc-body-inner">
+        <p>連続でタイプ変更をした場合、プロセスの競合が発生することがあります。</p>
+        <div class="solution">
+          <strong>対処:</strong> 「ステータス確認」で自動復旧を試すか、「デモ終了」→「デモを行う」で再起動してください。タイプ変更は15秒以上間隔を空けてください。
+        </div>
+      </div></div>
+    </div>
+    <div class="acc-item">
+      <button class="acc-header">
+        <span>「処理中です。○秒後にお試しください」と表示される</span>
+        <span class="arrow">&#9660;</span>
+      </button>
+      <div class="acc-body"><div class="acc-body-inner">
+        <p>連打防止のクールダウン（15秒）が発動しています。</p>
+        <div class="solution">
+          <strong>対処:</strong> 表示された秒数だけ待ってから再度操作してください。
+        </div>
+      </div></div>
+    </div>
+    <div class="acc-item">
+      <button class="acc-header">
+        <span>502 Bad Gateway</span>
+        <span class="arrow">&#9660;</span>
+      </button>
+      <div class="acc-body"><div class="acc-body-inner">
+        <p>cirrus.js（シグナリングサーバー）が停止しています。</p>
+        <div class="solution">
+          <strong>対処:</strong> 「ステータス確認」で自動復旧されます。それでもダメなら「デモ終了」→「デモを行う」で再起動してください。
+        </div>
+      </div></div>
+    </div>
+    <div class="acc-item">
+      <button class="acc-header">
+        <span>AWS停止が完了しない（stopping状態が続く）</span>
+        <span class="arrow">&#9660;</span>
+      </button>
+      <div class="acc-body"><div class="acc-body-inner">
+        <p>g4dnインスタンスは停止に3〜5分かかることがあります。</p>
+        <div class="solution">
+          <strong>対処:</strong> 5分程度待ってから「ステータス確認」で状態を確認してください。強制停止で処理しているため、最終的には停止します。
+        </div>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<!-- AUTO REPAIR -->
+<section id="repair">
+  <h2>ステータス確認 &amp; 自動復旧</h2>
+  <p style="margin-bottom:1rem; color:var(--gray);">「ステータス確認」ボタンは状態確認だけでなく、障害を検出すると自動復旧を行います。</p>
+  <div class="arch-diagram">
+    <div class="flow-diagram">
+      <div class="flow-box action">LINE「ステータス確認」タップ</div>
+      <div class="flow-arrow-down">&#9660;</div>
+      <div class="flow-box check">SSMでプロセス確認<br><small>cirrus.js / TURN / Bridge / UE5</small></div>
+      <div class="flow-arrow-down">&#9660;</div>
+      <div class="flow-branch">
+        <div style="text-align:center">
+          <div class="flow-box result-ok">全プロセス正常</div>
+          <div style="margin-top:0.5rem;font-size:0.85rem;color:var(--gray);">「✅ 全プロセス正常稼働中」</div>
+        </div>
+        <div style="text-align:center">
+          <div class="flow-box result-ng">障害検出</div>
+          <div style="margin-top:0.5rem;font-size:0.85rem;color:var(--gray);">「⚠️ 障害検出 → 自動復旧開始」</div>
+          <div class="flow-arrow-down" style="margin-top:0.5rem;">&#9660;</div>
+          <div class="flow-box action" style="margin-top:0.5rem;">停止プロセスを自動再起動</div>
+          <div class="flow-arrow-down" style="margin-top:0.5rem;">&#9660;</div>
+          <div class="flow-box result-ok" style="margin-top:0.5rem;">「✅ サービス復旧完了」<br><small>push通知</small></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLACK -->
+<section id="slack">
+  <h2>Slack 会話ログ</h2>
+  <p style="margin-bottom:1rem; color:var(--gray);">AIが会話終了を検出すると、自動的にSlackに会話ログが投稿されます。</p>
+  <div class="slack-example">
+    <strong>:hotel: AIコンシェルジュ 会話ログ</strong><br>
+    :bust_in_silhouette: <strong>実行者:</strong> 田中太郎<br>
+    :label: <strong>タイプ:</strong> hotel | <strong>AI:</strong> gemini<br><br>
+    <strong>:speech_balloon: 会話要約</strong><br>
+    チェックイン時間と駐車場料金について質問があり、FAQ情報をもとに回答しました。<br><br>
+    <strong>:memo: お客様のリクエスト</strong><br>
+    レイトチェックアウトの可否確認<br><br>
+    <strong>:bell: フォローアップ事項</strong><br>
+    レイトチェックアウトの空き状況をフロントで確認要
+  </div>
+  <div class="alert alert-info" style="margin-top:1rem;">
+    会話中に「ありがとう」「以上です」等の終了ワードを発すると、Slack投稿 → お辞儀アニメーション → セッション終了の順で処理されます。
+  </div>
+</section>
+
+<footer>
+  AI Concierge SAKURA &copy; 2026 ICTL Inc. &mdash; Built with UE5 + Gemini Live API + Nova Sonic 2
+</footer>
+
+<script>
+// Tab switching
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const tab = btn.dataset.tab;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + tab).classList.add('active');
+  });
+});
+
+// Accordion
+document.querySelectorAll('.acc-header').forEach(header => {
+  header.addEventListener('click', () => {
+    const item = header.parentElement;
+    const body = item.querySelector('.acc-body');
+    const isOpen = item.classList.contains('open');
+    // Close all
+    document.querySelectorAll('.acc-item').forEach(i => {
+      i.classList.remove('open');
+      i.querySelector('.acc-body').style.maxHeight = null;
+    });
+    // Toggle current
+    if (!isOpen) {
+      item.classList.add('open');
+      body.style.maxHeight = body.scrollHeight + 'px';
+    }
+  });
+});
+
+// Smooth scroll
+document.querySelectorAll('nav a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+</script>
+</body>
+</html>
