@@ -139,6 +139,30 @@ section h2 { font-size:1.6rem; color:var(--navy); margin-bottom:1.5rem; padding-
 .faq-search { width:100%; padding:0.5rem 0.8rem; border:2px solid #e0e0e0; border-radius:8px; font-size:0.85rem; margin-bottom:0.8rem; outline:none; transition:border-color .2s; }
 .faq-search:focus { border-color:var(--sakura-dark); }
 
+/* ===== TECH LOG ===== */
+.timeline { position:relative; padding-left:2rem; }
+.timeline::before { content:""; position:absolute; left:8px; top:0; bottom:0; width:3px; background:linear-gradient(to bottom,var(--navy),var(--sakura-dark)); border-radius:2px; }
+.tl-item { position:relative; margin-bottom:1.5rem; padding-left:1.5rem; }
+.tl-item::before { content:""; position:absolute; left:-1.6rem; top:6px; width:14px; height:14px; border-radius:50%; background:var(--sakura-dark); border:3px solid #fff; box-shadow:0 0 0 2px var(--sakura-dark); z-index:1; }
+.tl-date { font-size:0.75rem; color:var(--sakura-dark); font-weight:700; margin-bottom:0.2rem; }
+.tl-title { font-size:0.95rem; font-weight:700; color:var(--navy); margin-bottom:0.3rem; }
+.tl-body { font-size:0.85rem; color:var(--gray); line-height:1.7; }
+.tl-body code { background:#f5f5f5; padding:0.1rem 0.4rem; border-radius:4px; font-size:0.8rem; color:var(--sakura-dark); }
+.metric-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:1rem; margin:1rem 0; }
+.metric-card { background:#fff; border-radius:8px; padding:1rem; text-align:center; box-shadow:0 2px 8px rgba(0,0,0,0.06); border-top:3px solid var(--sakura-dark); }
+.metric-card .metric-val { font-size:1.5rem; font-weight:700; color:var(--navy); }
+.metric-card .metric-label { font-size:0.75rem; color:var(--gray); margin-top:0.2rem; }
+.metric-card .metric-change { font-size:0.7rem; margin-top:0.3rem; }
+.metric-card .metric-change.good { color:#2e7d32; }
+.metric-card .metric-change.bad { color:#c62828; }
+.issue-table { width:100%; border-collapse:separate; border-spacing:0; background:#fff; border-radius:var(--radius); overflow:hidden; box-shadow:var(--card-shadow); margin:1rem 0; }
+.issue-table th { background:var(--navy); color:#fff; padding:0.6rem 0.8rem; text-align:left; font-size:0.8rem; }
+.issue-table td { padding:0.5rem 0.8rem; border-bottom:1px solid #eee; font-size:0.8rem; }
+.issue-table tr:last-child td { border-bottom:none; }
+.status-done { color:#2e7d32; font-weight:600; }
+.status-partial { color:#e65100; font-weight:600; }
+.status-todo { color:#9e9e9e; font-weight:600; }
+
 /* ===== FOOTER ===== */
 footer { text-align:center; padding:2rem; color:var(--gray); font-size:0.8rem; background:#fff; margin-top:2rem; }
 </style>
@@ -157,6 +181,7 @@ footer { text-align:center; padding:2rem; color:var(--gray); font-size:0.8rem; b
     <a href="#trouble">トラブル</a>
     <a href="#repair">自動復旧</a>
     <a href="#slack">Slack通知</a>
+    <a href="#techlog">技術記録</a>
   </div>
 </nav>
 
@@ -635,6 +660,200 @@ footer { text-align:center; padding:2rem; color:var(--gray); font-size:0.8rem; b
   <div class="alert alert-info" style="margin-top:1rem;">
     会話中に「ありがとう」「以上です」等の終了ワードを発すると、Slack投稿 → お辞儀アニメーション → セッション終了の順で処理されます。
   </div>
+</section>
+
+<!-- TECH LOG -->
+<section id="techlog">
+  <h2>技術対応記録</h2>
+  <p style="margin-bottom:1.5rem; color:var(--gray);">Gemini Live API / Nova Sonic 2 の応答速度・音声品質に関する最適化の記録です。</p>
+
+  <!-- METRICS -->
+  <h3 style="font-size:1.1rem; color:var(--navy); margin-bottom:1rem;">現在のパフォーマンス指標</h3>
+  <div class="metric-grid">
+    <div class="metric-card">
+      <div class="metric-val">1.4〜1.8s</div>
+      <div class="metric-label">Gemini 応答レイテンシ（ツールなし）</div>
+      <div class="metric-change good">thinking=0 で 5-6s から改善</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-val">10〜15s</div>
+      <div class="metric-label">Gemini FC使用時レイテンシ</div>
+      <div class="metric-change bad">Function Calling の構造的制約</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-val">300ms</div>
+      <div class="metric-label">silence_duration_ms</div>
+      <div class="metric-change good">600ms から短縮（ターン検出高速化）</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-val">~23ms</div>
+      <div class="metric-label">音声チャンクサイズ</div>
+      <div class="metric-change good">~46ms から短縮（Google推奨20-40ms準拠）</div>
+    </div>
+  </div>
+
+  <!-- LATENCY TABLE -->
+  <h3 style="font-size:1.1rem; color:var(--navy); margin:2rem 0 1rem;">Gemini 実測レイテンシ比較</h3>
+  <table class="issue-table">
+    <tr><th>条件</th><th>レイテンシ</th><th>備考</th></tr>
+    <tr><td>thinking ON（デフォルト）</td><td><strong>5〜6秒</strong></td><td>内部推論が走るため遅い</td></tr>
+    <tr><td>thinking OFF（thinkingBudget=0）</td><td><strong>1.4〜1.8秒</strong></td><td>コンシェルジュには不要。最優先で適用</td></tr>
+    <tr><td>thinking OFF + Function Calling</td><td><strong>10〜15秒</strong></td><td>ツール呼び出し時の構造的遅延</td></tr>
+  </table>
+
+  <!-- FC OPTIMIZATION TABLE -->
+  <h3 style="font-size:1.1rem; color:var(--navy); margin:2rem 0 1rem;">Function Calling タイプ別最適化</h3>
+  <p style="margin-bottom:0.8rem; font-size:0.85rem; color:var(--gray);">不要なツールを除外してFC発動頻度を最小化。Interviewが最速（ツール1つ）。</p>
+  <table class="issue-table">
+    <tr><th>タイプ</th><th>summary</th><th>google_search</th><th>hotel_faq</th><th>monitor</th><th>合計</th></tr>
+    <tr><td><strong>NC</strong></td><td class="status-done">&#10004;</td><td class="status-done">&#10004;</td><td>-</td><td>-</td><td>2</td></tr>
+    <tr><td><strong>Hotel</strong></td><td class="status-done">&#10004;</td><td>-</td><td class="status-done">&#10004;</td><td>-</td><td>2</td></tr>
+    <tr><td><strong>Senior</strong></td><td class="status-done">&#10004;</td><td class="status-done">&#10004;</td><td>-</td><td>-</td><td>2</td></tr>
+    <tr><td><strong>Interview</strong></td><td class="status-done">&#10004;</td><td>-</td><td>-</td><td>-</td><td>1</td></tr>
+    <tr><td><strong>NewsCaster</strong></td><td class="status-done">&#10004;</td><td>-</td><td>-</td><td class="status-done">&#10004;</td><td>2</td></tr>
+  </table>
+
+  <!-- TIMELINE -->
+  <h3 style="font-size:1.1rem; color:var(--navy); margin:2rem 0 1rem;">最適化タイムライン</h3>
+  <div class="timeline">
+
+    <div class="tl-item">
+      <div class="tl-date">2026-03-22</div>
+      <div class="tl-title">音声品質ルール追加（全タイプ共通）</div>
+      <div class="tl-body">
+        全5タイプの<code>system_instructions.txt</code>冒頭に「音声品質ルール（最優先・厳守）」を追加。
+        日本語ネイティブ発音の指示、外国人風イントネーション禁止、声のトーン一定保持、漢字読み間違い注意を明記。
+        <br><strong>背景:</strong> セッション毎に声質・イントネーションが不安定だった問題への対策。特にNova Sonic 2は日本語が公式非サポートのため、system_instructionsでの強制が唯一の手段。
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-date">2026-03-22</div>
+      <div class="tl-title">Gemini応答速度最適化（4項目）</div>
+      <div class="tl-body">
+        1. <code>silence_duration_ms</code>: 600ms→300ms（ターン検出300ms短縮）<br>
+        2. <code>CHUNK_SIZE</code>: 2048→1024フレーム（~46ms→~23ms、Google推奨20-40ms準拠）<br>
+        3. <code>ContextWindowCompressionConfig</code>追加（trigger_tokens=25600, target_tokens=12800）— 長時間セッション安定化<br>
+        4. <code>api_version: v1beta</code>で最新API機能を有効化
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-date">2026-03-22</div>
+      <div class="tl-title">Function Calling タイプ別最適化</div>
+      <div class="tl-body">
+        FC発動時10-15秒の遅延が最大のボトルネック。各コンシェルジュタイプに必要なツールのみを割り当てることで、不要なFC判定を排除。
+        Interviewタイプはツール1つ（summary）のみで最速。
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-date">2026-03-22</div>
+      <div class="tl-title">レイテンシ計測ログ追加</div>
+      <div class="tl-body">
+        <code>[LATENCY]</code>タグでユーザー発話終了→AI初回音声到着までの時間を自動計測。FC有無による差を数値で確認可能に。
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-date">2026-03-22</div>
+      <div class="tl-title">Nova Sonic 2 ツール英語化で解決</div>
+      <div class="tl-body">
+        Nova Sonic 2は日本語のツール説明文だとFunction Callingがトリガーしない問題が判明。
+        全ツール（send_conversation_summary, show_on_monitor, search_hotel_faq）のdescriptionを英語化して解決。
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-date">2026-03-22</div>
+      <div class="tl-title">Nova Sonic 2 FAREWELL タイミング修正</div>
+      <div class="tl-body">
+        Geminiはツール呼び出しと音声を並行で返すが、Nova Sonic 2はツール結果を返してから挨拶音声を生成する。
+        <code>farewell_audio_started</code>を最大15秒待機してから再生完了を待つ修正で、「ありがとう」後に無音で切断される問題を解決。
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-date">2026-03-21</div>
+      <div class="tl-title">system_instructions一元化</div>
+      <div class="tl-body">
+        以前は複数ファイルを結合してsystem_instructionsを構築していたが、全情報を<code>system_instructions.txt</code>1ファイルに集約。
+        追加ファイル結合を廃止してシンプル化。メンテナンス性と応答速度の両方が改善。
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-date">2026-03-21</div>
+      <div class="tl-title">Thinking無効化（thinkingBudget=0）</div>
+      <div class="tl-body">
+        <code>gemini-2.5-flash-native-audio</code>モデルでthinkingをONにすると5-6秒のレイテンシが発生。
+        コンシェルジュ用途では複雑な推論は不要なため<code>thinkingBudget=0</code>に設定。応答時間が1.4-1.8秒に改善。
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-date">2026-03-20</div>
+      <div class="tl-title">発音指示の最適化</div>
+      <div class="tl-body">
+        漢字の読み間違い対策として、ふりがなを括弧方式<code>施行（しこう）</code>で直接記述。
+        system_instructionsの冒頭に配置して優先度を確保。ただしNative-audioモデルは直接音声生成するため、テキストモデルより遵守度が低い傾向あり。
+      </div>
+    </div>
+  </div>
+
+  <!-- KNOWN ISSUES -->
+  <h3 style="font-size:1.1rem; color:var(--navy); margin:2rem 0 1rem;">既知の制約・課題</h3>
+  <table class="issue-table">
+    <tr><th>課題</th><th>状態</th><th>詳細</th></tr>
+    <tr>
+      <td>Geminiリージョン制約</td>
+      <td class="status-partial">制約</td>
+      <td>日本リージョン未対応。US-Central1への往復約150msは物理的に削減不可</td>
+    </tr>
+    <tr>
+      <td>Nova Sonic 2 日本語非公式</td>
+      <td class="status-partial">制約</td>
+      <td>日本語ボイス・ロケールが公式非サポート。tiffany（英語ポリグロット）で代用中。イントネーション不安定の根本原因</td>
+    </tr>
+    <tr>
+      <td>FC使用時レイテンシ</td>
+      <td class="status-partial">改善中</td>
+      <td>10-15秒。タイプ別ツール最適化で発動頻度を低減したが、発動時の遅延は構造的</td>
+    </tr>
+    <tr>
+      <td>Native-audio instruction遵守</td>
+      <td class="status-partial">制約</td>
+      <td>モデルが直接音声を生成するため、テキストモデルよりsystem_instructions遵守度が低い。セッション毎のばらつきあり</td>
+    </tr>
+    <tr>
+      <td>silence_duration_ms 300ms</td>
+      <td class="status-partial">要観察</td>
+      <td>日本語の自然な間（0.3-0.5秒）で誤検出の可能性。実運用で問題が出れば400msに戻す</td>
+    </tr>
+    <tr>
+      <td>System Promptキャッシュ</td>
+      <td class="status-todo">未実装</td>
+      <td>Vertex AI CachedContentで静的部分をキャッシュすればTTFT -0.5〜1秒改善見込み。API移行が必要</td>
+    </tr>
+  </table>
+
+  <!-- NOVA VS GEMINI DEEP COMPARE -->
+  <h3 style="font-size:1.1rem; color:var(--navy); margin:2rem 0 1rem;">Gemini vs Nova Sonic 2 技術比較</h3>
+  <table class="issue-table">
+    <tr><th>項目</th><th>Gemini Live API</th><th>Nova Sonic 2</th></tr>
+    <tr><td>モデル</td><td><code>gemini-2.5-flash-native-audio-latest</code></td><td><code>amazon.nova-2-sonic-v1:0</code></td></tr>
+    <tr><td>ボイス</td><td>Kore（日本語対応）</td><td>tiffany（日本語非公式）</td></tr>
+    <tr><td>リージョン</td><td>US-Central1（日本未対応）</td><td>ap-northeast-1（東京）</td></tr>
+    <tr><td>日本語品質</td><td class="badge-ok">良好（セッション毎にばらつきあり）</td><td class="badge-warn">不安定（公式非サポート）</td></tr>
+    <tr><td>応答速度</td><td>1.4-1.8秒（FC無し）</td><td>Geminiより体感速い（東京リージョン）</td></tr>
+    <tr><td>セッション上限</td><td>ContextWindowCompression で長時間可能</td><td>8分制限 → 自動再接続で対応</td></tr>
+    <tr><td>Google検索連携</td><td class="badge-ok">対応</td><td class="badge-na">非対応</td></tr>
+    <tr><td>認証方式</td><td>APIキー</td><td>IMDS（IAMロール）</td></tr>
+    <tr><td>ツール説明言語</td><td>日本語OK</td><td>英語必須（日本語だとトリガーしない）</td></tr>
+    <tr><td>FC+音声の並行処理</td><td>ツール呼び出しと音声を並行返却</td><td>ツール結果返却後に音声生成（順次）</td></tr>
+    <tr><td>入力サンプルレート</td><td>16kHz</td><td>16kHz</td></tr>
+    <tr><td>出力サンプルレート</td><td>24kHz</td><td>24kHz</td></tr>
+  </table>
 </section>
 
 <footer>
