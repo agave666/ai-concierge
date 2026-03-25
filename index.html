@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Concierge SAKURA | 次世代AIコンシェルジュ - NATIVE CREATION</title>
+<meta name="description" content="リアルタイム音声AI × フォトリアル3Dキャラクター。ホテル・商業施設・イベントに、24時間対応のAIコンシェルジュを。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ========== RESET & BASE ========== */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body {
+  font-family: 'Noto Sans JP', 'Inter', 'Hiragino Kaku Gothic ProN', sans-serif;
+  background: #0a0014;
+  color: #e8e0f0;
+  overflow-x: hidden;
+  line-height: 1.8;
+}
+a { color: inherit; text-decoration: none; }
+img { max-width: 100%; height: auto; display: block; }
+
+/* ========== CSS VARIABLES ========== */
+:root {
+  --purple-deep: #1a0030;
+  --purple-primary: #2f004b;
+  --purple-mid: #4a1070;
+  --purple-light: #7b2cbf;
+  --purple-glow: #9d4edd;
+  --red-accent: #d80100;
+  --red-warm: #ff3333;
+  --gold: #c9a84c;
+  --gold-light: #e8c86e;
+  --white: #ffffff;
+  --gray-light: #b0a8c0;
+  --glass-bg: rgba(30, 10, 60, 0.6);
+  --glass-border: rgba(157, 78, 221, 0.2);
+}
+
+/* ========== UTILITY ========== */
+.container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+.container-wide { max-width: 1400px; margin: 0 auto; padding: 0 24px; }
+
+/* ========== SCROLL ANIMATIONS ========== */
+.reveal { opacity: 0; transform: translateY(60px); transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-left { opacity: 0; transform: translateX(-80px); transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+.reveal-left.visible { opacity: 1; transform: translateX(0); }
+.reveal-right { opacity: 0; transform: translateX(80px); transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+.reveal-right.visible { opacity: 1; transform: translateX(0); }
+.reveal-scale { opacity: 0; transform: scale(0.9); transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+.reveal-scale.visible { opacity: 1; transform: scale(1); }
+.delay-1 { transition-delay: 0.1s; }
+.delay-2 { transition-delay: 0.2s; }
+.delay-3 { transition-delay: 0.3s; }
+.delay-4 { transition-delay: 0.4s; }
+
+/* ========== NAVIGATION ========== */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  padding: 16px 0;
+  background: transparent;
+  transition: background 0.4s ease, padding 0.4s ease, backdrop-filter 0.4s ease;
+}
+.nav.scrolled {
+  background: rgba(10, 0, 20, 0.9);
+  backdrop-filter: blur(20px);
+  padding: 10px 0;
+  border-bottom: 1px solid var(--glass-border);
+}
+.nav-inner {
+  max-width: 1400px; margin: 0 auto; padding: 0 32px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.nav-logo {
+  display: flex; align-items: center; gap: 12px;
+  font-weight: 700; font-size: 1.1rem; letter-spacing: 0.05em;
+}
+.nav-logo .logo-icon {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--purple-light), var(--red-accent));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.2rem; font-weight: 900; color: white;
+}
+.nav-links { display: flex; gap: 32px; align-items: center; }
+.nav-links a {
+  font-size: 0.85rem; font-weight: 500; letter-spacing: 0.05em;
+  color: var(--gray-light); transition: color 0.3s;
+  position: relative;
+}
+.nav-links a::after {
+  content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 2px;
+  background: linear-gradient(90deg, var(--purple-glow), var(--red-accent));
+  transition: width 0.3s ease;
+}
+.nav-links a:hover { color: var(--white); }
+.nav-links a:hover::after { width: 100%; }
+.nav-cta {
+  padding: 8px 24px; border-radius: 24px; font-size: 0.85rem; font-weight: 600;
+  background: linear-gradient(135deg, var(--red-accent), #ff4444);
+  color: white; transition: transform 0.3s, box-shadow 0.3s;
+}
+.nav-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(216, 1, 0, 0.4); }
+.nav-cta::after { display: none; }
+
+.nav-hamburger { display: none; cursor: pointer; flex-direction: column; gap: 5px; }
+.nav-hamburger span { width: 24px; height: 2px; background: white; transition: 0.3s; }
+
+/* ========== HERO ========== */
+.hero {
+  position: relative; min-height: 100vh; display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+.hero-video-bg {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  overflow: hidden; z-index: 1;
+}
+.hero-video-bg iframe {
+  position: absolute; top: 50%; left: 50%;
+  width: 180vw; height: 180vh;
+  min-width: 100%; min-height: 100%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+.hero-overlay {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2;
+  background: linear-gradient(
+    180deg,
+    rgba(10, 0, 20, 0.4) 0%,
+    rgba(10, 0, 20, 0.2) 40%,
+    rgba(10, 0, 20, 0.5) 70%,
+    rgba(10, 0, 20, 0.95) 100%
+  );
+}
+.hero-content {
+  position: relative; z-index: 3; text-align: center;
+  padding: 120px 24px 80px;
+}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 8px 20px; border-radius: 24px;
+  background: rgba(157, 78, 221, 0.15);
+  border: 1px solid rgba(157, 78, 221, 0.3);
+  font-size: 0.8rem; font-weight: 500; letter-spacing: 0.1em;
+  color: var(--purple-glow); margin-bottom: 24px;
+  backdrop-filter: blur(10px);
+}
+.hero-badge .pulse {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--purple-glow);
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(157, 78, 221, 0.6); }
+  50% { box-shadow: 0 0 0 8px rgba(157, 78, 221, 0); }
+}
+.hero-title {
+  font-size: clamp(2.5rem, 6vw, 5rem); font-weight: 900; line-height: 1.1;
+  margin-bottom: 16px;
+  background: linear-gradient(135deg, #fff 30%, var(--gold-light) 70%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero-title span.accent {
+  background: linear-gradient(135deg, var(--purple-glow), var(--red-warm));
+  -webkit-background-clip: text; background-clip: text;
+}
+.hero-subtitle {
+  font-size: clamp(1rem, 2vw, 1.35rem); font-weight: 300;
+  color: var(--gray-light); max-width: 700px; margin: 0 auto 40px;
+  line-height: 1.8;
+}
+.hero-buttons { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+.btn-primary {
+  padding: 16px 40px; border-radius: 50px; font-size: 1rem; font-weight: 600;
+  background: linear-gradient(135deg, var(--red-accent), #ff4444);
+  color: white; border: none; cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.3s;
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.btn-primary:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(216, 1, 0, 0.4); }
+.btn-secondary {
+  padding: 16px 40px; border-radius: 50px; font-size: 1rem; font-weight: 600;
+  background: transparent; color: white;
+  border: 1px solid rgba(255,255,255,0.3); cursor: pointer;
+  transition: all 0.3s;
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.btn-secondary:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.5); }
+.hero-scroll-indicator {
+  position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); z-index: 3;
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  color: var(--gray-light); font-size: 0.75rem; letter-spacing: 0.15em;
+  animation: float 3s infinite ease-in-out;
+}
+@keyframes float {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(-10px); }
+}
+.hero-scroll-indicator .arrow { width: 1px; height: 40px; background: linear-gradient(to bottom, var(--purple-glow), transparent); }
+
+/* ========== INTRO / ABOUT ========== */
+.section-intro {
+  padding: 120px 0;
+  background: linear-gradient(180deg, var(--purple-deep) 0%, #0a0014 100%);
+  position: relative;
+}
+.section-intro::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--purple-mid), transparent);
+}
+.intro-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;
+}
+.intro-visual {
+  position: relative; border-radius: 20px; overflow: hidden;
+  box-shadow: 0 40px 80px rgba(0,0,0,0.5);
+}
+.intro-visual img { width: 100%; transition: transform 8s ease; }
+.intro-visual:hover img { transform: scale(1.05); }
+.intro-visual::after {
+  content: ''; position: absolute; inset: 0;
+  border: 1px solid var(--glass-border); border-radius: 20px;
+  background: linear-gradient(135deg, rgba(157,78,221,0.1) 0%, transparent 50%);
+  pointer-events: none;
+}
+.intro-text .section-label {
+  font-size: 0.75rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--purple-glow); margin-bottom: 16px;
+  display: flex; align-items: center; gap: 12px;
+}
+.intro-text .section-label::before {
+  content: ''; width: 30px; height: 2px;
+  background: linear-gradient(90deg, var(--purple-glow), var(--red-accent));
+}
+.intro-text h2 {
+  font-size: clamp(1.8rem, 3.5vw, 2.8rem); font-weight: 800; line-height: 1.3;
+  margin-bottom: 24px; color: var(--white);
+}
+.intro-text h2 em { font-style: normal; color: var(--gold-light); }
+.intro-text p { font-size: 1rem; color: var(--gray-light); margin-bottom: 16px; }
+.intro-stats {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 40px;
+}
+.stat-item {
+  text-align: center; padding: 20px;
+  background: var(--glass-bg); border: 1px solid var(--glass-border);
+  border-radius: 16px; backdrop-filter: blur(10px);
+}
+.stat-number {
+  font-size: 2rem; font-weight: 900; line-height: 1;
+  background: linear-gradient(135deg, var(--gold-light), var(--red-warm));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.stat-label { font-size: 0.75rem; color: var(--gray-light); margin-top: 8px; }
+
+/* ========== VIDEO SHOWCASE ========== */
+.section-video {
+  padding: 100px 0;
+  background: #0a0014;
+  position: relative;
+}
+.video-showcase {
+  position: relative; border-radius: 24px; overflow: hidden;
+  box-shadow: 0 0 100px rgba(157, 78, 221, 0.15);
+  aspect-ratio: 16 / 9; max-width: 1000px; margin: 0 auto;
+}
+.video-showcase iframe { width: 100%; height: 100%; border: none; }
+.video-showcase::before {
+  content: ''; position: absolute; inset: -2px; border-radius: 26px; z-index: -1;
+  background: linear-gradient(135deg, var(--purple-glow), var(--red-accent), var(--gold));
+  opacity: 0.5;
+}
+.video-title {
+  text-align: center; margin-bottom: 48px;
+}
+.video-title h2 {
+  font-size: clamp(1.5rem, 3vw, 2.5rem); font-weight: 800; color: var(--white);
+}
+.video-title p { color: var(--gray-light); margin-top: 12px; font-size: 1rem; }
+
+/* ========== FEATURES ========== */
+.section-features {
+  padding: 120px 0;
+  background: linear-gradient(180deg, #0a0014 0%, var(--purple-deep) 50%, #0a0014 100%);
+  position: relative;
+}
+.section-header {
+  text-align: center; margin-bottom: 72px;
+}
+.section-header .section-label {
+  font-size: 0.75rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--purple-glow); margin-bottom: 16px;
+  display: inline-flex; align-items: center; gap: 12px;
+}
+.section-header h2 {
+  font-size: clamp(2rem, 4vw, 3rem); font-weight: 900; color: var(--white);
+  line-height: 1.3; margin-bottom: 16px;
+}
+.section-header p { color: var(--gray-light); font-size: 1.05rem; max-width: 600px; margin: 0 auto; }
+
+.features-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+}
+.feature-card {
+  background: var(--glass-bg); border: 1px solid var(--glass-border);
+  border-radius: 20px; padding: 40px 32px;
+  backdrop-filter: blur(10px);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s, border-color 0.4s;
+  position: relative; overflow: hidden;
+}
+.feature-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--purple-glow), var(--red-accent));
+  opacity: 0; transition: opacity 0.4s;
+}
+.feature-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 24px 48px rgba(0,0,0,0.4);
+  border-color: rgba(157, 78, 221, 0.4);
+}
+.feature-card:hover::before { opacity: 1; }
+.feature-icon {
+  width: 56px; height: 56px; border-radius: 16px; margin-bottom: 24px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.5rem;
+  background: linear-gradient(135deg, rgba(157, 78, 221, 0.2), rgba(216, 1, 0, 0.1));
+  border: 1px solid rgba(157, 78, 221, 0.2);
+}
+.feature-card h3 { font-size: 1.15rem; font-weight: 700; margin-bottom: 12px; color: var(--white); }
+.feature-card p { font-size: 0.9rem; color: var(--gray-light); line-height: 1.7; }
+
+/* ========== USE CASES ========== */
+.section-usecases {
+  padding: 120px 0;
+  background: #0a0014;
+}
+.usecase-item {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;
+  margin-bottom: 120px;
+}
+.usecase-item:last-child { margin-bottom: 0; }
+.usecase-item.reverse { direction: rtl; }
+.usecase-item.reverse > * { direction: ltr; }
+.usecase-visual {
+  position: relative; border-radius: 20px; overflow: hidden;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+}
+.usecase-visual img { width: 100%; transition: transform 6s ease; }
+.usecase-visual:hover img { transform: scale(1.08); }
+.usecase-visual .usecase-tag {
+  position: absolute; top: 20px; left: 20px; padding: 8px 16px;
+  background: rgba(10, 0, 20, 0.8); backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border); border-radius: 8px;
+  font-size: 0.75rem; font-weight: 600; color: var(--purple-glow);
+  letter-spacing: 0.1em;
+}
+.usecase-content h3 {
+  font-size: clamp(1.5rem, 2.5vw, 2rem); font-weight: 800; margin-bottom: 20px;
+  color: var(--white); line-height: 1.4;
+}
+.usecase-content p { color: var(--gray-light); margin-bottom: 16px; font-size: 0.95rem; }
+.usecase-features-list {
+  list-style: none; margin-top: 24px;
+}
+.usecase-features-list li {
+  padding: 10px 0; font-size: 0.9rem; color: var(--gray-light);
+  display: flex; align-items: flex-start; gap: 12px;
+  border-bottom: 1px solid rgba(157, 78, 221, 0.1);
+}
+.usecase-features-list li:last-child { border: none; }
+.usecase-features-list .check {
+  flex-shrink: 0; width: 20px; height: 20px; border-radius: 50%; margin-top: 2px;
+  background: linear-gradient(135deg, var(--purple-light), var(--red-accent));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.65rem; color: white;
+}
+
+/* ========== TECHNOLOGY ========== */
+.section-tech {
+  padding: 120px 0;
+  background: linear-gradient(180deg, #0a0014 0%, var(--purple-deep) 100%);
+  position: relative;
+}
+.tech-stack {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;
+  margin-top: 60px;
+}
+.tech-item {
+  text-align: center; padding: 32px 20px;
+  background: var(--glass-bg); border: 1px solid var(--glass-border);
+  border-radius: 16px; backdrop-filter: blur(10px);
+  transition: transform 0.3s, border-color 0.3s;
+}
+.tech-item:hover { transform: translateY(-4px); border-color: var(--purple-glow); }
+.tech-item .tech-icon { font-size: 2.5rem; margin-bottom: 16px; }
+.tech-item h4 { font-size: 1rem; font-weight: 700; color: var(--white); margin-bottom: 8px; }
+.tech-item p { font-size: 0.8rem; color: var(--gray-light); }
+
+.tech-arch {
+  margin-top: 80px; padding: 48px;
+  background: var(--glass-bg); border: 1px solid var(--glass-border);
+  border-radius: 24px; backdrop-filter: blur(10px);
+}
+.tech-arch h3 {
+  font-size: 1.4rem; font-weight: 700; color: var(--white); margin-bottom: 32px; text-align: center;
+}
+.arch-flow {
+  display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap;
+}
+.arch-node {
+  padding: 16px 24px; border-radius: 12px; text-align: center;
+  font-size: 0.85rem; font-weight: 600;
+  background: rgba(157, 78, 221, 0.15); border: 1px solid rgba(157, 78, 221, 0.3);
+  color: var(--white); min-width: 120px;
+}
+.arch-node.highlight {
+  background: linear-gradient(135deg, rgba(216, 1, 0, 0.2), rgba(157, 78, 221, 0.2));
+  border-color: var(--red-accent);
+}
+.arch-arrow { color: var(--purple-glow); font-size: 1.2rem; }
+
+/* ========== FLOW (導入フロー) ========== */
+.section-flow {
+  padding: 120px 0;
+  background: #0a0014;
+}
+.flow-timeline {
+  position: relative; max-width: 800px; margin: 0 auto;
+}
+.flow-timeline::before {
+  content: ''; position: absolute; left: 32px; top: 0; bottom: 0; width: 2px;
+  background: linear-gradient(to bottom, var(--purple-glow), var(--red-accent), var(--gold));
+}
+.flow-step {
+  position: relative; padding-left: 80px; margin-bottom: 48px;
+  transition: transform 0.3s;
+}
+.flow-step:hover { transform: translateX(8px); }
+.flow-step:last-child { margin-bottom: 0; }
+.flow-number {
+  position: absolute; left: 12px; top: 0;
+  width: 42px; height: 42px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--purple-light), var(--red-accent));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem; font-weight: 900; color: white; z-index: 1;
+  box-shadow: 0 0 20px rgba(157, 78, 221, 0.4);
+}
+.flow-step h4 {
+  font-size: 1.2rem; font-weight: 700; color: var(--white); margin-bottom: 8px;
+}
+.flow-step p { font-size: 0.9rem; color: var(--gray-light); }
+.flow-step .flow-duration {
+  display: inline-block; margin-top: 8px; padding: 4px 12px; border-radius: 12px;
+  background: rgba(201, 168, 76, 0.15); border: 1px solid rgba(201, 168, 76, 0.3);
+  font-size: 0.75rem; font-weight: 600; color: var(--gold-light);
+}
+
+/* ========== PRICING / PLAN ========== */
+.section-plans {
+  padding: 120px 0;
+  background: linear-gradient(180deg, #0a0014 0%, var(--purple-deep) 100%);
+}
+.plans-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+}
+.plan-card {
+  background: var(--glass-bg); border: 1px solid var(--glass-border);
+  border-radius: 24px; padding: 48px 32px; text-align: center;
+  backdrop-filter: blur(10px);
+  transition: transform 0.4s, box-shadow 0.4s;
+  position: relative;
+}
+.plan-card.featured {
+  border-color: var(--gold);
+  box-shadow: 0 0 60px rgba(201, 168, 76, 0.15);
+}
+.plan-card.featured::before {
+  content: 'RECOMMENDED'; position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+  padding: 4px 20px; border-radius: 12px;
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  font-size: 0.7rem; font-weight: 800; color: #1a0030; letter-spacing: 0.1em;
+}
+.plan-card:hover { transform: translateY(-8px); box-shadow: 0 24px 48px rgba(0,0,0,0.4); }
+.plan-card h3 { font-size: 1.3rem; font-weight: 700; color: var(--white); margin-bottom: 16px; }
+.plan-card .plan-desc { font-size: 0.85rem; color: var(--gray-light); margin-bottom: 32px; }
+.plan-card .plan-features { list-style: none; text-align: left; margin-bottom: 32px; }
+.plan-card .plan-features li {
+  padding: 8px 0; font-size: 0.85rem; color: var(--gray-light);
+  display: flex; align-items: center; gap: 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.plan-card .plan-features li .icon { color: var(--purple-glow); }
+
+/* ========== CTA ========== */
+.section-cta {
+  padding: 120px 0;
+  background: linear-gradient(135deg, var(--purple-deep) 0%, #1a0030 50%, #0a0014 100%);
+  position: relative; overflow: hidden; text-align: center;
+}
+.section-cta::before {
+  content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  width: 600px; height: 600px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(157, 78, 221, 0.1) 0%, transparent 70%);
+}
+.cta-content { position: relative; z-index: 1; }
+.cta-content h2 {
+  font-size: clamp(2rem, 4vw, 3rem); font-weight: 900; color: var(--white);
+  margin-bottom: 20px; line-height: 1.3;
+}
+.cta-content p { color: var(--gray-light); font-size: 1.1rem; margin-bottom: 40px; max-width: 600px; margin-left: auto; margin-right: auto; }
+.cta-buttons { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+
+/* ========== FOOTER ========== */
+.footer {
+  padding: 60px 0 30px;
+  background: #050008;
+  border-top: 1px solid var(--glass-border);
+}
+.footer-content {
+  display: flex; justify-content: space-between; align-items: center;
+  padding-bottom: 30px; border-bottom: 1px solid rgba(255,255,255,0.05);
+  margin-bottom: 30px;
+}
+.footer-brand h3 { font-size: 1.2rem; font-weight: 700; color: var(--white); margin-bottom: 8px; }
+.footer-brand p { font-size: 0.85rem; color: var(--gray-light); }
+.footer-links { display: flex; gap: 32px; }
+.footer-links a { font-size: 0.85rem; color: var(--gray-light); transition: color 0.3s; }
+.footer-links a:hover { color: var(--purple-glow); }
+.footer-bottom { text-align: center; font-size: 0.75rem; color: rgba(255,255,255,0.3); }
+
+/* ========== SAKURA PARALLAX IMAGES ========== */
+.parallax-section {
+  position: relative; height: 60vh; overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+}
+.parallax-bg {
+  position: absolute; top: -20%; left: 0; width: 100%; height: 140%;
+  object-fit: cover;
+  will-change: transform;
+}
+.parallax-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(10,0,20,0.7) 0%, rgba(10,0,20,0.3) 40%, rgba(10,0,20,0.7) 100%);
+}
+.parallax-text {
+  position: relative; z-index: 2; text-align: center; padding: 0 24px;
+}
+.parallax-text h2 {
+  font-size: clamp(1.8rem, 4vw, 3.2rem); font-weight: 900; color: white;
+  text-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  margin-bottom: 16px; line-height: 1.3;
+}
+.parallax-text p {
+  font-size: 1.1rem; color: rgba(255,255,255,0.8); max-width: 600px; margin: 0 auto;
+}
+
+/* ========== MOBILE RESPONSIVE ========== */
+@media (max-width: 1024px) {
+  .features-grid { grid-template-columns: repeat(2, 1fr); }
+  .tech-stack { grid-template-columns: repeat(2, 1fr); }
+  .plans-grid { grid-template-columns: 1fr; max-width: 480px; margin: 0 auto; }
+}
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .nav-hamburger { display: flex; }
+  .nav-links.open {
+    display: flex; flex-direction: column;
+    position: absolute; top: 100%; left: 0; right: 0;
+    background: rgba(10, 0, 20, 0.95); backdrop-filter: blur(20px);
+    padding: 24px; gap: 20px;
+    border-bottom: 1px solid var(--glass-border);
+  }
+  .intro-grid, .usecase-item, .usecase-item.reverse { grid-template-columns: 1fr; gap: 40px; }
+  .usecase-item.reverse { direction: ltr; }
+  .features-grid { grid-template-columns: 1fr; }
+  .tech-stack { grid-template-columns: 1fr; }
+  .intro-stats { grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .stat-number { font-size: 1.5rem; }
+  .arch-flow { flex-direction: column; }
+  .arch-arrow { transform: rotate(90deg); }
+  .hero-video-bg iframe { width: 300vw; height: 300vh; }
+  .parallax-section { height: 50vh; }
+  .footer-content { flex-direction: column; gap: 24px; text-align: center; }
+  .footer-links { flex-wrap: wrap; justify-content: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- ========== NAVIGATION ========== -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">
+      <div class="logo-icon">S</div>
+      AI Concierge SAKURA
+    </a>
+    <div class="nav-links" id="navLinks">
+      <a href="#about">SAKURAとは</a>
+      <a href="#demo">デモ動画</a>
+      <a href="#features">機能</a>
+      <a href="#usecases">活用事例</a>
+      <a href="#technology">技術</a>
+      <a href="#flow">導入の流れ</a>
+      <a href="#plans">プラン</a>
+      <a href="#contact" class="nav-cta">お問い合わせ</a>
+    </div>
+    <div class="nav-hamburger" id="hamburger" onclick="document.getElementById('navLinks').classList.toggle('open')">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+
+<!-- ========== HERO ========== -->
+<section class="hero" id="top">
+  <div class="hero-video-bg">
+    <iframe src="https://www.youtube.com/embed/jPRWTZCZ6GI?autoplay=1&mute=1&loop=1&playlist=jPRWTZCZ6GI&controls=0&showinfo=0&modestbranding=1&rel=0&playsinline=1&enablejsapi=1"
+      allow="autoplay; encrypted-media" allowfullscreen></iframe>
+  </div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-badge reveal"><span class="pulse"></span>NEXT-GENERATION AI CONCIERGE</div>
+    <h1 class="hero-title reveal delay-1">
+      会話が、<span class="accent">体験</span>になる。
+    </h1>
+    <p class="hero-subtitle reveal delay-2">
+      フォトリアルな3DキャラクターとリアルタイムAI音声会話。<br>
+      ホテル・商業施設・イベントの接客を、次のステージへ。
+    </p>
+    <div class="hero-buttons reveal delay-3">
+      <a href="#demo" class="btn-primary">▶ デモを見る</a>
+      <a href="#contact" class="btn-secondary">お問い合わせ</a>
+    </div>
+  </div>
+  <div class="hero-scroll-indicator">
+    SCROLL
+    <div class="arrow"></div>
+  </div>
+</section>
+
+<!-- ========== ABOUT ========== -->
+<section class="section-intro" id="about">
+  <div class="container-wide">
+    <div class="intro-grid">
+      <div class="intro-visual reveal-left">
+        <img src="assets/images/ai_concierge_visual.png" alt="AI Concierge SAKURA - フロントビュー" loading="lazy">
+      </div>
+      <div class="intro-text reveal-right">
+        <div class="section-label">ABOUT SAKURA</div>
+        <h2>まるで人と話しているような、<br><em>AIコンシェルジュ</em></h2>
+        <p>
+          AI Concierge SAKURAは、Unreal Engine 5で描かれるフォトリアルなMetaHumanキャラクターと、
+          Google Gemini・Amazon Nova Sonic 2・OpenAIの最先端AIを組み合わせた、次世代の対話型AIコンシェルジュです。
+        </p>
+        <p>
+          お客様はブラウザを開くだけ。マイクに話しかければ、SAKURAがリアルタイムで音声応答。
+          表情も口の動きも自然に連動し、まるで対面で接客を受けているかのような体験を提供します。
+        </p>
+        <div class="intro-stats">
+          <div class="stat-item reveal delay-1">
+            <div class="stat-number">24/7</div>
+            <div class="stat-label">対応時間</div>
+          </div>
+          <div class="stat-item reveal delay-2">
+            <div class="stat-number">多言語</div>
+            <div class="stat-label">自動対応</div>
+          </div>
+          <div class="stat-item reveal delay-3">
+            <div class="stat-number">0秒</div>
+            <div class="stat-label">待ち時間</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== DEMO VIDEO ========== -->
+<section class="section-video" id="demo">
+  <div class="container">
+    <div class="video-title reveal">
+      <div class="section-label" style="justify-content:center; font-size:0.75rem; font-weight:700; letter-spacing:0.2em; color:var(--purple-glow); margin-bottom:16px; display:flex; align-items:center; gap:12px;">
+        DEMO MOVIE
+      </div>
+      <h2>SAKURAが案内する世界をご覧ください</h2>
+      <p>実際のAI Concierge SAKURAによるプロモーション映像</p>
+    </div>
+    <div class="video-showcase reveal-scale delay-1">
+      <iframe src="https://www.youtube.com/embed/jPRWTZCZ6GI?rel=0&modestbranding=1"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen loading="lazy"></iframe>
+    </div>
+  </div>
+</section>
+
+<!-- ========== PARALLAX ========== -->
+<div class="parallax-section">
+  <img src="assets/images/sakura_wide.png" alt="" class="parallax-bg" loading="lazy">
+  <div class="parallax-overlay"></div>
+  <div class="parallax-text">
+    <h2 class="reveal">人の温もりを持つAIで<br>おもてなしの未来を創る</h2>
+  </div>
+</div>
+
+<!-- ========== FEATURES ========== -->
+<section class="section-features" id="features">
+  <div class="container-wide">
+    <div class="section-header reveal">
+      <div class="section-label">FEATURES</div>
+      <h2>SAKURAができること</h2>
+      <p>最先端のAI技術と3Dグラフィックスが生み出す、かつてない接客体験</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card reveal delay-1">
+        <div class="feature-icon">🎙️</div>
+        <h3>リアルタイム音声会話</h3>
+        <p>お客様がマイクに話しかけるだけで、自然な日本語・多言語でリアルタイムに応答。テキスト入力は不要です。</p>
+      </div>
+      <div class="feature-card reveal delay-2">
+        <div class="feature-icon">👤</div>
+        <h3>フォトリアルなキャラクター</h3>
+        <p>Unreal Engine 5 MetaHuman技術により、実写と見紛うほどリアルな3Dキャラクターが接客します。</p>
+      </div>
+      <div class="feature-card reveal delay-3">
+        <div class="feature-icon">💬</div>
+        <h3>自然なリップシンク</h3>
+        <p>AI音声に合わせてキャラクターの口元がリアルタイムで動き、自然な対話感を実現します。</p>
+      </div>
+      <div class="feature-card reveal delay-1">
+        <div class="feature-icon">🌐</div>
+        <h3>ブラウザだけで利用可能</h3>
+        <p>Pixel Streaming技術により、お客様はアプリ不要。ブラウザを開くだけで高品質な3D体験をお届けします。</p>
+      </div>
+      <div class="feature-card reveal delay-2">
+        <div class="feature-icon">🧠</div>
+        <h3>マルチAIエンジン</h3>
+        <p>Google Gemini、Amazon Nova Sonic 2、OpenAIの3つのAIエンジンに対応。用途に応じて最適なAIを選択できます。</p>
+      </div>
+      <div class="feature-card reveal delay-3">
+        <div class="feature-icon">🎨</div>
+        <h3>カスタマイズ自由</h3>
+        <p>キャラクターの外見・衣装・背景空間・人格設定をお客様の用途に合わせて自由にカスタマイズ可能です。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== USE CASES ========== -->
+<section class="section-usecases" id="usecases">
+  <div class="container-wide">
+    <div class="section-header reveal">
+      <div class="section-label">USE CASES</div>
+      <h2>あらゆるシーンで活躍</h2>
+      <p>SAKURAは業種を問わず、お客様との接点を革新します</p>
+    </div>
+
+    <!-- ホテル -->
+    <div class="usecase-item">
+      <div class="usecase-visual reveal-left">
+        <img src="assets/images/sakura_front.png" alt="ホテルコンシェルジュ" loading="lazy">
+        <div class="usecase-tag">🏨 HOTEL</div>
+      </div>
+      <div class="usecase-content reveal-right">
+        <h3>ホテル・旅館<br>フロントコンシェルジュ</h3>
+        <p>
+          チェックイン・チェックアウトの案内から、周辺観光スポット、レストランの予約案内まで。
+          深夜帯やスタッフ不足の時間帯でも、SAKURAが24時間おもてなし対応を行います。
+        </p>
+        <ul class="usecase-features-list">
+          <li><span class="check">✓</span>チェックイン/アウト手順の案内</li>
+          <li><span class="check">✓</span>周辺観光・飲食店のリアルタイム情報提供</li>
+          <li><span class="check">✓</span>多言語対応でインバウンド観光客をサポート</li>
+          <li><span class="check">✓</span>館内施設・アメニティの案内</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 商業施設 -->
+    <div class="usecase-item reverse">
+      <div class="usecase-visual reveal-right">
+        <img src="assets/images/sakura_side.png" alt="商業施設ガイド" loading="lazy">
+        <div class="usecase-tag">🏬 COMMERCIAL</div>
+      </div>
+      <div class="usecase-content reveal-left">
+        <h3>商業施設・ショールーム<br>インフォメーション</h3>
+        <p>
+          大型商業施設やショールームに設置されたモニターからSAKURAが案内。
+          フロアマップの説明、キャンペーン情報、お探しのショップへの道案内を行います。
+        </p>
+        <ul class="usecase-features-list">
+          <li><span class="check">✓</span>フロアガイド・テナント案内</li>
+          <li><span class="check">✓</span>セール・イベント情報のリアルタイム発信</li>
+          <li><span class="check">✓</span>商品やサービスの詳細説明</li>
+          <li><span class="check">✓</span>来館者データの収集・分析</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- イベント -->
+    <div class="usecase-item">
+      <div class="usecase-visual reveal-left">
+        <img src="assets/images/sakura_closeup.png" alt="イベントガイド" loading="lazy">
+        <div class="usecase-tag">🎪 EVENT</div>
+      </div>
+      <div class="usecase-content reveal-right">
+        <h3>展示会・イベント<br>プレゼンター</h3>
+        <p>
+          展示ブースで製品やサービスを紹介するプレゼンターとして、またイベント会場の総合案内役として。
+          来場者の質問にその場で答え、インパクトあるブース演出を実現します。
+        </p>
+        <ul class="usecase-features-list">
+          <li><span class="check">✓</span>製品・サービスの自動プレゼンテーション</li>
+          <li><span class="check">✓</span>来場者の質問にリアルタイム応答</li>
+          <li><span class="check">✓</span>大画面でのインパクトあるブース演出</li>
+          <li><span class="check">✓</span>リード獲得・アンケート収集</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== PARALLAX 2 ========== -->
+<div class="parallax-section">
+  <img src="assets/images/metahuman_front.png" alt="" class="parallax-bg" style="object-position: center top;">
+  <div class="parallax-overlay"></div>
+  <div class="parallax-text">
+    <h2 class="reveal">Unreal Engine 5が描く<br>フォトリアルの頂点</h2>
+    <p class="reveal delay-1">MetaHuman技術による、実写を超えるリアリティ</p>
+  </div>
+</div>
+
+<!-- ========== TECHNOLOGY ========== -->
+<section class="section-tech" id="technology">
+  <div class="container-wide">
+    <div class="section-header reveal">
+      <div class="section-label">TECHNOLOGY</div>
+      <h2>最先端技術の融合</h2>
+      <p>グラフィックス、AI、クラウドの最先端技術を統合</p>
+    </div>
+
+    <div class="tech-stack">
+      <div class="tech-item reveal delay-1">
+        <div class="tech-icon">🎮</div>
+        <h4>Unreal Engine 5</h4>
+        <p>MetaHuman + Nanite + Lumenで<br>フォトリアルな3D描画</p>
+      </div>
+      <div class="tech-item reveal delay-2">
+        <div class="tech-icon">🤖</div>
+        <h4>マルチAI</h4>
+        <p>Gemini / Nova Sonic 2 / OpenAI<br>最適なエンジンを選択</p>
+      </div>
+      <div class="tech-item reveal delay-3">
+        <div class="tech-icon">☁️</div>
+        <h4>AWS Cloud</h4>
+        <p>GPU搭載EC2で高品質な<br>Pixel Streamingを配信</p>
+      </div>
+      <div class="tech-item reveal delay-4">
+        <div class="tech-icon">📡</div>
+        <h4>Pixel Streaming</h4>
+        <p>ブラウザだけで<br>ハイエンド3D体験を提供</p>
+      </div>
+    </div>
+
+    <div class="tech-arch reveal">
+      <h3>システムアーキテクチャ</h3>
+      <div class="arch-flow">
+        <div class="arch-node">👤 お客様<br><small>ブラウザ</small></div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-node">🎙️ 音声入力<br><small>WebRTC</small></div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-node highlight">🧠 AI Engine<br><small>Gemini / Nova / GPT</small></div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-node">🔊 音声合成<br><small>リアルタイム</small></div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-node">👤 MetaHuman<br><small>UE5 + リップシンク</small></div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-node">📺 配信<br><small>Pixel Streaming</small></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== DEPLOYMENT FLOW ========== -->
+<section class="section-flow" id="flow">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-label">DEPLOYMENT</div>
+      <h2>導入の流れ</h2>
+      <p>既存のSAKURAをベースに、短期間でリリースが可能です</p>
+    </div>
+
+    <div class="flow-timeline">
+      <div class="flow-step reveal">
+        <div class="flow-number">1</div>
+        <h4>ヒアリング・要件定義</h4>
+        <p>導入先の業種・利用シーン・必要な機能をヒアリング。SAKURAの標準機能で対応できる範囲と、カスタマイズが必要な箇所を明確にします。</p>
+        <span class="flow-duration">約1週間</span>
+      </div>
+      <div class="flow-step reveal delay-1">
+        <div class="flow-number">2</div>
+        <h4>キャラクター & 空間デザイン</h4>
+        <p>既存SAKURAをそのまま利用する場合はスキップ可能。オリジナルキャラクター制作や、Unreal Engineベースの3D空間デザインにも対応します。</p>
+        <span class="flow-duration">2〜4週間（カスタム時）</span>
+      </div>
+      <div class="flow-step reveal delay-2">
+        <div class="flow-number">3</div>
+        <h4>AI人格設定 & ナレッジ構築</h4>
+        <p>施設情報・FAQ・接客トーンなど、AIの応答内容をカスタマイズ。お客様の施設に最適化された知識ベースを構築します。</p>
+        <span class="flow-duration">1〜2週間</span>
+      </div>
+      <div class="flow-step reveal delay-3">
+        <div class="flow-number">4</div>
+        <h4>テスト & チューニング</h4>
+        <p>実際の利用シナリオでテスト運用。音声認識精度・応答品質・リップシンクの微調整を行い、品質を磨き上げます。</p>
+        <span class="flow-duration">1〜2週間</span>
+      </div>
+      <div class="flow-step reveal delay-4">
+        <div class="flow-number">5</div>
+        <h4>本番リリース & 運用サポート</h4>
+        <p>AWS環境のセットアップから運用開始まで一気通貫でサポート。リリース後のチューニングや機能追加にも柔軟に対応します。</p>
+        <span class="flow-duration">継続サポート</span>
+      </div>
+    </div>
+
+    <div style="text-align:center; margin-top:60px;" class="reveal">
+      <p style="color:var(--gold-light); font-size:1.1rem; font-weight:600; margin-bottom:8px;">
+        ✨ 既存SAKURAベースなら最短2週間でリリース可能
+      </p>
+      <p style="color:var(--gray-light); font-size:0.9rem;">
+        複数台同時接続や大規模導入もお見積りの上対応いたします
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ========== PLANS ========== -->
+<section class="section-plans" id="plans">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-label">PLANS</div>
+      <h2>導入プラン</h2>
+      <p>お客様のニーズに合わせた3つのプラン</p>
+    </div>
+
+    <div class="plans-grid">
+      <div class="plan-card reveal delay-1">
+        <h3>スタンダード</h3>
+        <p class="plan-desc">SAKURAをそのまま活用。最短2週間で導入可能な手軽なプラン。</p>
+        <ul class="plan-features">
+          <li><span class="icon">✦</span>既存SAKURAキャラクター</li>
+          <li><span class="icon">✦</span>AI人格 & ナレッジカスタマイズ</li>
+          <li><span class="icon">✦</span>マルチAI対応（Gemini / Nova / GPT）</li>
+          <li><span class="icon">✦</span>多言語対応</li>
+          <li><span class="icon">✦</span>1接続</li>
+          <li><span class="icon">✦</span>運用サポート</li>
+        </ul>
+        <a href="#contact" class="btn-secondary" style="width:100%; justify-content:center;">お問い合わせ</a>
+      </div>
+      <div class="plan-card featured reveal delay-2">
+        <h3>プレミアム</h3>
+        <p class="plan-desc">オリジナルキャラクターと3D空間で、ブランド体験を最大化。</p>
+        <ul class="plan-features">
+          <li><span class="icon">✦</span>オリジナルキャラクター制作</li>
+          <li><span class="icon">✦</span>3D空間デザイン</li>
+          <li><span class="icon">✦</span>ブランドに合わせた衣装 & 演出</li>
+          <li><span class="icon">✦</span>AI人格の完全カスタマイズ</li>
+          <li><span class="icon">✦</span>複数台同時接続対応</li>
+          <li><span class="icon">✦</span>優先サポート</li>
+        </ul>
+        <a href="#contact" class="btn-primary" style="width:100%; justify-content:center;">お問い合わせ</a>
+      </div>
+      <div class="plan-card reveal delay-3">
+        <h3>エンタープライズ</h3>
+        <p class="plan-desc">大規模導入や特殊要件に対応するフルカスタムプラン。</p>
+        <ul class="plan-features">
+          <li><span class="icon">✦</span>複数キャラクター / 複数拠点</li>
+          <li><span class="icon">✦</span>既存システム連携（PMS / CRM等）</li>
+          <li><span class="icon">✦</span>専用インフラ構築</li>
+          <li><span class="icon">✦</span>SLA付きサポート</li>
+          <li><span class="icon">✦</span>オンプレミス対応可</li>
+          <li><span class="icon">✦</span>カスタム開発</li>
+        </ul>
+        <a href="#contact" class="btn-secondary" style="width:100%; justify-content:center;">お問い合わせ</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== CTA ========== -->
+<section class="section-cta" id="contact">
+  <div class="container">
+    <div class="cta-content reveal">
+      <h2>SAKURAと一緒に、<br>おもてなしの未来を始めませんか？</h2>
+      <p>デモンストレーションのご依頼やお見積りなど、お気軽にお問い合わせください。</p>
+      <div class="cta-buttons">
+        <a href="https://ncinc.jp/#contact" class="btn-primary" target="_blank">
+          ✉ お問い合わせ
+        </a>
+        <a href="https://ncinc.jp" class="btn-secondary" target="_blank">
+          NATIVE CREATION について
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== FOOTER ========== -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <h3>AI Concierge SAKURA</h3>
+        <p>NATIVE CREATION, Inc.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://ncinc.jp" target="_blank">会社概要</a>
+        <a href="https://ncinc.jp/#contact" target="_blank">お問い合わせ</a>
+        <a href="manual/" target="_blank">管理者マニュアル</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      &copy; 2026 NATIVE CREATION, Inc. All rights reserved.
+    </div>
+  </div>
+</footer>
+
+<!-- ========== SCRIPTS ========== -->
+<script>
+// Scroll Reveal
+const revealElements = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale');
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+revealElements.forEach(el => revealObserver.observe(el));
+
+// Nav scroll effect
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 80);
+});
+
+// Parallax scroll
+const parallaxBgs = document.querySelectorAll('.parallax-bg');
+window.addEventListener('scroll', () => {
+  parallaxBgs.forEach(bg => {
+    const section = bg.parentElement;
+    const rect = section.getBoundingClientRect();
+    const scrollPercent = rect.top / window.innerHeight;
+    bg.style.transform = `translateY(${scrollPercent * 40}px)`;
+  });
+});
+
+// Smooth scroll for nav links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function(e) {
+    e.preventDefault();
+    const target = document.querySelector(this.getAttribute('href'));
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      document.getElementById('navLinks').classList.remove('open');
+    }
+  });
+});
+</script>
+</body>
+</html>
