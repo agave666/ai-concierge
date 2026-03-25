@@ -65,11 +65,9 @@ img,video{max-width:100%;height:auto;display:block}
   height:64px;
 }
 .nav-logo{
-  font-family:Georgia,serif;font-size:1rem;font-weight:700;
-  color:var(--purple);display:flex;align-items:center;gap:10px;
-  letter-spacing:.02em;
+  display:flex;align-items:center;gap:12px;
 }
-.nav-logo .bar{width:3px;height:20px;background:var(--red);border-radius:2px}
+.nav-logo img{height:32px;width:auto}
 .nav-links{display:flex;gap:28px;align-items:center}
 .nav-links a{
   font-size:.8rem;font-weight:500;color:var(--text);
@@ -162,10 +160,17 @@ img,video{max-width:100%;height:auto;display:block}
 
 /* ===== ABOUT ===== */
 .about-grid{
-  display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;
+  display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:stretch;
 }
-.about-visual{position:relative;border-radius:8px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.12)}
-.about-visual img{width:100%;transition:transform 6s ease}
+.about-visual{
+  position:relative;border-radius:8px;overflow:hidden;
+  box-shadow:0 20px 60px rgba(0,0,0,.12);
+  min-height:420px;
+}
+.about-visual img{
+  width:100%;height:100%;object-fit:cover;
+  transition:transform 6s ease;
+}
 .about-visual:hover img{transform:scale(1.04)}
 .about-text .label{
   font-size:.7rem;font-weight:700;letter-spacing:.15em;color:var(--red);
@@ -284,16 +289,25 @@ img,video{max-width:100%;height:auto;display:block}
 }
 
 /* ===== USE CASES ===== */
+.uc-block{padding:80px 0}
+.uc-block:nth-child(even){background:var(--bg-gray)}
 .uc-item{
-  display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;
-  margin-bottom:80px;
+  display:grid;grid-template-columns:3fr 4fr;gap:48px;align-items:stretch;
 }
-.uc-item:last-child{margin-bottom:0}
-.uc-item.reverse{direction:rtl}
+.uc-item.reverse{grid-template-columns:4fr 3fr;direction:rtl}
 .uc-item.reverse>*{direction:ltr}
-.uc-visual{position:relative;border-radius:8px;overflow:hidden;box-shadow:0 16px 48px rgba(0,0,0,.1)}
-.uc-visual img{width:100%;transition:transform 5s ease}
+.uc-visual{
+  position:relative;border-radius:8px;overflow:hidden;
+  box-shadow:0 16px 48px rgba(0,0,0,.1);
+  min-height:420px;
+  background:linear-gradient(135deg,#1a0030,#2f004b);
+}
+.uc-visual img{
+  width:100%;height:100%;object-fit:cover;object-position:center top;
+  transition:transform 5s ease;
+}
 .uc-visual:hover img{transform:scale(1.06)}
+.uc-content{display:flex;flex-direction:column;justify-content:center;padding:16px 0}
 .uc-tag{
   position:absolute;top:16px;left:16px;padding:6px 14px;
   background:var(--purple);color:#fff;border-radius:4px;
@@ -431,6 +445,8 @@ img,video{max-width:100%;height:auto;display:block}
   }
   .about-grid,.uc-item,.uc-item.reverse{grid-template-columns:1fr;gap:32px}
   .uc-item.reverse{direction:ltr}
+  .about-visual{min-height:240px}
+  .uc-visual{min-height:280px}
   .features-grid,.tech-grid{grid-template-columns:1fr}
   .about-stats{grid-template-columns:repeat(3,1fr);gap:8px}
   .footer-inner{flex-direction:column;gap:20px;text-align:center}
@@ -444,7 +460,7 @@ img,video{max-width:100%;height:auto;display:block}
 <!-- NAV -->
 <nav class="nav" id="nav">
   <div class="nav-inner">
-    <a href="#" class="nav-logo"><span class="bar"></span>AI Concierge SAKURA</a>
+    <a href="https://ncinc.jp" class="nav-logo" target="_blank"><img src="https://ncinc.jp/wp-content/uploads/2023/06/NC-LOGO-2020-1.png" alt="NATIVE CREATION, Inc."></a>
     <div class="nav-links" id="navLinks">
       <a href="#about">SAKURAとは</a>
       <a href="#demo">デモ動画</a>
@@ -603,14 +619,19 @@ img,video{max-width:100%;height:auto;display:block}
 </section>
 
 <!-- USE CASES -->
-<section class="section" id="usecases">
-  <div class="container-wide">
-    <div class="section-header reveal">
-      <div class="label">USE CASES</div>
-      <h2>あらゆるシーンで活躍</h2>
-      <p>SAKURAは業種を問わず、お客様との接点を革新します</p>
+<div id="usecases">
+  <section class="section" style="padding-bottom:40px">
+    <div class="container-wide">
+      <div class="section-header reveal">
+        <div class="label">USE CASES</div>
+        <h2>あらゆるシーンで活躍</h2>
+        <p>SAKURAは業種を問わず、お客様との接点を革新します</p>
+      </div>
     </div>
+  </section>
 
+  <div class="uc-block">
+    <div class="container-wide">
     <div class="uc-item">
       <div class="uc-visual reveal-left">
         <img src="assets/images/sakura_front.png" alt="ホテルコンシェルジュ" loading="lazy">
@@ -636,7 +657,11 @@ img,video{max-width:100%;height:auto;display:block}
         </ul>
       </div>
     </div>
+    </div>
+  </div>
 
+  <div class="uc-block">
+    <div class="container-wide">
     <div class="uc-item reverse">
       <div class="uc-visual reveal-right">
         <img src="assets/images/sakura_side.png" alt="商業施設ガイド" loading="lazy">
@@ -663,7 +688,11 @@ img,video{max-width:100%;height:auto;display:block}
         </ul>
       </div>
     </div>
+    </div>
+  </div>
 
+  <div class="uc-block">
+    <div class="container-wide">
     <div class="uc-item">
       <div class="uc-visual reveal-left">
         <img src="assets/images/sakura_closeup.png" alt="イベントプレゼンター" loading="lazy">
@@ -691,7 +720,11 @@ img,video{max-width:100%;height:auto;display:block}
         </ul>
       </div>
     </div>
+    </div>
+  </div>
 
+  <div class="uc-block">
+    <div class="container-wide">
     <div class="uc-item reverse">
       <div class="uc-visual reveal-right">
         <img src="assets/images/sakura_face.png" alt="企業受付" loading="lazy">
@@ -718,8 +751,9 @@ img,video{max-width:100%;height:auto;display:block}
         </ul>
       </div>
     </div>
+    </div>
   </div>
-</section>
+</div>
 
 <!-- TECHNOLOGY -->
 <section class="section section-dark" id="technology">
