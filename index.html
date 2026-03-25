@@ -82,10 +82,10 @@ img,video{max-width:100%;height:auto;display:block}
 .nav-links a:hover{color:var(--purple)}
 .nav-cta{
   padding:8px 24px;border-radius:4px;font-size:.8rem;font-weight:700;
-  background:var(--red);color:white;transition:background .3s,transform .2s;
+  background:var(--purple);color:white;transition:background .3s,transform .2s;
   letter-spacing:.05em;
 }
-.nav-cta:hover{background:#b00000;transform:translateY(-1px)}
+.nav-cta:hover{background:var(--purple-light);transform:translateY(-1px)}
 .hamburger{display:none;cursor:pointer;flex-direction:column;gap:5px}
 .hamburger span{width:22px;height:2px;background:var(--text);transition:.3s}
 
@@ -166,7 +166,7 @@ img,video{max-width:100%;height:auto;display:block}
 
 /* ===== ABOUT (white bg with side image) ===== */
 .about-section{
-  padding:80px 0;background:#fff;overflow:hidden;
+  padding:56px 0;background:#fff;overflow:hidden;
 }
 .about-grid{
   display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;
@@ -193,7 +193,7 @@ img,video{max-width:100%;height:auto;display:block}
 .stat-lbl{font-size:.75rem;color:var(--text-light);margin-top:8px}
 
 /* ===== DEMO VIDEO (Apple-style scroll autoplay) ===== */
-.demo-section{padding:80px 0;background:var(--bg-gray);overflow:hidden}
+.demo-section{padding:0;background:var(--bg-gray);overflow:hidden}
 .demo-section .section-header{margin-bottom:40px}
 .demo-video-full{
   width:100%;max-width:100%;overflow:hidden;
@@ -279,7 +279,7 @@ img,video{max-width:100%;height:auto;display:block}
 /* ===== USE CASES (full-width bg) ===== */
 .uc-block{
   position:relative;overflow:hidden;
-  min-height:400px;display:flex;align-items:center;
+  min-height:560px;display:flex;align-items:center;
 }
 .uc-block .uc-bg{
   position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
@@ -299,7 +299,7 @@ img,video{max-width:100%;height:auto;display:block}
 .uc-block:nth-child(odd) .uc-content h3,
 .uc-block:nth-child(odd) .uc-content p{color:var(--text)}
 .uc-block:nth-child(odd) .uc-list li{color:var(--text-light);border-color:var(--border)}
-.uc-block:nth-child(odd) .uc-scene-label{color:rgba(0,0,0,.06)}
+.uc-block:nth-child(odd) .uc-scene-label{color:rgba(0,0,0,.1)}
 .uc-content{
   position:relative;z-index:2;
   width:100%;max-width:1300px;margin:0 auto;
@@ -310,7 +310,7 @@ img,video{max-width:100%;height:auto;display:block}
 .uc-content .uc-right{grid-column:2}
 .uc-scene-label{
   position:absolute;top:24px;left:32px;z-index:3;
-  font-size:clamp(1.8rem,4vw,3rem);font-weight:900;color:rgba(255,255,255,.12);
+  font-size:clamp(2rem,5vw,3.5rem);font-weight:900;color:rgba(255,255,255,.25);
   letter-spacing:.15em;text-transform:uppercase;line-height:1;
   pointer-events:none;
 }
@@ -652,14 +652,16 @@ img,video{max-width:100%;height:auto;display:block}
     <div class="uc-content reveal">
       <div class="uc-left">
         <h3>ホテル・旅館<br>フロントコンシェルジュ</h3>
-        <p>深夜でもSAKURAが笑顔でお出迎え。言語を自動判別し、チェックイン手順から周辺の深夜営業店舗まで案内。"もう一人のフロントスタッフ"として24時間おもてなしを続けます。</p>
+        <p>深夜2時、長時間のフライトを終えた海外からのお客様がフロントに到着。スタッフは不在ですが、ロビーの大画面にはSAKURAが笑顔で待っています。「Welcome! How can I help you?」——お客様の言語を自動で判別し、チェックイン手順を丁寧にご案内。「近くにコンビニはありますか？」という質問にも、Googleのリアルタイム情報をもとに深夜営業中の店舗を地図付きでお伝えします。</p>
+        <p>翌朝、日本人ゲストが「おすすめの朝食スポットは？」と尋ねると、営業中の店舗を口コミ評価付きでご紹介。人手不足が深刻な宿泊業界で、SAKURAは疲れ知らずの"もう一人のフロントスタッフ"として、24時間365日おもてなしを続けます。</p>
       </div>
       <div class="uc-right">
         <ul class="uc-list">
           <li><span class="uc-check">✓</span>チェックイン/アウト手順の多言語案内</li>
           <li><span class="uc-check">✓</span>周辺観光・飲食店のリアルタイム情報提供</li>
           <li><span class="uc-check">✓</span>深夜・早朝など無人時間帯のフロント対応</li>
-          <li><span class="uc-check">✓</span>インバウンド観光客への多言語対応</li>
+          <li><span class="uc-check">✓</span>館内施設・Wi-Fi・アメニティの案内</li>
+          <li><span class="uc-check">✓</span>インバウンド観光客への英語・中国語・韓国語対応</li>
         </ul>
       </div>
     </div>
@@ -672,12 +674,14 @@ img,video{max-width:100%;height:auto;display:block}
     <div class="uc-content reveal">
       <div class="uc-left">
         <h3>商業施設・ショールーム<br>インフォメーション</h3>
-        <p>話しかけるだけでフロアマップとともに最短ルートを案内。タイムセール情報も自然な会話でお伝え。ハンズフリーのバリアフリー対応です。</p>
+        <p>大型ショッピングモールのエントランスに設置されたデジタルサイネージ。お子様連れのお客様が「子ども服のお店はどこですか？」と話しかけると、SAKURAがフロアマップとともに最短ルートをご案内。「今日だけのタイムセール情報もございますよ」と、リアルタイムのキャンペーン情報も自然な会話の中でお伝えします。</p>
+        <p>従来のタッチパネル式案内板では実現できなかった「会話によるおもてなし」。ベビーカーで両手がふさがっているお客様も、声だけで知りたい情報にたどり着けます。高齢のお客様にも好評で、施設の顧客満足度向上とリピーター獲得に貢献します。</p>
       </div>
       <div class="uc-right">
         <ul class="uc-list">
           <li><span class="uc-check">✓</span>フロアガイド・テナント検索・ルート案内</li>
           <li><span class="uc-check">✓</span>セール・イベント情報のリアルタイム告知</li>
+          <li><span class="uc-check">✓</span>商品やサービスの詳細説明・比較提案</li>
           <li><span class="uc-check">✓</span>ハンズフリーで利用可能なバリアフリー対応</li>
           <li><span class="uc-check">✓</span>来館者データの収集・マーケティング活用</li>
         </ul>
@@ -692,14 +696,16 @@ img,video{max-width:100%;height:auto;display:block}
     <div class="uc-content reveal">
       <div class="uc-left">
         <h3>展示会・イベント<br>AIプレゼンター</h3>
-        <p>説明員が商談中でもSAKURAが来場者に製品の特長を説明。リード情報を自動記録し、3Dキャラクターの演出で来場者の足を止める集客効果も。</p>
+        <p>展示会の自社ブース。説明員が他のお客様と商談中でも、SAKURAが大画面から来場者に声をかけます。「こんにちは！当社の新製品についてご説明しましょうか？」——製品の特長や料金プラン、導入事例まで、営業担当者と同じレベルの説明をAIが行います。</p>
+        <p>来場者は気軽に質問でき、人間のプレッシャーなく情報収集が可能。「資料をメールで送ってほしい」というリクエストにも対応し、リード情報を自動で記録。ブースの滞在時間が延び、商談化率の向上につながります。人目を引く3Dキャラクターの演出で、通路を歩く来場者の足を止める集客効果も絶大です。</p>
       </div>
       <div class="uc-right">
         <ul class="uc-list">
           <li><span class="uc-check">✓</span>製品・サービスの自動プレゼンテーション</li>
-          <li><span class="uc-check">✓</span>来場者の質問にリアルタイム応答</li>
-          <li><span class="uc-check">✓</span>リード獲得・アンケートの自動収集</li>
-          <li><span class="uc-check">✓</span>説明員の負担軽減・運営コスト削減</li>
+          <li><span class="uc-check">✓</span>来場者の質問にリアルタイムで的確に応答</li>
+          <li><span class="uc-check">✓</span>大画面3Dキャラクターによる集客効果</li>
+          <li><span class="uc-check">✓</span>リード獲得・名刺情報・アンケートの自動収集</li>
+          <li><span class="uc-check">✓</span>説明員の負担軽減・ブース運営コスト削減</li>
         </ul>
       </div>
     </div>
@@ -712,7 +718,8 @@ img,video{max-width:100%;height:auto;display:block}
     <div class="uc-content reveal">
       <div class="uc-left">
         <h3>企業受付・医療機関<br>スマート受付</h3>
-        <p>来訪者を自動確認し担当者に即通知。医療機関では予約確認から問診票案内、診察室への誘導まで対応。スタッフはより専門的な業務に集中できます。</p>
+        <p>オフィスのエントランスに到着した来訪者。受付にはSAKURAが常駐しています。「山田様ですね。営業部の佐藤がお待ちしております。3階の会議室Bへどうぞ」——事前予約情報と連動し、来訪者の名前を確認して担当者にSlackやメールで自動通知。入館手続きもスムーズに案内します。</p>
+        <p>医療機関では受付の混雑緩和にも効果的。「予約確認」「問診票の記入案内」「診察室への誘導」など、受付スタッフの定型業務をSAKURAが担当。スタッフはより専門的な対応に集中でき、来訪者・患者様の待ち時間削減と業務効率化を同時に実現します。</p>
       </div>
       <div class="uc-right">
         <ul class="uc-list">
@@ -720,6 +727,7 @@ img,video{max-width:100%;height:auto;display:block}
           <li><span class="uc-check">✓</span>会議室・フロアへの道順案内</li>
           <li><span class="uc-check">✓</span>医療機関での受付・問診票・診察案内</li>
           <li><span class="uc-check">✓</span>予約システム・入退館管理との連携</li>
+          <li><span class="uc-check">✓</span>受付スタッフの業務負荷を大幅軽減</li>
         </ul>
       </div>
     </div>
@@ -732,13 +740,15 @@ img,video{max-width:100%;height:auto;display:block}
     <div class="uc-content reveal">
       <div class="uc-left">
         <h3>リモート面談・採用面接<br>AI面接官</h3>
-        <p>一次面接や適性確認をSAKURAが担当。候補者はリラックスした環境でAIと対話し、面接内容は自動で記録・分析。採用担当者の負荷を大幅に軽減します。</p>
+        <p>採用活動の一次面接をSAKURAが担当。候補者は自宅からノートPCやスマートフォンでSAKURAと面談。志望動機や経験をヒアリングし、面接内容をリアルタイムで記録・レポート化します。深夜や休日でも対応可能で、候補者はスケジュールを気にせず面接に臨めます。</p>
+        <p>人事担当者は生成されたレポートをもとに二次面接に進む候補者を効率的に選定。面接の質を均一に保ちながら、採用担当者の工数を大幅に削減。急成長期の大量採用にも対応できるスケーラブルな面接体制を構築できます。</p>
       </div>
       <div class="uc-right">
         <ul class="uc-list">
           <li><span class="uc-check">✓</span>一次面接・スクリーニングの自動化</li>
           <li><span class="uc-check">✓</span>面接内容の自動記録・レポート生成</li>
           <li><span class="uc-check">✓</span>24時間いつでも面接可能</li>
+          <li><span class="uc-check">✓</span>面接品質の均一化・バイアス排除</li>
           <li><span class="uc-check">✓</span>採用担当者の工数を大幅削減</li>
         </ul>
       </div>
@@ -752,13 +762,15 @@ img,video{max-width:100%;height:auto;display:block}
     <div class="uc-content reveal">
       <div class="uc-left">
         <h3>ミュージアム・教育施設<br>インタラクティブガイド</h3>
-        <p>博物館や大学の展示コーナーでSAKURAが来場者の質問に対話形式で応答。展示内容をわかりやすく解説し、多言語対応で海外からの来館者にも対応します。</p>
+        <p>博物館の展示コーナーに設置されたデジタルキオスク。学生グループが恐竜の化石について質問すると、SAKURAが研究データをもとにわかりやすく解説。「もっと詳しく知りたい」という声にも、関連する展示エリアへの誘導とともに知識を深める対話を続けます。</p>
+        <p>大学のオープンキャンパスでは学部紹介や入試案内を自動対応。来訪者一人ひとりの興味に合わせてパーソナライズされた案内を提供し、多言語対応で海外からの留学希望者にも母国語で情報をお届け。ガイドスタッフの負担を軽減しながら、来館者の満足度と学習体験の質を向上させます。</p>
       </div>
       <div class="uc-right">
         <ul class="uc-list">
           <li><span class="uc-check">✓</span>展示内容の対話型解説・質問応答</li>
-          <li><span class="uc-check">✓</span>多言語対応で海外来館者をサポート</li>
-          <li><span class="uc-check">✓</span>来館者の興味に合わせた案内</li>
+          <li><span class="uc-check">✓</span>来館者の興味に合わせたパーソナル案内</li>
+          <li><span class="uc-check">✓</span>多言語対応で海外来館者・留学生をサポート</li>
+          <li><span class="uc-check">✓</span>オープンキャンパス・入試案内の自動化</li>
           <li><span class="uc-check">✓</span>ガイドスタッフの負荷軽減</li>
         </ul>
       </div>
@@ -920,7 +932,10 @@ img,video{max-width:100%;height:auto;display:block}
       <div class="footer-col">
         <h4>その他</h4>
         <a href="https://ncinc.jp/recruit/" target="_blank">お問い合わせ</a>
-        <a href="manual/">管理者マニュアル</a>
+        <div class="footer-badges">
+          <img src="https://ncinc.jp/wp-content/uploads/2025/09/10825173_02_jp.png" alt="ISMS認証" style="height:60px;margin-top:12px">
+          <img src="https://ncinc.jp/wp-content/uploads/2023/08/partnership_logo.png" alt="パートナーシップ" style="height:40px;margin-top:8px">
+        </div>
       </div>
     </div>
     <div class="footer-copy">Copyright &copy; NATIVE CREATION, Inc. All Rights Reserved.</div>
