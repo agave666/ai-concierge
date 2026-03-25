@@ -294,47 +294,53 @@ img,video{max-width:100%;height:auto;display:block}
   letter-spacing:.08em;border:1px solid rgba(255,255,255,.15);
 }
 
-/* ===== USE CASES ===== */
-.uc-block{padding:80px 0}
-.uc-block:nth-child(even){background:var(--bg-gray)}
-.uc-item{
-  display:grid;grid-template-columns:3fr 4fr;gap:48px;align-items:stretch;
+/* ===== USE CASES (full-width bg) ===== */
+.uc-block{
+  position:relative;overflow:hidden;
+  min-height:500px;display:flex;align-items:center;
 }
-.uc-item.reverse{grid-template-columns:4fr 3fr;direction:rtl}
-.uc-item.reverse>*{direction:ltr}
-.uc-visual{
-  position:relative;border-radius:8px;overflow:hidden;
-  box-shadow:0 16px 48px rgba(0,0,0,.1);
-  min-height:420px;
-  background:linear-gradient(135deg,#1a0030,#2f004b);
+.uc-block .uc-bg{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  transition:transform 8s ease;
 }
-.uc-visual img{
-  width:100%;height:100%;object-fit:cover;object-position:center top;
-  transition:transform 5s ease;
+.uc-block:hover .uc-bg{transform:scale(1.03)}
+.uc-block .uc-bg-overlay{
+  position:absolute;inset:0;
 }
-.uc-visual:hover img{transform:scale(1.06)}
-.uc-content{display:flex;flex-direction:column;justify-content:center;padding:16px 0}
+.uc-block .uc-bg-overlay.left{
+  background:linear-gradient(90deg,rgba(0,0,0,.82) 0%,rgba(0,0,0,.6) 45%,rgba(0,0,0,.15) 100%);
+}
+.uc-block .uc-bg-overlay.right{
+  background:linear-gradient(270deg,rgba(0,0,0,.82) 0%,rgba(0,0,0,.6) 45%,rgba(0,0,0,.15) 100%);
+}
+.uc-content{
+  position:relative;z-index:2;
+  max-width:560px;padding:60px 48px;
+}
+.uc-content.pos-left{margin-right:auto}
+.uc-content.pos-right{margin-left:auto}
 .uc-tag{
-  position:absolute;top:16px;left:16px;padding:6px 14px;
-  background:var(--purple);color:#fff;border-radius:4px;
+  display:inline-block;padding:6px 14px;margin-bottom:16px;
+  background:rgba(255,255,255,.15);backdrop-filter:blur(4px);
+  color:#fff;border-radius:4px;border:1px solid rgba(255,255,255,.2);
   font-size:.7rem;font-weight:700;letter-spacing:.1em;
 }
 .uc-content h3{
-  font-size:clamp(1.3rem,2.2vw,1.7rem);font-weight:900;color:var(--purple);
+  font-size:clamp(1.3rem,2.2vw,1.7rem);font-weight:900;color:#fff;
   margin-bottom:16px;line-height:1.4;
   border-left:3px solid var(--red);padding-left:16px;
 }
-.uc-content p{font-size:.9rem;color:var(--text-light);margin-bottom:14px}
+.uc-content p{font-size:.9rem;color:rgba(255,255,255,.8);margin-bottom:14px;line-height:1.9}
 .uc-list{list-style:none}
 .uc-list li{
-  padding:8px 0;font-size:.85rem;color:var(--text-light);
+  padding:8px 0;font-size:.85rem;color:rgba(255,255,255,.75);
   display:flex;align-items:flex-start;gap:10px;
-  border-bottom:1px solid var(--border);
+  border-bottom:1px solid rgba(255,255,255,.1);
 }
 .uc-list li:last-child{border:none}
 .uc-check{
   flex-shrink:0;width:18px;height:18px;border-radius:50%;margin-top:3px;
-  background:var(--purple);display:flex;align-items:center;justify-content:center;
+  background:var(--red);display:flex;align-items:center;justify-content:center;
   font-size:.6rem;color:#fff;
 }
 
@@ -450,10 +456,13 @@ img,video{max-width:100%;height:auto;display:block}
     box-shadow:0 8px 24px rgba(0,0,0,.08);
   }
   .about-grid{grid-template-columns:1fr;gap:32px}
-  .uc-item,.uc-item.reverse{grid-template-columns:1fr;gap:32px}
+  .uc-block{min-height:auto}
+  .uc-block .uc-bg-overlay.left,.uc-block .uc-bg-overlay.right{
+    background:linear-gradient(0deg,rgba(0,0,0,.85) 0%,rgba(0,0,0,.5) 60%,rgba(0,0,0,.2) 100%);
+  }
+  .uc-content{max-width:100%;padding:40px 24px}
+  .uc-content.pos-left,.uc-content.pos-right{margin:auto}
   .features-grid{grid-template-columns:1fr 1fr}
-  .uc-item.reverse{direction:ltr}
-  .uc-visual{min-height:280px}
   .features-grid{grid-template-columns:1fr}
   .feat-card{min-height:200px}
   .tech-grid{grid-template-columns:1fr}
@@ -656,13 +665,10 @@ img,video{max-width:100%;height:auto;display:block}
   </section>
 
   <div class="uc-block">
-    <div class="container-wide">
-    <div class="uc-item">
-      <div class="uc-visual reveal-left">
-        <img src="assets/images/sakura_front.png" alt="ホテルコンシェルジュ" loading="lazy">
+    <img class="uc-bg" src="assets/images/sakura_front.png" alt="" loading="lazy">
+    <div class="uc-bg-overlay left"></div>
+      <div class="uc-content pos-left reveal">
         <div class="uc-tag">🏨 HOTEL</div>
-      </div>
-      <div class="uc-content reveal-right">
         <h3>ホテル・旅館<br>フロントコンシェルジュ</h3>
         <p>
           深夜2時、海外からのお客様がフロントに到着。スタッフは不在ですが、ロビーのモニターにはSAKURAが笑顔で待っています。
@@ -681,18 +687,13 @@ img,video{max-width:100%;height:auto;display:block}
           <li><span class="uc-check">✓</span>インバウンド観光客への英語・中国語・韓国語対応</li>
         </ul>
       </div>
-    </div>
-    </div>
   </div>
 
   <div class="uc-block">
-    <div class="container-wide">
-    <div class="uc-item reverse">
-      <div class="uc-visual reveal-right">
-        <img src="assets/images/sakura_side.png" alt="商業施設ガイド" loading="lazy">
+    <img class="uc-bg" src="assets/images/sakura_side.png" alt="" loading="lazy">
+    <div class="uc-bg-overlay right"></div>
+      <div class="uc-content pos-right reveal">
         <div class="uc-tag">🏬 COMMERCIAL</div>
-      </div>
-      <div class="uc-content reveal-left">
         <h3>商業施設・ショールーム<br>インフォメーション</h3>
         <p>
           大型ショッピングモールのエントランスに設置された大画面モニター。
@@ -712,18 +713,13 @@ img,video{max-width:100%;height:auto;display:block}
           <li><span class="uc-check">✓</span>来館者の関心データの収集・マーケティング活用</li>
         </ul>
       </div>
-    </div>
-    </div>
   </div>
 
   <div class="uc-block">
-    <div class="container-wide">
-    <div class="uc-item">
-      <div class="uc-visual reveal-left">
-        <img src="assets/images/sakura_closeup.png" alt="イベントプレゼンター" loading="lazy">
+    <img class="uc-bg" src="assets/images/sakura_closeup.png" alt="" loading="lazy">
+    <div class="uc-bg-overlay left"></div>
+      <div class="uc-content pos-left reveal">
         <div class="uc-tag">🎪 EVENT</div>
-      </div>
-      <div class="uc-content reveal-right">
         <h3>展示会・イベント<br>AIプレゼンター</h3>
         <p>
           展示会の自社ブース。説明員が他のお客様と商談中でも、SAKURAが大画面から来場者に声をかけます。
@@ -744,18 +740,13 @@ img,video{max-width:100%;height:auto;display:block}
           <li><span class="uc-check">✓</span>説明員の負担軽減・ブース運営コスト削減</li>
         </ul>
       </div>
-    </div>
-    </div>
   </div>
 
   <div class="uc-block">
-    <div class="container-wide">
-    <div class="uc-item reverse">
-      <div class="uc-visual reveal-right">
-        <img src="assets/images/sakura_face.png" alt="企業受付" loading="lazy">
+    <img class="uc-bg" src="assets/images/sakura_face.png" alt="" loading="lazy">
+    <div class="uc-bg-overlay right"></div>
+      <div class="uc-content pos-right reveal">
         <div class="uc-tag">🏢 OFFICE</div>
-      </div>
-      <div class="uc-content reveal-left">
         <h3>企業受付・医療機関<br>スマート受付</h3>
         <p>
           オフィスのエントランスに到着した来訪者。受付にはSAKURAが常駐しています。
@@ -775,8 +766,6 @@ img,video{max-width:100%;height:auto;display:block}
           <li><span class="uc-check">✓</span>受付スタッフの業務負荷を大幅軽減</li>
         </ul>
       </div>
-    </div>
-    </div>
   </div>
 </div>
 
