@@ -251,30 +251,29 @@ img,video{max-width:100%;height:auto;display:block}
 .feat-card p{font-size:.88rem;color:var(--text-light);line-height:1.8}
 
 /* ===== METAHUMAN SHOWCASE ===== */
-/* ===== METAHUMAN (full-width video bg) ===== */
-.mh-section{position:relative;overflow:hidden}
-.mh-block{position:relative;width:100%;overflow:hidden}
-.mh-block video,.mh-block img{width:100%;display:block}
-.mh-block .mh-overlay{
+/* ===== METAHUMAN (horizontal 3-col) ===== */
+.mh-section{position:relative;overflow:hidden;background:#000}
+.mh-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0}
+.mh-cell{position:relative;overflow:hidden;aspect-ratio:16/9}
+.mh-cell video,.mh-cell img{width:100%;height:100%;object-fit:cover;display:block}
+.mh-cell .mh-overlay{
   position:absolute;inset:0;
-  background:linear-gradient(0deg,rgba(0,0,0,.7) 0%,rgba(0,0,0,.1) 40%,rgba(0,0,0,.3) 100%);
+  background:linear-gradient(0deg,rgba(0,0,0,.65) 0%,rgba(0,0,0,.05) 50%,rgba(0,0,0,.2) 100%);
 }
-.mh-block .mh-text{
+.mh-cell .mh-text{
   position:absolute;bottom:0;left:0;right:0;z-index:2;
-  padding:32px 48px;
+  padding:20px 24px;
 }
-.mh-block .mh-text h3{
-  font-size:clamp(1.4rem,2.5vw,2rem);font-weight:900;color:#fff;margin-bottom:8px;
+.mh-cell .mh-text h3{
+  font-size:clamp(1rem,1.8vw,1.4rem);font-weight:900;color:#fff;margin-bottom:4px;
 }
-.mh-block .mh-text p{font-size:.9rem;color:rgba(255,255,255,.7)}
-.mh-block .mh-label{
-  position:absolute;top:24px;left:24px;z-index:2;
-  padding:6px 16px;background:rgba(0,0,0,.5);backdrop-filter:blur(8px);
-  border-radius:4px;font-size:.7rem;font-weight:600;color:#fff;
+.mh-cell .mh-text p{font-size:.8rem;color:rgba(255,255,255,.65)}
+.mh-cell .mh-label{
+  position:absolute;top:14px;left:14px;z-index:2;
+  padding:4px 12px;background:rgba(0,0,0,.5);backdrop-filter:blur(8px);
+  border-radius:3px;font-size:.65rem;font-weight:600;color:#fff;
   letter-spacing:.08em;border:1px solid rgba(255,255,255,.15);
 }
-.mh-sub-grid{display:grid;grid-template-columns:1fr 1fr;gap:0}
-.mh-sub-grid .mh-block video,.mh-sub-grid .mh-block img{height:100%;object-fit:cover;min-height:300px}
 
 /* ===== USE CASES (full-width bg) ===== */
 .uc-block{
@@ -434,7 +433,7 @@ img,video{max-width:100%;height:auto;display:block}
   .features-grid{grid-template-columns:repeat(2,1fr)}
   .tech-grid{grid-template-columns:repeat(2,1fr)}
   .plans-grid{grid-template-columns:1fr;max-width:420px;margin:0 auto}
-  .mh-sub-grid{grid-template-columns:1fr}
+  .mh-row{grid-template-columns:1fr}
   .flow-grid{grid-template-columns:repeat(3,1fr)}
 }
 @media(max-width:768px){
@@ -603,29 +602,34 @@ img,video{max-width:100%;height:auto;display:block}
 
 <!-- METAHUMAN SHOWCASE -->
 <div class="mh-section" id="metahuman">
-  <div class="mh-block reveal-scale">
-    <video autoplay muted loop playsinline>
-      <source src="assets/videos/Sakura_Face_1920.mp4" type="video/mp4">
-    </video>
-    <div class="mh-overlay"></div>
-    <div class="mh-label">METAHUMAN TECHNOLOGY</div>
-    <div class="mh-text">
-      <h3>実写を超えるフォトリアル</h3>
-      <p>Unreal Engine 5 MetaHumanが描く、圧倒的なリアリティのキャラクター</p>
+  <div class="mh-row">
+    <div class="mh-cell reveal-left">
+      <video autoplay muted loop playsinline>
+        <source src="assets/videos/Sakura_Face_1920.mp4" type="video/mp4">
+      </video>
+      <div class="mh-overlay"></div>
+      <div class="mh-text">
+        <h3>Unreal Engine 5 MetaHuman</h3>
+        <p>Epic Games最新のデジタルヒューマン技術で制作。数千のブレンドシェイプと物理シミュレーションで実写に迫る表情を実現</p>
+      </div>
     </div>
-  </div>
-  <div class="mh-sub-grid">
-    <div class="mh-block reveal-left">
+    <div class="mh-cell reveal-scale d1">
       <video autoplay muted loop playsinline>
         <source src="assets/videos/Sakura_Body_Action.mp4" type="video/mp4">
       </video>
       <div class="mh-overlay"></div>
-      <div class="mh-label">BODY ACTION</div>
+      <div class="mh-text">
+        <h3>リアルタイム3Dレンダリング</h3>
+        <p>GPU搭載クラウドサーバーで毎秒30フレームの高品質レンダリング。身体の動き・表情・リップシンクを同時処理</p>
+      </div>
     </div>
-    <div class="mh-block reveal-right">
+    <div class="mh-cell reveal-right d2">
       <img src="assets/images/metahuman_1.png" alt="MetaHuman Detail" loading="lazy">
       <div class="mh-overlay"></div>
-      <div class="mh-label">SKIN & HAIR</div>
+      <div class="mh-text">
+        <h3>毛穴レベルのディテール</h3>
+        <p>肌のサブサーフェス散乱、髪のストランドシミュレーション、瞳孔の光彩反射まで再現する圧倒的なクオリティ</p>
+      </div>
     </div>
   </div>
 </div>
