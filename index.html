@@ -185,16 +185,38 @@ img,video{max-width:100%;height:auto;display:block}
 .stat-num{font-size:1.6rem;font-weight:900;color:var(--purple);line-height:1}
 .stat-lbl{font-size:.7rem;color:var(--text-light);margin-top:6px}
 
-/* ===== DEMO VIDEO ===== */
-.video-wrap{
-  position:relative;max-width:900px;margin:0 auto;border-radius:8px;overflow:hidden;
-  box-shadow:0 20px 60px rgba(0,0,0,.15);
+/* ===== DEMO VIDEO (Apple-style scroll autoplay) ===== */
+.demo-section{padding:80px 0;background:var(--bg-gray);overflow:hidden}
+.demo-section .section-header{margin-bottom:40px}
+.demo-video-full{
+  width:100%;max-width:100%;overflow:hidden;
+  position:relative;background:#000;
 }
-.video-wrap::before{
-  content:'';position:absolute;inset:-3px;border-radius:11px;z-index:-1;
-  background:linear-gradient(135deg,var(--purple),var(--red));
+.demo-video-full video{
+  width:100%;display:block;
+  opacity:0;transition:opacity .8s ease;
 }
-.video-wrap iframe{width:100%;aspect-ratio:16/9;border:none;display:block}
+.demo-video-full video.playing{opacity:1}
+.demo-video-full .demo-poster{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,rgba(47,0,75,.8),rgba(26,26,46,.7));
+  cursor:pointer;transition:opacity .6s ease;z-index:2;
+}
+.demo-video-full .demo-poster.hidden{opacity:0;pointer-events:none}
+.demo-poster-inner{text-align:center;color:#fff}
+.demo-poster-inner .play-circle{
+  width:80px;height:80px;border-radius:50%;margin:0 auto 16px;
+  border:2px solid rgba(255,255,255,.5);
+  display:flex;align-items:center;justify-content:center;
+  transition:transform .3s,border-color .3s;
+}
+.demo-poster-inner .play-circle:hover{transform:scale(1.1);border-color:#fff}
+.demo-poster-inner .play-circle::after{
+  content:'';width:0;height:0;margin-left:4px;
+  border-top:14px solid transparent;border-bottom:14px solid transparent;
+  border-left:22px solid #fff;
+}
+.demo-poster-inner p{font-size:.85rem;letter-spacing:.1em;opacity:.7}
 
 /* ===== FEATURES ===== */
 .features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
@@ -487,17 +509,23 @@ img,video{max-width:100%;height:auto;display:block}
 </section>
 
 <!-- DEMO VIDEO -->
-<section class="section section-gray" id="demo">
+<section class="demo-section" id="demo">
   <div class="container">
     <div class="section-header reveal">
       <div class="label">DEMO MOVIE</div>
       <h2>SAKURAが案内する世界</h2>
       <p>実際のAI Concierge SAKURAによるプロモーション映像</p>
     </div>
-    <div class="video-wrap reveal-scale d1">
-      <iframe src="https://www.youtube.com/embed/jPRWTZCZ6GI?rel=0&modestbranding=1"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowfullscreen loading="lazy"></iframe>
+  </div>
+  <div class="demo-video-full reveal-scale" id="demoVideoWrap">
+    <video id="demoVideo" muted playsinline preload="metadata">
+      <source src="assets/videos/Promo.mp4" type="video/mp4">
+    </video>
+    <div class="demo-poster" id="demoPoster">
+      <div class="demo-poster-inner">
+        <div class="play-circle"></div>
+        <p>CLICK TO PLAY WITH SOUND</p>
+      </div>
     </div>
   </div>
 </section>
@@ -857,6 +885,45 @@ document.querySelectorAll('a[href^="#"]').forEach(a=>{
     if(t){t.scrollIntoView({behavior:'smooth',block:'start'});document.getElementById('navLinks').classList.remove('open')}
   });
 });
+
+// Demo video: Apple-style scroll autoplay (muted) + click for sound
+(function(){
+  const video=document.getElementById('demoVideo');
+  const poster=document.getElementById('demoPoster');
+  if(!video)return;
+  let userClicked=false;
+
+  // Scroll into view → auto-play muted
+  const vObs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting && e.intersectionRatio>=0.6){
+        video.play().then(()=>{video.classList.add('playing')}).catch(()=>{});
+      }else if(!e.isIntersecting){
+        if(!userClicked){video.pause();video.classList.remove('playing')}
+      }
+    });
+  },{threshold:[0,0.6]});
+  vObs.observe(document.getElementById('demoVideoWrap'));
+
+  // Click poster → unmute + play with sound
+  poster.addEventListener('click',function(){
+    userClicked=true;
+    video.muted=false;
+    video.currentTime=0;
+    video.play().then(()=>{
+      video.classList.add('playing');
+      poster.classList.add('hidden');
+    }).catch(()=>{});
+  });
+
+  // When video ends, reset
+  video.addEventListener('ended',function(){
+    if(!userClicked){
+      video.classList.remove('playing');
+      video.currentTime=0;
+    }
+  });
+})();
 </script>
 </body>
 </html>
