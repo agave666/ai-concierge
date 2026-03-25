@@ -449,7 +449,12 @@ img,video{max-width:100%;height:auto;display:block}
   }
   .about-grid{grid-template-columns:1fr;gap:32px}
   .uc-block{min-height:auto}
-  .uc-content{padding:32px 20px}
+  .uc-scene-label{
+    position:static;font-size:1.6rem;margin-bottom:12px;
+    color:rgba(255,255,255,.35);
+  }
+  .uc-block:nth-child(odd) .uc-scene-label{color:rgba(0,0,0,.15)}
+  .uc-content{padding:28px 20px}
   .uc-row{grid-template-columns:1fr;gap:16px}
   .features-grid{grid-template-columns:1fr}
   .feat-card{min-height:200px}
