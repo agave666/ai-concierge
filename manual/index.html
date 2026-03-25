@@ -189,7 +189,7 @@ footer { text-align:center; padding:2rem; color:var(--gray); font-size:0.8rem; b
 <div class="hero">
   <h1>AI Concierge SAKURA</h1>
   <p class="subtitle">AIコンシェルジュ デモ操作マニュアル</p>
-  <span class="badge">社内デモ担当者向け v1.0 | 2026-03-22</span>
+  <span class="badge">社内デモ担当者向け v1.1 | 2026-03-25</span>
 </div>
 
 <!-- ARCHITECTURE -->
@@ -256,7 +256,7 @@ footer { text-align:center; padding:2rem; color:var(--gray); font-size:0.8rem; b
       <div class="step-num">3</div>
       <div class="step-content">
         <h3>コンシェルジュタイプ選択</h3>
-        <p>NC / Hotel / Senior / Interview / NewsCaster から用途に応じて選択します。</p>
+        <p>NC / Hotel / Senior / Interview / NewsCaster / Promo / Aida から用途に応じて選択します。</p>
         <span class="note">各タイプの詳細は「タイプ一覧」セクションを参照</span>
       </div>
     </div>
@@ -307,12 +307,15 @@ footer { text-align:center; padding:2rem; color:var(--gray); font-size:0.8rem; b
       <button class="tab-btn" data-tab="senior">👴 Senior</button>
       <button class="tab-btn" data-tab="interview">💼 Interview</button>
       <button class="tab-btn" data-tab="newscaster">📺 NewsCaster</button>
+      <button class="tab-btn" data-tab="promo">🎤 Promo</button>
+      <button class="tab-btn" data-tab="aida">🏗️ Aida</button>
     </div>
     <div class="tab-panel active" id="tab-nc">
       <div class="emoji-title">🏢 NC（会社紹介コンシェルジュ）</div>
       <ul class="features">
         <li>会社紹介をベースとした会話が可能</li>
         <li>Google検索連携 <span class="tag tag-search">Google検索</span> でグルメ・ニュース・一般知識も検索可能</li>
+        <li>SMS送信機能 <span class="tag" style="background:#e8f5e9;color:#2e7d32;">SMS送信</span> お店のURLを携帯にSMS送信（Amazon SNS経由）</li>
         <li>最も汎用的なタイプ — デモのデフォルト</li>
         <li>会話終了時にSlackへ要約を自動投稿</li>
       </ul>
@@ -474,6 +477,29 @@ footer { text-align:center; padding:2rem; color:var(--gray); font-size:0.8rem; b
         <li>Yahooニュース30件をベースに会話 <span class="tag tag-news">ニュース</span></li>
         <li>ニュース画像をモニターに表示 <span class="tag tag-monitor">モニター表示</span></li>
         <li>ディスプレイ連携時にニュース画像を自動表示</li>
+      </ul>
+    </div>
+    <div class="tab-panel" id="tab-promo">
+      <div class="emoji-title">🎤 Promo（プロモーション）</div>
+      <ul class="features">
+        <li>事前に用意した原稿をAIが自動読み上げ — プレゼンテーション用</li>
+        <li>段落ごとに送信する安定読み上げ方式（Gemini Live APIの長文対策）</li>
+        <li>読み上げ中はMetaHumanが歩行アニメーション付きで演出</li>
+        <li>読み終わるとお辞儀→自動終了</li>
+        <li>対応AI: <strong>Gemini / Nova Sonic 2</strong> のみ（OpenAIは非対応）</li>
+        <li>ユーザーの音声入力は不要（自動プレゼンモード）</li>
+      </ul>
+      <div class="alert alert-info" style="margin-top:0.5rem;">
+        <strong>注意:</strong> LINE AI選択ではGemini・Nova Sonic 2のみ表示されます。
+      </div>
+    </div>
+    <div class="tab-panel" id="tab-aida">
+      <div class="emoji-title">🏗️ Aida（アイダ設計）</div>
+      <ul class="features">
+        <li>アイダ設計（aidagroup.co.jp）の会社紹介コンシェルジュ</li>
+        <li>公式サイトの情報のみ回答 — 不明な質問はお問い合わせフォームに誘導</li>
+        <li>家族向け住宅ソリューション、温かみのある対応スタイル</li>
+        <li>対応AI: Gemini / Nova Sonic 2 / OpenAI（全3種）</li>
       </ul>
     </div>
   </div>
@@ -711,11 +737,32 @@ footer { text-align:center; padding:2rem; color:var(--gray); font-size:0.8rem; b
     <tr><td><strong>Senior</strong></td><td class="status-done">&#10004;</td><td class="status-done">&#10004;</td><td>-</td><td>-</td><td>2</td></tr>
     <tr><td><strong>Interview</strong></td><td class="status-done">&#10004;</td><td>-</td><td>-</td><td>-</td><td>1</td></tr>
     <tr><td><strong>NewsCaster</strong></td><td class="status-done">&#10004;</td><td>-</td><td>-</td><td class="status-done">&#10004;</td><td>2</td></tr>
+    <tr><td><strong>Promo</strong></td><td>-</td><td>-</td><td>-</td><td>-</td><td>0 (自動読み上げ)</td></tr>
+    <tr><td><strong>Aida</strong></td><td class="status-done">&#10004;</td><td>-</td><td>-</td><td>-</td><td>1</td></tr>
   </table>
 
   <!-- TIMELINE -->
   <h3 style="font-size:1.1rem; color:var(--navy); margin:2rem 0 1rem;">最適化タイムライン</h3>
   <div class="timeline">
+
+    <div class="tl-item">
+      <div class="tl-date">2026-03-25</div>
+      <div class="tl-title">Twilio + SMS送信機能（NCモード）</div>
+      <div class="tl-body">
+        NCモードのAI会話中にお店のURLをSMSで送信する機能を追加。Amazon SNS経由でSMS送信。
+        Twilio 050番号による電話着信→AI対応も実装済み（番号取得審査待ち）。
+        <code>twilio_service.py</code>を新規独立サービスとして作成。
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-date">2026-03-25</div>
+      <div class="tl-title">アイダ設計 + Promoモード追加</div>
+      <div class="tl-body">
+        アイダ設計（Aida）コンシェルジュタイプを新規追加。公式サイト情報のみ回答する仕様。
+        Promoモードは段落分割送信方式に改善し、Gemini/Nova Sonic 2で安定読み上げ。
+      </div>
+    </div>
 
     <div class="tl-item">
       <div class="tl-date">2026-03-22</div>
