@@ -281,6 +281,8 @@ img,video{max-width:100%;height:auto;display:block}
   transition:transform 8s ease;
 }
 .uc-block:hover .uc-bg{transform:scale(1.03)}
+.uc-bg-img{display:none}
+@media(max-width:768px){.uc-bg-video{display:none}.uc-bg-img{display:block}}
 .uc-block .uc-bg-overlay{
   position:absolute;inset:0;
   background:rgba(0,0,0,.55);
@@ -403,7 +405,7 @@ img,video{max-width:100%;height:auto;display:block}
 }
 .section-cta .cta-bg{
   position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
-  object-position:center top;
+  object-position:center 8%;
 }
 .section-cta .cta-bg-overlay{
   position:absolute;inset:0;background:rgba(0,0,0,.6);
@@ -642,7 +644,8 @@ img,video{max-width:100%;height:auto;display:block}
   </section>
 
   <div class="uc-block">
-    <video class="uc-bg" autoplay muted loop playsinline style="object-position:center 40%"><source src="assets/videos/uc_hotel.mp4" type="video/mp4"></video>
+    <video class="uc-bg uc-bg-video" autoplay muted loop playsinline style="object-position:center 40%"><source src="assets/videos/uc_hotel.mp4" type="video/mp4"></video>
+    <img class="uc-bg uc-bg-img" src="assets/images/uc_hotel.png" alt="" loading="lazy" style="object-position:center 40%">
     <div class="uc-bg-overlay"></div>
     <div class="uc-scene-label">HOTEL</div>
     <div class="uc-content reveal">
@@ -664,7 +667,8 @@ img,video{max-width:100%;height:auto;display:block}
   </div>
 
   <div class="uc-block">
-    <video class="uc-bg" autoplay muted loop playsinline style="object-position:center 30%"><source src="assets/videos/uc_event.mp4" type="video/mp4"></video>
+    <video class="uc-bg uc-bg-video" autoplay muted loop playsinline style="object-position:center 30%"><source src="assets/videos/uc_event.mp4" type="video/mp4"></video>
+    <img class="uc-bg uc-bg-img" src="assets/images/uc_event.png" alt="" loading="lazy" style="object-position:center 30%">
     <div class="uc-bg-overlay"></div>
     <div class="uc-scene-label">EVENT</div>
     <div class="uc-content reveal">
@@ -686,7 +690,8 @@ img,video{max-width:100%;height:auto;display:block}
   </div>
 
   <div class="uc-block">
-    <video class="uc-bg" autoplay muted loop playsinline style="object-position:center 50%"><source src="assets/videos/uc_commercial.mp4" type="video/mp4"></video>
+    <video class="uc-bg uc-bg-video" autoplay muted loop playsinline style="object-position:center 50%"><source src="assets/videos/uc_commercial.mp4" type="video/mp4"></video>
+    <img class="uc-bg uc-bg-img" src="assets/images/uc_commercial.png" alt="" loading="lazy" style="object-position:center 50%">
     <div class="uc-bg-overlay"></div>
     <div class="uc-scene-label">COMMERCIAL</div>
     <div class="uc-content reveal">
@@ -708,7 +713,8 @@ img,video{max-width:100%;height:auto;display:block}
   </div>
 
   <div class="uc-block">
-    <video class="uc-bg" autoplay muted loop playsinline style="object-position:center 50%"><source src="assets/videos/uc_office.mp4" type="video/mp4"></video>
+    <video class="uc-bg uc-bg-video" autoplay muted loop playsinline style="object-position:center 50%"><source src="assets/videos/uc_office.mp4" type="video/mp4"></video>
+    <img class="uc-bg uc-bg-img" src="assets/images/uc_office.png" alt="" loading="lazy" style="object-position:center 50%">
     <div class="uc-bg-overlay"></div>
     <div class="uc-scene-label">OFFICE</div>
     <div class="uc-content reveal">
@@ -730,7 +736,8 @@ img,video{max-width:100%;height:auto;display:block}
   </div>
 
   <div class="uc-block">
-    <video class="uc-bg" autoplay muted loop playsinline><source src="assets/videos/uc_interview.mp4" type="video/mp4"></video>
+    <video class="uc-bg uc-bg-video" autoplay muted loop playsinline><source src="assets/videos/uc_interview.mp4" type="video/mp4"></video>
+    <img class="uc-bg uc-bg-img" src="assets/images/uc_interview.png" alt="" loading="lazy">
     <div class="uc-bg-overlay"></div>
     <div class="uc-scene-label">INTERVIEW</div>
     <div class="uc-content reveal">
@@ -752,7 +759,8 @@ img,video{max-width:100%;height:auto;display:block}
   </div>
 
   <div class="uc-block">
-    <video class="uc-bg" autoplay muted loop playsinline><source src="assets/videos/uc_education.mp4" type="video/mp4"></video>
+    <video class="uc-bg uc-bg-video" autoplay muted loop playsinline><source src="assets/videos/uc_education.mp4" type="video/mp4"></video>
+    <img class="uc-bg uc-bg-img" src="assets/images/uc_education.png" alt="" loading="lazy">
     <div class="uc-bg-overlay"></div>
     <div class="uc-scene-label">EDUCATION</div>
     <div class="uc-content reveal">
