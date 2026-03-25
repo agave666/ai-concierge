@@ -279,7 +279,7 @@ img,video{max-width:100%;height:auto;display:block}
 /* ===== USE CASES (full-width bg) ===== */
 .uc-block{
   position:relative;overflow:hidden;
-  min-height:560px;display:flex;align-items:center;
+  min-height:480px;display:flex;align-items:center;
 }
 .uc-block .uc-bg{
   position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
@@ -288,46 +288,38 @@ img,video{max-width:100%;height:auto;display:block}
 .uc-block:hover .uc-bg{transform:scale(1.03)}
 .uc-block .uc-bg-overlay{
   position:absolute;inset:0;
-}
-.uc-block .uc-bg-overlay{
   background:rgba(0,0,0,.55);
 }
-.uc-block:nth-child(odd) .uc-bg-overlay{
-  background:rgba(255,255,255,.75);
-}
-.uc-block:nth-child(odd) .uc-bg-overlay{background:rgba(255,255,255,.7)}
+.uc-block:nth-child(odd) .uc-bg-overlay{background:rgba(255,255,255,.75)}
 .uc-block:nth-child(odd) .uc-content h3,
 .uc-block:nth-child(odd) .uc-content p{color:var(--text)}
 .uc-block:nth-child(odd) .uc-list li{color:var(--text-light);border-color:var(--border)}
 .uc-block:nth-child(odd) .uc-scene-label{color:rgba(0,0,0,.1)}
 .uc-content{
   position:relative;z-index:2;
-  width:100%;max-width:1300px;margin:0 auto;
-  padding:48px 48px;
+  width:100%;max-width:900px;margin:0 auto;
+  padding:40px 32px;
 }
 .uc-content h3{
-  margin-bottom:20px;
+  font-size:clamp(1.4rem,2.5vw,1.8rem);font-weight:900;color:#fff;
+  margin-bottom:16px;line-height:1.4;
+  border-left:3px solid var(--red);padding-left:16px;
 }
 .uc-body{
   display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:start;
 }
 .uc-scene-label{
-  position:absolute;top:24px;left:32px;z-index:3;
+  position:absolute;top:20px;left:28px;z-index:3;
   font-size:clamp(2rem,5vw,3.5rem);font-weight:900;color:rgba(255,255,255,.25);
   letter-spacing:.15em;text-transform:uppercase;line-height:1;
   pointer-events:none;
 }
-.uc-content h3{
-  font-size:clamp(1.4rem,2.5vw,1.8rem);font-weight:900;color:#fff;
-  margin-bottom:12px;line-height:1.4;
-  border-left:3px solid var(--red);padding-left:16px;
-}
-.uc-content p{font-size:.9rem;color:rgba(255,255,255,.8);margin-bottom:10px;line-height:1.9}
+.uc-content p{font-size:.9rem;color:rgba(255,255,255,.85);margin-bottom:10px;line-height:1.9}
 .uc-list{list-style:none}
 .uc-list li{
-  padding:8px 0;font-size:.85rem;color:rgba(255,255,255,.75);
+  padding:8px 0;font-size:.85rem;color:rgba(255,255,255,.8);
   display:flex;align-items:flex-start;gap:10px;
-  border-bottom:1px solid rgba(255,255,255,.1);
+  border-bottom:1px solid rgba(255,255,255,.15);
 }
 .uc-list li:last-child{border:none}
 .uc-check{
@@ -450,10 +442,7 @@ img,video{max-width:100%;height:auto;display:block}
   }
   .about-grid{grid-template-columns:1fr;gap:32px}
   .uc-block{min-height:auto}
-  .uc-block .uc-bg-overlay.left,.uc-block .uc-bg-overlay.right{
-    background:linear-gradient(0deg,rgba(0,0,0,.85) 0%,rgba(0,0,0,.5) 60%,rgba(0,0,0,.2) 100%);
-  }
-  .uc-content{padding:40px 24px}
+  .uc-content{padding:32px 20px}
   .uc-body{grid-template-columns:1fr}
   .features-grid{grid-template-columns:1fr 1fr}
   .features-grid{grid-template-columns:1fr}
@@ -639,12 +628,15 @@ img,video{max-width:100%;height:auto;display:block}
 
 <!-- USE CASES -->
 <div id="usecases">
-  <section class="section" style="padding-bottom:40px">
+  <section class="section" style="padding-bottom:24px;padding-top:60px">
     <div class="container-wide">
       <div class="section-header reveal">
         <div class="label">USE CASES</div>
         <h2>あらゆるシーンで活躍</h2>
-        <p>SAKURAは業種を問わず、お客様との接点を革新します</p>
+        <p style="max-width:800px">「人手が足りない」「深夜に対応できない」「外国語が話せるスタッフがいない」——<br>
+        そんな現場の課題を、SAKURAはたった1台のディスプレイで解決します。<br>
+        ホテルのフロントから展示会のブース、オフィスの受付まで。<br>
+        24時間365日、何語でも、何度でも。笑顔で、飽きることなく、プロフェッショナルな接客を届け続けます。</p>
       </div>
     </div>
   </section>
