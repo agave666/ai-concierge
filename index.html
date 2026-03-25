@@ -87,7 +87,7 @@ img,video{max-width:100%;height:auto;display:block}
 
 /* ===== HERO ===== */
 .hero{
-  position:relative;min-height:100vh;display:flex;align-items:center;
+  position:relative;display:flex;align-items:center;
   overflow:hidden;background:#000;
 }
 .hero-video{
@@ -99,7 +99,7 @@ img,video{max-width:100%;height:auto;display:block}
   background:linear-gradient(135deg,rgba(47,0,75,.55) 0%,rgba(26,26,46,.4) 50%,rgba(0,0,0,.5) 100%);
 }
 .hero-content{
-  position:relative;z-index:2;padding:140px 24px 100px;
+  position:relative;z-index:2;padding:120px 24px 60px;
   max-width:1300px;margin:0 auto;width:100%;
 }
 .hero-label{
@@ -131,14 +131,7 @@ img,video{max-width:100%;height:auto;display:block}
 .btn-purple:hover{background:var(--purple-light);transform:translateY(-2px);box-shadow:0 8px 24px rgba(47,0,75,.3)}
 .btn-outline{background:transparent;color:var(--purple);border:2px solid var(--purple)}
 .btn-outline:hover{background:var(--purple);color:#fff}
-.hero-scroll{
-  position:absolute;bottom:32px;left:50%;transform:translateX(-50%);z-index:2;
-  color:rgba(255,255,255,.6);font-size:.7rem;letter-spacing:.15em;
-  display:flex;flex-direction:column;align-items:center;gap:8px;
-  animation:heroFloat 2.5s infinite ease-in-out;
-}
-@keyframes heroFloat{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-8px)}}
-.hero-scroll::after{content:'';width:1px;height:32px;background:linear-gradient(to bottom,rgba(255,255,255,.5),transparent)}
+/* hero-scroll removed for compact hero */
 
 /* ===== SECTION COMMON ===== */
 .section{padding:100px 0}
@@ -304,7 +297,7 @@ img,video{max-width:100%;height:auto;display:block}
 }
 
 /* ===== TECHNOLOGY ===== */
-.tech-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-bottom:60px}
+.tech-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
 .tech-card{
   text-align:center;padding:32px 16px;
   background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
@@ -314,19 +307,6 @@ img,video{max-width:100%;height:auto;display:block}
 .tech-card .icon{font-size:2.2rem;margin-bottom:14px}
 .tech-card h4{font-size:.9rem;font-weight:700;color:#fff;margin-bottom:8px}
 .tech-card p{font-size:.75rem;color:rgba(255,255,255,.5);line-height:1.6}
-.arch-box{
-  padding:40px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
-  border-radius:12px;
-}
-.arch-box h3{font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:28px;text-align:center}
-.arch-flow{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap}
-.arch-node{
-  padding:12px 18px;border-radius:6px;text-align:center;
-  font-size:.78rem;font-weight:600;color:#fff;min-width:100px;
-  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);
-}
-.arch-node.hl{background:rgba(216,1,0,.2);border-color:var(--red)}
-.arch-arrow{color:rgba(255,255,255,.3);font-size:1rem}
 
 /* ===== FLOW ===== */
 .flow-timeline{position:relative;max-width:750px;margin:0 auto}
@@ -431,11 +411,9 @@ img,video{max-width:100%;height:auto;display:block}
   .uc-item.reverse{direction:ltr}
   .features-grid,.tech-grid{grid-template-columns:1fr}
   .about-stats{grid-template-columns:repeat(3,1fr);gap:8px}
-  .arch-flow{flex-direction:column}
-  .arch-arrow{transform:rotate(90deg)}
   .footer-inner{flex-direction:column;gap:20px;text-align:center}
   .footer-links{flex-wrap:wrap;justify-content:center}
-  .hero-content{padding:120px 20px 80px}
+  .hero-content{padding:100px 20px 48px}
 }
 </style>
 </head>
@@ -449,10 +427,9 @@ img,video{max-width:100%;height:auto;display:block}
       <a href="#about">SAKURAとは</a>
       <a href="#demo">デモ動画</a>
       <a href="#features">機能</a>
-      <a href="#metahuman">MetaHuman</a>
       <a href="#usecases">活用事例</a>
-      <a href="#technology">技術</a>
       <a href="#flow">導入の流れ</a>
+      <a href="#plans">プラン</a>
       <a href="#contact" class="nav-cta">お問い合わせ</a>
     </div>
     <div class="hamburger" onclick="document.getElementById('navLinks').classList.toggle('open')">
@@ -479,7 +456,6 @@ img,video{max-width:100%;height:auto;display:block}
       <a href="#contact" class="btn btn-white">お問い合わせ</a>
     </div>
   </div>
-  <div class="hero-scroll">SCROLL</div>
 </section>
 
 <!-- ABOUT -->
@@ -614,12 +590,21 @@ img,video{max-width:100%;height:auto;display:block}
       </div>
       <div class="uc-content reveal-right">
         <h3>ホテル・旅館<br>フロントコンシェルジュ</h3>
-        <p>チェックイン・チェックアウトの案内から周辺観光情報まで。深夜帯やスタッフ不足の時間帯でも、SAKURAが24時間おもてなし対応を行います。</p>
+        <p>
+          深夜2時、海外からのお客様がフロントに到着。スタッフは不在ですが、ロビーのモニターにはSAKURAが笑顔で待っています。
+          「Welcome! How can I help you?」——お客様の言語を自動で判別し、チェックイン手順を丁寧に案内。
+          周辺のコンビニや深夜営業のレストラン情報もリアルタイムで検索してお伝えします。
+        </p>
+        <p>
+          翌朝、日本人ゲストが「近くでおすすめの朝食スポットは？」と尋ねると、SAKURAはGoogleの最新情報をもとに営業中の店舗を案内。
+          人手不足が深刻な宿泊業界で、SAKURAは疲れ知らずの"もう一人のフロントスタッフ"として24時間おもてなしを続けます。
+        </p>
         <ul class="uc-list">
-          <li><span class="uc-check">✓</span>チェックイン/アウト手順の案内</li>
+          <li><span class="uc-check">✓</span>チェックイン/アウト手順の多言語案内</li>
           <li><span class="uc-check">✓</span>周辺観光・飲食店のリアルタイム情報提供</li>
-          <li><span class="uc-check">✓</span>多言語対応でインバウンド観光客をサポート</li>
-          <li><span class="uc-check">✓</span>館内施設・アメニティの案内</li>
+          <li><span class="uc-check">✓</span>深夜・早朝など無人時間帯のフロント対応</li>
+          <li><span class="uc-check">✓</span>館内施設・Wi-Fi・アメニティの案内</li>
+          <li><span class="uc-check">✓</span>インバウンド観光客への英語・中国語・韓国語対応</li>
         </ul>
       </div>
     </div>
@@ -631,12 +616,22 @@ img,video{max-width:100%;height:auto;display:block}
       </div>
       <div class="uc-content reveal-left">
         <h3>商業施設・ショールーム<br>インフォメーション</h3>
-        <p>大型商業施設やショールームのモニターからSAKURAが案内。フロアガイド、キャンペーン情報、目的地への道案内を行います。</p>
+        <p>
+          大型ショッピングモールのエントランスに設置された大画面モニター。
+          来館者が「子ども服のお店はどこですか？」と話しかけると、SAKURAがフロアマップとともに最短ルートを案内。
+          「今日だけのタイムセール情報もありますよ」と、リアルタイムのキャンペーン情報も自然な会話の中でお伝えします。
+        </p>
+        <p>
+          従来のタッチパネル式案内板では実現できなかった「会話によるおもてなし」。
+          お客様は画面に触れることなく、声だけで知りたい情報にたどり着けます。
+          高齢のお客様やベビーカーで両手がふさがっているお客様にも好評。施設の顧客満足度向上とリピーター獲得に貢献します。
+        </p>
         <ul class="uc-list">
-          <li><span class="uc-check">✓</span>フロアガイド・テナント案内</li>
-          <li><span class="uc-check">✓</span>セール・イベント情報のリアルタイム発信</li>
-          <li><span class="uc-check">✓</span>商品やサービスの詳細説明</li>
-          <li><span class="uc-check">✓</span>来館者データの収集・分析</li>
+          <li><span class="uc-check">✓</span>フロアガイド・テナント検索・ルート案内</li>
+          <li><span class="uc-check">✓</span>セール・イベント情報のリアルタイム告知</li>
+          <li><span class="uc-check">✓</span>商品やサービスの詳細説明・比較提案</li>
+          <li><span class="uc-check">✓</span>ハンズフリーで利用可能なバリアフリー対応</li>
+          <li><span class="uc-check">✓</span>来館者の関心データの収集・マーケティング活用</li>
         </ul>
       </div>
     </div>
@@ -647,13 +642,51 @@ img,video{max-width:100%;height:auto;display:block}
         <div class="uc-tag">🎪 EVENT</div>
       </div>
       <div class="uc-content reveal-right">
-        <h3>展示会・イベント<br>プレゼンター</h3>
-        <p>展示ブースで製品を紹介するプレゼンターとして、またイベント会場の総合案内役として。来場者の質問にその場で答え、インパクトあるブース演出を実現します。</p>
+        <h3>展示会・イベント<br>AIプレゼンター</h3>
+        <p>
+          展示会の自社ブース。説明員が他のお客様と商談中でも、SAKURAが大画面から来場者に声をかけます。
+          「こんにちは！当社の新製品についてご説明しましょうか？」——製品の特長や料金プラン、導入事例まで、
+          営業担当者と同じレベルの説明をAIが行います。
+        </p>
+        <p>
+          来場者は気軽に質問でき、人間のプレッシャーなく情報収集が可能。
+          「資料をメールで送ってほしい」というリクエストにも対応し、リード情報を自動で記録。
+          ブースの滞在時間が延び、商談化率の向上につながります。
+          人目を引く3Dキャラクターの演出で、通路を歩く来場者の足を止める集客効果も絶大です。
+        </p>
         <ul class="uc-list">
           <li><span class="uc-check">✓</span>製品・サービスの自動プレゼンテーション</li>
-          <li><span class="uc-check">✓</span>来場者の質問にリアルタイム応答</li>
-          <li><span class="uc-check">✓</span>大画面でのインパクトあるブース演出</li>
-          <li><span class="uc-check">✓</span>リード獲得・アンケート収集</li>
+          <li><span class="uc-check">✓</span>来場者の質問にリアルタイムで的確に応答</li>
+          <li><span class="uc-check">✓</span>大画面3Dキャラクターによる集客・アイキャッチ効果</li>
+          <li><span class="uc-check">✓</span>リード獲得・名刺情報・アンケートの自動収集</li>
+          <li><span class="uc-check">✓</span>説明員の負担軽減・ブース運営コスト削減</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="uc-item reverse">
+      <div class="uc-visual reveal-right">
+        <img src="assets/images/sakura_face.png" alt="企業受付" loading="lazy">
+        <div class="uc-tag">🏢 OFFICE</div>
+      </div>
+      <div class="uc-content reveal-left">
+        <h3>企業受付・医療機関<br>スマート受付</h3>
+        <p>
+          オフィスのエントランスに到着した来訪者。受付にはSAKURAが常駐しています。
+          「山田様ですね。営業部の佐藤がお待ちしております。3階の会議室Bへどうぞ」——事前予約情報と連動し、
+          来訪者の名前を確認して担当者に自動通知。入館手続きもスムーズに案内します。
+        </p>
+        <p>
+          医療機関では受付の混雑緩和にも効果的。「予約確認」「問診票の記入案内」「診察室への誘導」など、
+          受付スタッフの定型業務をSAKURAが担当。スタッフはより専門的な対応に集中できます。
+          来訪者・患者様の待ち時間削減と、スタッフの業務効率化を同時に実現します。
+        </p>
+        <ul class="uc-list">
+          <li><span class="uc-check">✓</span>来訪者の本人確認・担当者への自動通知</li>
+          <li><span class="uc-check">✓</span>会議室・フロアへの道順案内</li>
+          <li><span class="uc-check">✓</span>医療機関での受付・問診票・診察案内</li>
+          <li><span class="uc-check">✓</span>予約システム・入退館管理との連携</li>
+          <li><span class="uc-check">✓</span>受付スタッフの業務負荷を大幅軽減</li>
         </ul>
       </div>
     </div>
@@ -673,22 +706,6 @@ img,video{max-width:100%;height:auto;display:block}
       <div class="tech-card reveal d2"><div class="icon">🤖</div><h4>マルチAI</h4><p>Gemini / Nova Sonic 2 / OpenAI<br>最適なエンジンを選択</p></div>
       <div class="tech-card reveal d3"><div class="icon">☁️</div><h4>AWS Cloud</h4><p>GPU搭載EC2で高品質な<br>Pixel Streamingを配信</p></div>
       <div class="tech-card reveal d4"><div class="icon">📡</div><h4>Pixel Streaming</h4><p>ブラウザだけで<br>ハイエンド3D体験を提供</p></div>
-    </div>
-    <div class="arch-box reveal">
-      <h3>システムアーキテクチャ</h3>
-      <div class="arch-flow">
-        <div class="arch-node">👤 お客様<br><small>ブラウザ</small></div>
-        <div class="arch-arrow">→</div>
-        <div class="arch-node">🎙️ 音声入力<br><small>WebRTC</small></div>
-        <div class="arch-arrow">→</div>
-        <div class="arch-node hl">🧠 AI Engine<br><small>Gemini / Nova / GPT</small></div>
-        <div class="arch-arrow">→</div>
-        <div class="arch-node">🔊 音声合成<br><small>リアルタイム</small></div>
-        <div class="arch-arrow">→</div>
-        <div class="arch-node">👤 MetaHuman<br><small>UE5 + リップシンク</small></div>
-        <div class="arch-arrow">→</div>
-        <div class="arch-node">📺 配信<br><small>Pixel Streaming</small></div>
-      </div>
     </div>
   </div>
 </section>
