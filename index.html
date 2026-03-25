@@ -379,7 +379,11 @@ img,video{max-width:100%;height:auto;display:block}
   font-size:.65rem;font-weight:700;color:#fff;letter-spacing:.1em;
 }
 .plan-card:hover{transform:translateY(-6px);box-shadow:0 16px 40px rgba(0,0,0,.1)}
-.plan-card h3{font-size:1.2rem;font-weight:900;color:var(--purple);margin-bottom:12px}
+.plan-card h3{font-size:1.2rem;font-weight:900;color:var(--purple);margin-bottom:8px}
+.plan-period{
+  display:inline-block;padding:3px 12px;border-radius:3px;margin-bottom:14px;
+  background:var(--purple);font-size:.7rem;font-weight:600;color:#fff;
+}
 .plan-card .plan-desc{font-size:.8rem;color:var(--text-light);margin-bottom:28px}
 .plan-card .plan-list{list-style:none;text-align:left;margin-bottom:28px}
 .plan-card .plan-list li{
@@ -826,7 +830,8 @@ img,video{max-width:100%;height:auto;display:block}
     <div class="plans-grid">
       <div class="plan-card reveal d1">
         <h3>スタンダード</h3>
-        <p class="plan-desc">まずは試してみたい方に最適。SAKURAキャラクターをそのまま利用し、AI人格と応答内容だけをお客様の施設に合わせてカスタマイズ。開発期間を最小限に抑え、最短2週間でリリース可能です。導入コストを抑えながら、AIコンシェルジュの効果を実感できるエントリープランです。</p>
+        <span class="plan-period">導入目安：約2週間</span>
+        <p class="plan-desc">まずは試してみたい方に最適。SAKURAキャラクターをそのまま利用し、AI人格と応答内容だけをお客様の施設に合わせてカスタマイズ。開発期間を最小限に抑え、約2週間でリリース可能です。導入コストを抑えながら、AIコンシェルジュの効果を実感できるエントリープランです。</p>
         <ul class="plan-list">
           <li><span class="dot">●</span>既存SAKURAキャラクター利用</li>
           <li><span class="dot">●</span>AI人格・ナレッジのカスタマイズ</li>
@@ -839,6 +844,7 @@ img,video{max-width:100%;height:auto;display:block}
       </div>
       <div class="plan-card featured reveal d2">
         <h3>プレミアム</h3>
+        <span class="plan-period">導入目安：約1ヶ月</span>
         <p class="plan-desc">ブランドの世界観を最大限に表現したい方へ。御社専用のオリジナル3Dキャラクターをゼロから制作し、Unreal Engineベースの3D空間デザインで、ロビーや店舗を忠実に再現した背景を構築。衣装・髪型・声のトーンまでブランドイメージに合わせてフルカスタマイズ。来訪者に「ここでしか体験できない」という特別な印象を残し、ブランド価値の向上とリピーター獲得に直結します。複数台の同時接続にも対応し、施設内の複数ポイントに展開可能です。</p>
         <ul class="plan-list">
           <li><span class="dot">●</span>オリジナルキャラクターをゼロから制作</li>
@@ -852,14 +858,15 @@ img,video{max-width:100%;height:auto;display:block}
       </div>
       <div class="plan-card reveal d3">
         <h3>エンタープライズ</h3>
-        <p class="plan-desc">全国チェーンや大規模施設向けのフルカスタムプラン。複数キャラクターの同時運用、拠点ごとに異なるナレッジ設定、既存の予約管理システム（PMS）や顧客管理（CRM）との連携など、あらゆる要件に対応。専用インフラの構築やオンプレミス環境での運用も可能です。SLA付きの手厚いサポート体制で、ミッションクリティカルな運用にもお応えします。</p>
+        <span class="plan-period">導入目安：2ヶ月～</span>
+        <p class="plan-desc">全国チェーンや大規模施設向けのフルカスタムプラン。複数キャラクターの同時運用、拠点ごとに異なるナレッジ設定、既存の予約管理システム（PMS）や顧客管理（CRM）との連携など、あらゆる要件に対応。専用インフラの構築やオンプレミス環境での運用も可能です。お客様の運用体制に合わせた手厚いサポートをご提供します。</p>
         <ul class="plan-list">
           <li><span class="dot">●</span>複数キャラクター・複数拠点運用</li>
           <li><span class="dot">●</span>PMS・CRM等の既存システム連携</li>
           <li><span class="dot">●</span>専用インフラ構築</li>
-          <li><span class="dot">●</span>SLA付きサポート</li>
           <li><span class="dot">●</span>オンプレミス対応可</li>
           <li><span class="dot">●</span>カスタム開発</li>
+          <li><span class="dot">●</span>専任担当による手厚いサポート</li>
         </ul>
         <a href="#contact" class="btn btn-outline" style="width:100%;justify-content:center">お問い合わせ</a>
       </div>
