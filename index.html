@@ -311,6 +311,13 @@ img,video{max-width:100%;height:auto;display:block}
 .uc-block .uc-bg-overlay{
   background:rgba(0,0,0,.55);
 }
+.uc-block:nth-child(odd) .uc-bg-overlay{
+  background:rgba(255,255,255,.75);
+}
+.uc-block:nth-child(odd) .uc-content h3,
+.uc-block:nth-child(odd) .uc-content p{color:var(--text)}
+.uc-block:nth-child(odd) .uc-list li{color:var(--text-light);border-color:var(--border)}
+.uc-block:nth-child(odd) .uc-tag{background:var(--purple);color:#fff;border-color:var(--purple)}
 .uc-content{
   position:relative;z-index:2;
   width:100%;max-width:1300px;margin:0 auto;
@@ -320,11 +327,12 @@ img,video{max-width:100%;height:auto;display:block}
 .uc-content .uc-left{grid-column:1}
 .uc-content .uc-right{grid-column:2}
 .uc-tag{
-  display:inline-block;padding:6px 14px;margin-bottom:16px;
+  display:inline-block;padding:8px 20px;margin-bottom:20px;
   background:rgba(255,255,255,.15);backdrop-filter:blur(4px);
   color:#fff;border-radius:4px;border:1px solid rgba(255,255,255,.2);
-  font-size:.7rem;font-weight:700;letter-spacing:.1em;
+  font-size:.9rem;font-weight:700;letter-spacing:.1em;
 }
+.uc-content h3{font-size:clamp(1.4rem,2.5vw,1.9rem)}
 .uc-content h3{
   font-size:clamp(1.3rem,2.2vw,1.7rem);font-weight:900;color:#fff;
   margin-bottom:16px;line-height:1.4;
@@ -345,16 +353,19 @@ img,video{max-width:100%;height:auto;display:block}
 }
 
 /* ===== TECHNOLOGY ===== */
-.tech-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.tech-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
 .tech-card{
-  text-align:center;padding:32px 16px;
-  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
-  border-radius:8px;transition:transform .3s,border-color .3s;
+  border-radius:12px;overflow:hidden;
+  transition:transform .3s,box-shadow .3s;
+  position:relative;min-height:280px;
+  display:flex;flex-direction:column;justify-content:flex-end;
 }
-.tech-card:hover{transform:translateY(-4px);border-color:var(--red)}
-.tech-card .icon{font-size:2.2rem;margin-bottom:14px}
-.tech-card h4{font-size:.9rem;font-weight:700;color:#fff;margin-bottom:8px}
-.tech-card p{font-size:.75rem;color:rgba(255,255,255,.5);line-height:1.6}
+.tech-card:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(0,0,0,.4)}
+.tech-card .tech-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.tech-card .tech-overlay{position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.85) 0%,rgba(0,0,0,.2) 60%)}
+.tech-card .tech-text{position:relative;z-index:2;padding:20px}
+.tech-card h4{font-size:1rem;font-weight:700;color:#fff;margin-bottom:6px}
+.tech-card p{font-size:.8rem;color:rgba(255,255,255,.7);line-height:1.6}
 
 /* ===== FLOW ===== */
 .flow-timeline{position:relative;max-width:750px;margin:0 auto}
@@ -758,10 +769,10 @@ img,video{max-width:100%;height:auto;display:block}
       <p>グラフィックス、AI、クラウドの最先端技術を統合</p>
     </div>
     <div class="tech-grid">
-      <div class="tech-card reveal d1"><div class="icon">🎮</div><h4>Unreal Engine 5</h4><p>MetaHuman + Nanite + Lumen<br>フォトリアルな3D描画</p></div>
-      <div class="tech-card reveal d2"><div class="icon">🤖</div><h4>マルチAI</h4><p>Gemini / Nova Sonic 2 / OpenAI<br>最適なエンジンを選択</p></div>
-      <div class="tech-card reveal d3"><div class="icon">☁️</div><h4>AWS Cloud</h4><p>GPU搭載EC2で高品質な<br>Pixel Streamingを配信</p></div>
-      <div class="tech-card reveal d4"><div class="icon">📡</div><h4>Pixel Streaming</h4><p>ブラウザだけで<br>ハイエンド3D体験を提供</p></div>
+      <div class="tech-card reveal d1"><img class="tech-bg" src="assets/images/tech_ue5.png" alt="" loading="lazy"><div class="tech-overlay"></div><div class="tech-text"><h4>Unreal Engine 5</h4><p>MetaHuman + Nanite + Lumen<br>フォトリアルな3D描画</p></div></div>
+      <div class="tech-card reveal d2"><img class="tech-bg" src="assets/images/tech_ai.png" alt="" loading="lazy"><div class="tech-overlay"></div><div class="tech-text"><h4>マルチAI</h4><p>Gemini / Nova Sonic 2 / OpenAI<br>最適なエンジンを選択</p></div></div>
+      <div class="tech-card reveal d3"><img class="tech-bg" src="assets/images/tech_aws.png" alt="" loading="lazy"><div class="tech-overlay"></div><div class="tech-text"><h4>AWS Cloud</h4><p>GPU搭載EC2で高品質な<br>Pixel Streamingを配信</p></div></div>
+      <div class="tech-card reveal d4"><img class="tech-bg" src="assets/images/tech_streaming.png" alt="" loading="lazy"><div class="tech-overlay"></div><div class="tech-text"><h4>Pixel Streaming</h4><p>ブラウザだけで<br>ハイエンド3D体験を提供</p></div></div>
     </div>
   </div>
 </section>
