@@ -7,687 +7,518 @@
 <meta name="description" content="リアルタイム音声AI × フォトリアル3Dキャラクター。ホテル・商業施設・イベントに、24時間対応のAIコンシェルジュを。">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <style>
-/* ========== RESET & BASE ========== */
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-html { scroll-behavior: smooth; font-size: 16px; }
-body {
-  font-family: 'Noto Sans JP', 'Inter', 'Hiragino Kaku Gothic ProN', sans-serif;
-  background: #0a0014;
-  color: #e8e0f0;
-  overflow-x: hidden;
-  line-height: 1.8;
+/* ===== RESET ===== */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;font-size:16px}
+body{
+  font-family: Verdana, 'Noto Sans JP', 'Hiragino Kaku Gothic ProN', Meiryo, sans-serif;
+  background:#fff; color:#222; line-height:1.9; overflow-x:hidden;
 }
-a { color: inherit; text-decoration: none; }
-img { max-width: 100%; height: auto; display: block; }
+a{color:inherit;text-decoration:none}
+img,video{max-width:100%;height:auto;display:block}
 
-/* ========== CSS VARIABLES ========== */
-:root {
-  --purple-deep: #1a0030;
-  --purple-primary: #2f004b;
-  --purple-mid: #4a1070;
-  --purple-light: #7b2cbf;
-  --purple-glow: #9d4edd;
-  --red-accent: #d80100;
-  --red-warm: #ff3333;
+/* ===== VARIABLES ===== */
+:root{
+  --purple: #2f004b;
+  --purple-light: #4a1a6b;
+  --purple-pale: #f3eef8;
+  --red: #d80100;
+  --red-light: #ff3b3b;
   --gold: #c9a84c;
-  --gold-light: #e8c86e;
   --white: #ffffff;
-  --gray-light: #b0a8c0;
-  --glass-bg: rgba(30, 10, 60, 0.6);
-  --glass-border: rgba(157, 78, 221, 0.2);
+  --bg-gray: #f5f5f5;
+  --bg-dark: #1a1a2e;
+  --text: #333333;
+  --text-light: #666666;
+  --text-white: #ffffff;
+  --border: #e0e0e0;
 }
 
-/* ========== UTILITY ========== */
-.container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
-.container-wide { max-width: 1400px; margin: 0 auto; padding: 0 24px; }
+/* ===== UTILITY ===== */
+.container{max-width:1100px;margin:0 auto;padding:0 24px}
+.container-wide{max-width:1300px;margin:0 auto;padding:0 24px}
 
-/* ========== SCROLL ANIMATIONS ========== */
-.reveal { opacity: 0; transform: translateY(60px); transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
-.reveal.visible { opacity: 1; transform: translateY(0); }
-.reveal-left { opacity: 0; transform: translateX(-80px); transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
-.reveal-left.visible { opacity: 1; transform: translateX(0); }
-.reveal-right { opacity: 0; transform: translateX(80px); transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
-.reveal-right.visible { opacity: 1; transform: translateX(0); }
-.reveal-scale { opacity: 0; transform: scale(0.9); transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
-.reveal-scale.visible { opacity: 1; transform: scale(1); }
-.delay-1 { transition-delay: 0.1s; }
-.delay-2 { transition-delay: 0.2s; }
-.delay-3 { transition-delay: 0.3s; }
-.delay-4 { transition-delay: 0.4s; }
+/* ===== SCROLL ANIMATIONS ===== */
+.reveal{opacity:0;transform:translateY(40px);transition:opacity .7s ease,transform .7s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-left{opacity:0;transform:translateX(-60px);transition:opacity .7s ease,transform .7s ease}
+.reveal-left.visible{opacity:1;transform:translateX(0)}
+.reveal-right{opacity:0;transform:translateX(60px);transition:opacity .7s ease,transform .7s ease}
+.reveal-right.visible{opacity:1;transform:translateX(0)}
+.reveal-scale{opacity:0;transform:scale(.92);transition:opacity .7s ease,transform .7s ease}
+.reveal-scale.visible{opacity:1;transform:scale(1)}
+.d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}.d4{transition-delay:.4s}
 
-/* ========== NAVIGATION ========== */
-.nav {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-  padding: 16px 0;
-  background: transparent;
-  transition: background 0.4s ease, padding 0.4s ease, backdrop-filter 0.4s ease;
+/* ===== NAVIGATION ===== */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  background:rgba(255,255,255,.95);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  transition:box-shadow .3s;
 }
-.nav.scrolled {
-  background: rgba(10, 0, 20, 0.9);
-  backdrop-filter: blur(20px);
-  padding: 10px 0;
-  border-bottom: 1px solid var(--glass-border);
+.nav.scrolled{box-shadow:0 2px 20px rgba(0,0,0,.08)}
+.nav-inner{
+  max-width:1300px;margin:0 auto;padding:0 32px;
+  display:flex;align-items:center;justify-content:space-between;
+  height:64px;
 }
-.nav-inner {
-  max-width: 1400px; margin: 0 auto; padding: 0 32px;
-  display: flex; align-items: center; justify-content: space-between;
+.nav-logo{
+  font-family:Georgia,serif;font-size:1rem;font-weight:700;
+  color:var(--purple);display:flex;align-items:center;gap:10px;
+  letter-spacing:.02em;
 }
-.nav-logo {
-  display: flex; align-items: center; gap: 12px;
-  font-weight: 700; font-size: 1.1rem; letter-spacing: 0.05em;
+.nav-logo .bar{width:3px;height:20px;background:var(--red);border-radius:2px}
+.nav-links{display:flex;gap:28px;align-items:center}
+.nav-links a{
+  font-size:.8rem;font-weight:500;color:var(--text);
+  transition:color .3s;position:relative;letter-spacing:.02em;
 }
-.nav-logo .logo-icon {
-  width: 36px; height: 36px; border-radius: 50%;
-  background: linear-gradient(135deg, var(--purple-light), var(--red-accent));
-  display: flex; align-items: center; justify-content: center;
-  font-size: 1.2rem; font-weight: 900; color: white;
+.nav-links a:hover{color:var(--purple)}
+.nav-cta{
+  padding:8px 24px;border-radius:4px;font-size:.8rem;font-weight:700;
+  background:var(--red);color:white;transition:background .3s,transform .2s;
+  letter-spacing:.05em;
 }
-.nav-links { display: flex; gap: 32px; align-items: center; }
-.nav-links a {
-  font-size: 0.85rem; font-weight: 500; letter-spacing: 0.05em;
-  color: var(--gray-light); transition: color 0.3s;
-  position: relative;
-}
-.nav-links a::after {
-  content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 2px;
-  background: linear-gradient(90deg, var(--purple-glow), var(--red-accent));
-  transition: width 0.3s ease;
-}
-.nav-links a:hover { color: var(--white); }
-.nav-links a:hover::after { width: 100%; }
-.nav-cta {
-  padding: 8px 24px; border-radius: 24px; font-size: 0.85rem; font-weight: 600;
-  background: linear-gradient(135deg, var(--red-accent), #ff4444);
-  color: white; transition: transform 0.3s, box-shadow 0.3s;
-}
-.nav-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(216, 1, 0, 0.4); }
-.nav-cta::after { display: none; }
+.nav-cta:hover{background:#b00000;transform:translateY(-1px)}
+.hamburger{display:none;cursor:pointer;flex-direction:column;gap:5px}
+.hamburger span{width:22px;height:2px;background:var(--text);transition:.3s}
 
-.nav-hamburger { display: none; cursor: pointer; flex-direction: column; gap: 5px; }
-.nav-hamburger span { width: 24px; height: 2px; background: white; transition: 0.3s; }
+/* ===== HERO ===== */
+.hero{
+  position:relative;min-height:100vh;display:flex;align-items:center;
+  overflow:hidden;background:#000;
+}
+.hero-video{
+  position:absolute;top:0;left:0;width:100%;height:100%;
+  object-fit:cover;opacity:.85;
+}
+.hero-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(47,0,75,.55) 0%,rgba(26,26,46,.4) 50%,rgba(0,0,0,.5) 100%);
+}
+.hero-content{
+  position:relative;z-index:2;padding:140px 24px 100px;
+  max-width:1300px;margin:0 auto;width:100%;
+}
+.hero-label{
+  display:inline-block;padding:6px 18px;border-radius:3px;
+  background:rgba(255,255,255,.12);backdrop-filter:blur(8px);
+  font-size:.7rem;font-weight:700;color:#fff;letter-spacing:.15em;
+  margin-bottom:20px;border:1px solid rgba(255,255,255,.2);
+}
+.hero h1{
+  font-size:clamp(2.2rem,5vw,4rem);font-weight:900;line-height:1.25;
+  color:#fff;margin-bottom:20px;
+}
+.hero h1 .accent{color:var(--gold)}
+.hero-sub{
+  font-size:clamp(.95rem,1.8vw,1.2rem);color:rgba(255,255,255,.85);
+  max-width:600px;line-height:1.9;margin-bottom:36px;font-weight:300;
+}
+.hero-btns{display:flex;gap:14px;flex-wrap:wrap}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:14px 36px;border-radius:4px;font-size:.9rem;font-weight:700;
+  transition:all .3s;cursor:pointer;border:none;letter-spacing:.03em;
+}
+.btn-red{background:var(--red);color:#fff}
+.btn-red:hover{background:#b00000;transform:translateY(-2px);box-shadow:0 8px 24px rgba(216,1,0,.3)}
+.btn-white{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.4);backdrop-filter:blur(4px)}
+.btn-white:hover{background:rgba(255,255,255,.25)}
+.btn-purple{background:var(--purple);color:#fff}
+.btn-purple:hover{background:var(--purple-light);transform:translateY(-2px);box-shadow:0 8px 24px rgba(47,0,75,.3)}
+.btn-outline{background:transparent;color:var(--purple);border:2px solid var(--purple)}
+.btn-outline:hover{background:var(--purple);color:#fff}
+.hero-scroll{
+  position:absolute;bottom:32px;left:50%;transform:translateX(-50%);z-index:2;
+  color:rgba(255,255,255,.6);font-size:.7rem;letter-spacing:.15em;
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  animation:heroFloat 2.5s infinite ease-in-out;
+}
+@keyframes heroFloat{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-8px)}}
+.hero-scroll::after{content:'';width:1px;height:32px;background:linear-gradient(to bottom,rgba(255,255,255,.5),transparent)}
 
-/* ========== HERO ========== */
-.hero {
-  position: relative; min-height: 100vh; display: flex; align-items: center; justify-content: center;
-  overflow: hidden;
+/* ===== SECTION COMMON ===== */
+.section{padding:100px 0}
+.section-gray{background:var(--bg-gray)}
+.section-purple{background:var(--purple);color:#fff}
+.section-dark{background:var(--bg-dark);color:#fff}
+.section-header{text-align:center;margin-bottom:64px}
+.section-header .label{
+  font-size:.7rem;font-weight:700;letter-spacing:.2em;color:var(--red);
+  margin-bottom:12px;display:inline-flex;align-items:center;gap:10px;
 }
-.hero-video-bg {
-  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-  overflow: hidden; z-index: 1;
+.section-header .label::before,.section-header .label::after{
+  content:'';width:20px;height:2px;background:var(--red);
 }
-.hero-video-bg iframe {
-  position: absolute; top: 50%; left: 50%;
-  width: 180vw; height: 180vh;
-  min-width: 100%; min-height: 100%;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
+.section-header h2{
+  font-size:clamp(1.6rem,3vw,2.4rem);font-weight:900;line-height:1.4;
+  color:inherit;margin-bottom:14px;
 }
-.hero-overlay {
-  position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2;
-  background: linear-gradient(
-    180deg,
-    rgba(10, 0, 20, 0.4) 0%,
-    rgba(10, 0, 20, 0.2) 40%,
-    rgba(10, 0, 20, 0.5) 70%,
-    rgba(10, 0, 20, 0.95) 100%
-  );
+.section-purple .section-header h2,.section-dark .section-header h2{color:#fff}
+.section-header p{font-size:.95rem;color:var(--text-light);max-width:600px;margin:0 auto}
+.section-purple .section-header p,.section-dark .section-header p{color:rgba(255,255,255,.7)}
+.section-header h2::after{
+  content:'';display:block;width:60px;height:3px;background:var(--red);
+  margin:16px auto 0;border-radius:2px;
 }
-.hero-content {
-  position: relative; z-index: 3; text-align: center;
-  padding: 120px 24px 80px;
-}
-.hero-badge {
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 8px 20px; border-radius: 24px;
-  background: rgba(157, 78, 221, 0.15);
-  border: 1px solid rgba(157, 78, 221, 0.3);
-  font-size: 0.8rem; font-weight: 500; letter-spacing: 0.1em;
-  color: var(--purple-glow); margin-bottom: 24px;
-  backdrop-filter: blur(10px);
-}
-.hero-badge .pulse {
-  width: 8px; height: 8px; border-radius: 50%;
-  background: var(--purple-glow);
-  animation: pulse 2s infinite;
-}
-@keyframes pulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(157, 78, 221, 0.6); }
-  50% { box-shadow: 0 0 0 8px rgba(157, 78, 221, 0); }
-}
-.hero-title {
-  font-size: clamp(2.5rem, 6vw, 5rem); font-weight: 900; line-height: 1.1;
-  margin-bottom: 16px;
-  background: linear-gradient(135deg, #fff 30%, var(--gold-light) 70%);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-.hero-title span.accent {
-  background: linear-gradient(135deg, var(--purple-glow), var(--red-warm));
-  -webkit-background-clip: text; background-clip: text;
-}
-.hero-subtitle {
-  font-size: clamp(1rem, 2vw, 1.35rem); font-weight: 300;
-  color: var(--gray-light); max-width: 700px; margin: 0 auto 40px;
-  line-height: 1.8;
-}
-.hero-buttons { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
-.btn-primary {
-  padding: 16px 40px; border-radius: 50px; font-size: 1rem; font-weight: 600;
-  background: linear-gradient(135deg, var(--red-accent), #ff4444);
-  color: white; border: none; cursor: pointer;
-  transition: transform 0.3s, box-shadow 0.3s;
-  display: inline-flex; align-items: center; gap: 8px;
-}
-.btn-primary:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(216, 1, 0, 0.4); }
-.btn-secondary {
-  padding: 16px 40px; border-radius: 50px; font-size: 1rem; font-weight: 600;
-  background: transparent; color: white;
-  border: 1px solid rgba(255,255,255,0.3); cursor: pointer;
-  transition: all 0.3s;
-  display: inline-flex; align-items: center; gap: 8px;
-}
-.btn-secondary:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.5); }
-.hero-scroll-indicator {
-  position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); z-index: 3;
-  display: flex; flex-direction: column; align-items: center; gap: 8px;
-  color: var(--gray-light); font-size: 0.75rem; letter-spacing: 0.15em;
-  animation: float 3s infinite ease-in-out;
-}
-@keyframes float {
-  0%, 100% { transform: translateX(-50%) translateY(0); }
-  50% { transform: translateX(-50%) translateY(-10px); }
-}
-.hero-scroll-indicator .arrow { width: 1px; height: 40px; background: linear-gradient(to bottom, var(--purple-glow), transparent); }
+.section-purple .section-header h2::after{background:rgba(255,255,255,.4)}
+.section-dark .section-header h2::after{background:var(--red)}
 
-/* ========== INTRO / ABOUT ========== */
-.section-intro {
-  padding: 120px 0;
-  background: linear-gradient(180deg, var(--purple-deep) 0%, #0a0014 100%);
-  position: relative;
+/* ===== ABOUT ===== */
+.about-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;
 }
-.section-intro::before {
-  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
-  background: linear-gradient(90deg, transparent, var(--purple-mid), transparent);
+.about-visual{position:relative;border-radius:8px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.12)}
+.about-visual img{width:100%;transition:transform 6s ease}
+.about-visual:hover img{transform:scale(1.04)}
+.about-text .label{
+  font-size:.7rem;font-weight:700;letter-spacing:.15em;color:var(--red);
+  margin-bottom:12px;display:flex;align-items:center;gap:8px;
 }
-.intro-grid {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;
+.about-text .label::before{content:'';width:24px;height:2px;background:var(--red)}
+.about-text h2{
+  font-size:clamp(1.5rem,2.8vw,2.2rem);font-weight:900;line-height:1.4;
+  color:var(--purple);margin-bottom:20px;
 }
-.intro-visual {
-  position: relative; border-radius: 20px; overflow: hidden;
-  box-shadow: 0 40px 80px rgba(0,0,0,0.5);
+.about-text p{font-size:.92rem;color:var(--text-light);margin-bottom:14px}
+.about-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:32px}
+.stat{
+  text-align:center;padding:16px 8px;border-radius:8px;
+  background:var(--purple-pale);border:1px solid #e4daf0;
 }
-.intro-visual img { width: 100%; transition: transform 8s ease; }
-.intro-visual:hover img { transform: scale(1.05); }
-.intro-visual::after {
-  content: ''; position: absolute; inset: 0;
-  border: 1px solid var(--glass-border); border-radius: 20px;
-  background: linear-gradient(135deg, rgba(157,78,221,0.1) 0%, transparent 50%);
-  pointer-events: none;
-}
-.intro-text .section-label {
-  font-size: 0.75rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase;
-  color: var(--purple-glow); margin-bottom: 16px;
-  display: flex; align-items: center; gap: 12px;
-}
-.intro-text .section-label::before {
-  content: ''; width: 30px; height: 2px;
-  background: linear-gradient(90deg, var(--purple-glow), var(--red-accent));
-}
-.intro-text h2 {
-  font-size: clamp(1.8rem, 3.5vw, 2.8rem); font-weight: 800; line-height: 1.3;
-  margin-bottom: 24px; color: var(--white);
-}
-.intro-text h2 em { font-style: normal; color: var(--gold-light); }
-.intro-text p { font-size: 1rem; color: var(--gray-light); margin-bottom: 16px; }
-.intro-stats {
-  display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 40px;
-}
-.stat-item {
-  text-align: center; padding: 20px;
-  background: var(--glass-bg); border: 1px solid var(--glass-border);
-  border-radius: 16px; backdrop-filter: blur(10px);
-}
-.stat-number {
-  font-size: 2rem; font-weight: 900; line-height: 1;
-  background: linear-gradient(135deg, var(--gold-light), var(--red-warm));
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-}
-.stat-label { font-size: 0.75rem; color: var(--gray-light); margin-top: 8px; }
+.stat-num{font-size:1.6rem;font-weight:900;color:var(--purple);line-height:1}
+.stat-lbl{font-size:.7rem;color:var(--text-light);margin-top:6px}
 
-/* ========== VIDEO SHOWCASE ========== */
-.section-video {
-  padding: 100px 0;
-  background: #0a0014;
-  position: relative;
+/* ===== DEMO VIDEO ===== */
+.video-wrap{
+  position:relative;max-width:900px;margin:0 auto;border-radius:8px;overflow:hidden;
+  box-shadow:0 20px 60px rgba(0,0,0,.15);
 }
-.video-showcase {
-  position: relative; border-radius: 24px; overflow: hidden;
-  box-shadow: 0 0 100px rgba(157, 78, 221, 0.15);
-  aspect-ratio: 16 / 9; max-width: 1000px; margin: 0 auto;
+.video-wrap::before{
+  content:'';position:absolute;inset:-3px;border-radius:11px;z-index:-1;
+  background:linear-gradient(135deg,var(--purple),var(--red));
 }
-.video-showcase iframe { width: 100%; height: 100%; border: none; }
-.video-showcase::before {
-  content: ''; position: absolute; inset: -2px; border-radius: 26px; z-index: -1;
-  background: linear-gradient(135deg, var(--purple-glow), var(--red-accent), var(--gold));
-  opacity: 0.5;
-}
-.video-title {
-  text-align: center; margin-bottom: 48px;
-}
-.video-title h2 {
-  font-size: clamp(1.5rem, 3vw, 2.5rem); font-weight: 800; color: var(--white);
-}
-.video-title p { color: var(--gray-light); margin-top: 12px; font-size: 1rem; }
+.video-wrap iframe{width:100%;aspect-ratio:16/9;border:none;display:block}
 
-/* ========== FEATURES ========== */
-.section-features {
-  padding: 120px 0;
-  background: linear-gradient(180deg, #0a0014 0%, var(--purple-deep) 50%, #0a0014 100%);
-  position: relative;
+/* ===== FEATURES ===== */
+.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.feat-card{
+  background:#fff;border:1px solid var(--border);border-radius:8px;
+  padding:36px 28px;transition:transform .3s,box-shadow .3s,border-color .3s;
+  position:relative;overflow:hidden;
 }
-.section-header {
-  text-align: center; margin-bottom: 72px;
+.feat-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:var(--red);transform:scaleX(0);transform-origin:left;transition:transform .4s;
 }
-.section-header .section-label {
-  font-size: 0.75rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase;
-  color: var(--purple-glow); margin-bottom: 16px;
-  display: inline-flex; align-items: center; gap: 12px;
+.feat-card:hover{transform:translateY(-6px);box-shadow:0 16px 40px rgba(0,0,0,.1);border-color:var(--purple)}
+.feat-card:hover::before{transform:scaleX(1)}
+.feat-icon{
+  width:48px;height:48px;border-radius:8px;margin-bottom:20px;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--purple-pale);font-size:1.4rem;
 }
-.section-header h2 {
-  font-size: clamp(2rem, 4vw, 3rem); font-weight: 900; color: var(--white);
-  line-height: 1.3; margin-bottom: 16px;
-}
-.section-header p { color: var(--gray-light); font-size: 1.05rem; max-width: 600px; margin: 0 auto; }
+.feat-card h3{font-size:1.05rem;font-weight:700;color:var(--purple);margin-bottom:10px}
+.feat-card p{font-size:.85rem;color:var(--text-light);line-height:1.8}
 
-.features-grid {
-  display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+/* ===== METAHUMAN SHOWCASE ===== */
+.metahuman-section{
+  padding:100px 0;background:var(--bg-dark);position:relative;overflow:hidden;
 }
-.feature-card {
-  background: var(--glass-bg); border: 1px solid var(--glass-border);
-  border-radius: 20px; padding: 40px 32px;
-  backdrop-filter: blur(10px);
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s, border-color 0.4s;
-  position: relative; overflow: hidden;
+.metahuman-header{text-align:center;margin-bottom:60px;color:#fff}
+.metahuman-header .label{
+  font-size:.7rem;font-weight:700;letter-spacing:.2em;color:var(--red);
+  margin-bottom:12px;display:inline-flex;align-items:center;gap:10px;
 }
-.feature-card::before {
-  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
-  background: linear-gradient(90deg, var(--purple-glow), var(--red-accent));
-  opacity: 0; transition: opacity 0.4s;
+.metahuman-header h2{
+  font-size:clamp(1.6rem,3vw,2.4rem);font-weight:900;color:#fff;margin-bottom:14px;line-height:1.4;
 }
-.feature-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 24px 48px rgba(0,0,0,0.4);
-  border-color: rgba(157, 78, 221, 0.4);
+.metahuman-header h2::after{
+  content:'';display:block;width:60px;height:3px;background:var(--red);margin:16px auto 0;
 }
-.feature-card:hover::before { opacity: 1; }
-.feature-icon {
-  width: 56px; height: 56px; border-radius: 16px; margin-bottom: 24px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 1.5rem;
-  background: linear-gradient(135deg, rgba(157, 78, 221, 0.2), rgba(216, 1, 0, 0.1));
-  border: 1px solid rgba(157, 78, 221, 0.2);
+.metahuman-header p{font-size:.95rem;color:rgba(255,255,255,.6);max-width:600px;margin:0 auto}
+.metahuman-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:1100px;margin:0 auto;padding:0 24px;
 }
-.feature-card h3 { font-size: 1.15rem; font-weight: 700; margin-bottom: 12px; color: var(--white); }
-.feature-card p { font-size: 0.9rem; color: var(--gray-light); line-height: 1.7; }
-
-/* ========== USE CASES ========== */
-.section-usecases {
-  padding: 120px 0;
-  background: #0a0014;
+.mh-video-card{
+  position:relative;border-radius:12px;overflow:hidden;
+  box-shadow:0 12px 40px rgba(0,0,0,.4);aspect-ratio:16/9;
 }
-.usecase-item {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;
-  margin-bottom: 120px;
+.mh-video-card video{width:100%;height:100%;object-fit:cover}
+.mh-video-card .mh-label{
+  position:absolute;bottom:16px;left:16px;padding:6px 14px;
+  background:rgba(0,0,0,.6);backdrop-filter:blur(8px);
+  border-radius:4px;font-size:.75rem;font-weight:600;color:#fff;
+  letter-spacing:.08em;border:1px solid rgba(255,255,255,.15);
 }
-.usecase-item:last-child { margin-bottom: 0; }
-.usecase-item.reverse { direction: rtl; }
-.usecase-item.reverse > * { direction: ltr; }
-.usecase-visual {
-  position: relative; border-radius: 20px; overflow: hidden;
-  box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+.mh-video-card.large{grid-column:1/3;aspect-ratio:21/9}
+.mh-image-card{
+  position:relative;border-radius:12px;overflow:hidden;
+  box-shadow:0 12px 40px rgba(0,0,0,.4);
 }
-.usecase-visual img { width: 100%; transition: transform 6s ease; }
-.usecase-visual:hover img { transform: scale(1.08); }
-.usecase-visual .usecase-tag {
-  position: absolute; top: 20px; left: 20px; padding: 8px 16px;
-  background: rgba(10, 0, 20, 0.8); backdrop-filter: blur(10px);
-  border: 1px solid var(--glass-border); border-radius: 8px;
-  font-size: 0.75rem; font-weight: 600; color: var(--purple-glow);
-  letter-spacing: 0.1em;
-}
-.usecase-content h3 {
-  font-size: clamp(1.5rem, 2.5vw, 2rem); font-weight: 800; margin-bottom: 20px;
-  color: var(--white); line-height: 1.4;
-}
-.usecase-content p { color: var(--gray-light); margin-bottom: 16px; font-size: 0.95rem; }
-.usecase-features-list {
-  list-style: none; margin-top: 24px;
-}
-.usecase-features-list li {
-  padding: 10px 0; font-size: 0.9rem; color: var(--gray-light);
-  display: flex; align-items: flex-start; gap: 12px;
-  border-bottom: 1px solid rgba(157, 78, 221, 0.1);
-}
-.usecase-features-list li:last-child { border: none; }
-.usecase-features-list .check {
-  flex-shrink: 0; width: 20px; height: 20px; border-radius: 50%; margin-top: 2px;
-  background: linear-gradient(135deg, var(--purple-light), var(--red-accent));
-  display: flex; align-items: center; justify-content: center;
-  font-size: 0.65rem; color: white;
+.mh-image-card img{width:100%;height:100%;object-fit:cover;transition:transform 6s ease}
+.mh-image-card:hover img{transform:scale(1.05)}
+.mh-image-card .mh-label{
+  position:absolute;bottom:16px;left:16px;padding:6px 14px;
+  background:rgba(0,0,0,.6);backdrop-filter:blur(8px);
+  border-radius:4px;font-size:.75rem;font-weight:600;color:#fff;
+  letter-spacing:.08em;border:1px solid rgba(255,255,255,.15);
 }
 
-/* ========== TECHNOLOGY ========== */
-.section-tech {
-  padding: 120px 0;
-  background: linear-gradient(180deg, #0a0014 0%, var(--purple-deep) 100%);
-  position: relative;
+/* ===== USE CASES ===== */
+.uc-item{
+  display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;
+  margin-bottom:80px;
 }
-.tech-stack {
-  display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;
-  margin-top: 60px;
+.uc-item:last-child{margin-bottom:0}
+.uc-item.reverse{direction:rtl}
+.uc-item.reverse>*{direction:ltr}
+.uc-visual{position:relative;border-radius:8px;overflow:hidden;box-shadow:0 16px 48px rgba(0,0,0,.1)}
+.uc-visual img{width:100%;transition:transform 5s ease}
+.uc-visual:hover img{transform:scale(1.06)}
+.uc-tag{
+  position:absolute;top:16px;left:16px;padding:6px 14px;
+  background:var(--purple);color:#fff;border-radius:4px;
+  font-size:.7rem;font-weight:700;letter-spacing:.1em;
 }
-.tech-item {
-  text-align: center; padding: 32px 20px;
-  background: var(--glass-bg); border: 1px solid var(--glass-border);
-  border-radius: 16px; backdrop-filter: blur(10px);
-  transition: transform 0.3s, border-color 0.3s;
+.uc-content h3{
+  font-size:clamp(1.3rem,2.2vw,1.7rem);font-weight:900;color:var(--purple);
+  margin-bottom:16px;line-height:1.4;
+  border-left:3px solid var(--red);padding-left:16px;
 }
-.tech-item:hover { transform: translateY(-4px); border-color: var(--purple-glow); }
-.tech-item .tech-icon { font-size: 2.5rem; margin-bottom: 16px; }
-.tech-item h4 { font-size: 1rem; font-weight: 700; color: var(--white); margin-bottom: 8px; }
-.tech-item p { font-size: 0.8rem; color: var(--gray-light); }
-
-.tech-arch {
-  margin-top: 80px; padding: 48px;
-  background: var(--glass-bg); border: 1px solid var(--glass-border);
-  border-radius: 24px; backdrop-filter: blur(10px);
+.uc-content p{font-size:.9rem;color:var(--text-light);margin-bottom:14px}
+.uc-list{list-style:none}
+.uc-list li{
+  padding:8px 0;font-size:.85rem;color:var(--text-light);
+  display:flex;align-items:flex-start;gap:10px;
+  border-bottom:1px solid var(--border);
 }
-.tech-arch h3 {
-  font-size: 1.4rem; font-weight: 700; color: var(--white); margin-bottom: 32px; text-align: center;
-}
-.arch-flow {
-  display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap;
-}
-.arch-node {
-  padding: 16px 24px; border-radius: 12px; text-align: center;
-  font-size: 0.85rem; font-weight: 600;
-  background: rgba(157, 78, 221, 0.15); border: 1px solid rgba(157, 78, 221, 0.3);
-  color: var(--white); min-width: 120px;
-}
-.arch-node.highlight {
-  background: linear-gradient(135deg, rgba(216, 1, 0, 0.2), rgba(157, 78, 221, 0.2));
-  border-color: var(--red-accent);
-}
-.arch-arrow { color: var(--purple-glow); font-size: 1.2rem; }
-
-/* ========== FLOW (導入フロー) ========== */
-.section-flow {
-  padding: 120px 0;
-  background: #0a0014;
-}
-.flow-timeline {
-  position: relative; max-width: 800px; margin: 0 auto;
-}
-.flow-timeline::before {
-  content: ''; position: absolute; left: 32px; top: 0; bottom: 0; width: 2px;
-  background: linear-gradient(to bottom, var(--purple-glow), var(--red-accent), var(--gold));
-}
-.flow-step {
-  position: relative; padding-left: 80px; margin-bottom: 48px;
-  transition: transform 0.3s;
-}
-.flow-step:hover { transform: translateX(8px); }
-.flow-step:last-child { margin-bottom: 0; }
-.flow-number {
-  position: absolute; left: 12px; top: 0;
-  width: 42px; height: 42px; border-radius: 50%;
-  background: linear-gradient(135deg, var(--purple-light), var(--red-accent));
-  display: flex; align-items: center; justify-content: center;
-  font-size: 1rem; font-weight: 900; color: white; z-index: 1;
-  box-shadow: 0 0 20px rgba(157, 78, 221, 0.4);
-}
-.flow-step h4 {
-  font-size: 1.2rem; font-weight: 700; color: var(--white); margin-bottom: 8px;
-}
-.flow-step p { font-size: 0.9rem; color: var(--gray-light); }
-.flow-step .flow-duration {
-  display: inline-block; margin-top: 8px; padding: 4px 12px; border-radius: 12px;
-  background: rgba(201, 168, 76, 0.15); border: 1px solid rgba(201, 168, 76, 0.3);
-  font-size: 0.75rem; font-weight: 600; color: var(--gold-light);
+.uc-list li:last-child{border:none}
+.uc-check{
+  flex-shrink:0;width:18px;height:18px;border-radius:50%;margin-top:3px;
+  background:var(--purple);display:flex;align-items:center;justify-content:center;
+  font-size:.6rem;color:#fff;
 }
 
-/* ========== PRICING / PLAN ========== */
-.section-plans {
-  padding: 120px 0;
-  background: linear-gradient(180deg, #0a0014 0%, var(--purple-deep) 100%);
+/* ===== TECHNOLOGY ===== */
+.tech-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-bottom:60px}
+.tech-card{
+  text-align:center;padding:32px 16px;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
+  border-radius:8px;transition:transform .3s,border-color .3s;
 }
-.plans-grid {
-  display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+.tech-card:hover{transform:translateY(-4px);border-color:var(--red)}
+.tech-card .icon{font-size:2.2rem;margin-bottom:14px}
+.tech-card h4{font-size:.9rem;font-weight:700;color:#fff;margin-bottom:8px}
+.tech-card p{font-size:.75rem;color:rgba(255,255,255,.5);line-height:1.6}
+.arch-box{
+  padding:40px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
+  border-radius:12px;
 }
-.plan-card {
-  background: var(--glass-bg); border: 1px solid var(--glass-border);
-  border-radius: 24px; padding: 48px 32px; text-align: center;
-  backdrop-filter: blur(10px);
-  transition: transform 0.4s, box-shadow 0.4s;
-  position: relative;
+.arch-box h3{font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:28px;text-align:center}
+.arch-flow{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap}
+.arch-node{
+  padding:12px 18px;border-radius:6px;text-align:center;
+  font-size:.78rem;font-weight:600;color:#fff;min-width:100px;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);
 }
-.plan-card.featured {
-  border-color: var(--gold);
-  box-shadow: 0 0 60px rgba(201, 168, 76, 0.15);
-}
-.plan-card.featured::before {
-  content: 'RECOMMENDED'; position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
-  padding: 4px 20px; border-radius: 12px;
-  background: linear-gradient(135deg, var(--gold), var(--gold-light));
-  font-size: 0.7rem; font-weight: 800; color: #1a0030; letter-spacing: 0.1em;
-}
-.plan-card:hover { transform: translateY(-8px); box-shadow: 0 24px 48px rgba(0,0,0,0.4); }
-.plan-card h3 { font-size: 1.3rem; font-weight: 700; color: var(--white); margin-bottom: 16px; }
-.plan-card .plan-desc { font-size: 0.85rem; color: var(--gray-light); margin-bottom: 32px; }
-.plan-card .plan-features { list-style: none; text-align: left; margin-bottom: 32px; }
-.plan-card .plan-features li {
-  padding: 8px 0; font-size: 0.85rem; color: var(--gray-light);
-  display: flex; align-items: center; gap: 10px;
-  border-bottom: 1px solid rgba(255,255,255,0.05);
-}
-.plan-card .plan-features li .icon { color: var(--purple-glow); }
+.arch-node.hl{background:rgba(216,1,0,.2);border-color:var(--red)}
+.arch-arrow{color:rgba(255,255,255,.3);font-size:1rem}
 
-/* ========== CTA ========== */
-.section-cta {
-  padding: 120px 0;
-  background: linear-gradient(135deg, var(--purple-deep) 0%, #1a0030 50%, #0a0014 100%);
-  position: relative; overflow: hidden; text-align: center;
+/* ===== FLOW ===== */
+.flow-timeline{position:relative;max-width:750px;margin:0 auto}
+.flow-timeline::before{
+  content:'';position:absolute;left:28px;top:0;bottom:0;width:2px;
+  background:linear-gradient(to bottom,var(--purple),var(--red));
 }
-.section-cta::before {
-  content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-  width: 600px; height: 600px; border-radius: 50%;
-  background: radial-gradient(circle, rgba(157, 78, 221, 0.1) 0%, transparent 70%);
+.flow-step{position:relative;padding-left:72px;margin-bottom:40px;transition:transform .3s}
+.flow-step:hover{transform:translateX(6px)}
+.flow-step:last-child{margin-bottom:0}
+.flow-num{
+  position:absolute;left:10px;top:0;
+  width:38px;height:38px;border-radius:50%;
+  background:var(--purple);display:flex;align-items:center;justify-content:center;
+  font-size:.9rem;font-weight:900;color:#fff;z-index:1;
+  box-shadow:0 4px 12px rgba(47,0,75,.3);
 }
-.cta-content { position: relative; z-index: 1; }
-.cta-content h2 {
-  font-size: clamp(2rem, 4vw, 3rem); font-weight: 900; color: var(--white);
-  margin-bottom: 20px; line-height: 1.3;
+.flow-step h4{font-size:1.1rem;font-weight:700;color:var(--purple);margin-bottom:6px}
+.flow-step p{font-size:.85rem;color:var(--text-light)}
+.flow-dur{
+  display:inline-block;margin-top:6px;padding:3px 10px;border-radius:3px;
+  background:var(--purple-pale);font-size:.7rem;font-weight:600;color:var(--purple);
 }
-.cta-content p { color: var(--gray-light); font-size: 1.1rem; margin-bottom: 40px; max-width: 600px; margin-left: auto; margin-right: auto; }
-.cta-buttons { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+.flow-highlight{
+  text-align:center;margin-top:48px;padding:28px;
+  background:var(--purple-pale);border:1px solid #e4daf0;border-radius:8px;
+}
+.flow-highlight p:first-child{font-size:1.05rem;font-weight:700;color:var(--purple)}
+.flow-highlight p:last-child{font-size:.85rem;color:var(--text-light);margin-top:4px}
 
-/* ========== FOOTER ========== */
-.footer {
-  padding: 60px 0 30px;
-  background: #050008;
-  border-top: 1px solid var(--glass-border);
+/* ===== PLANS ===== */
+.plans-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.plan-card{
+  background:#fff;border:1px solid var(--border);border-radius:8px;
+  padding:40px 28px;text-align:center;transition:transform .3s,box-shadow .3s;
+  position:relative;
 }
-.footer-content {
-  display: flex; justify-content: space-between; align-items: center;
-  padding-bottom: 30px; border-bottom: 1px solid rgba(255,255,255,0.05);
-  margin-bottom: 30px;
+.plan-card.featured{border-color:var(--red);box-shadow:0 8px 32px rgba(216,1,0,.1)}
+.plan-card.featured::before{
+  content:'おすすめ';position:absolute;top:-12px;left:50%;transform:translateX(-50%);
+  padding:4px 16px;border-radius:3px;background:var(--red);
+  font-size:.65rem;font-weight:700;color:#fff;letter-spacing:.1em;
 }
-.footer-brand h3 { font-size: 1.2rem; font-weight: 700; color: var(--white); margin-bottom: 8px; }
-.footer-brand p { font-size: 0.85rem; color: var(--gray-light); }
-.footer-links { display: flex; gap: 32px; }
-.footer-links a { font-size: 0.85rem; color: var(--gray-light); transition: color 0.3s; }
-.footer-links a:hover { color: var(--purple-glow); }
-.footer-bottom { text-align: center; font-size: 0.75rem; color: rgba(255,255,255,0.3); }
+.plan-card:hover{transform:translateY(-6px);box-shadow:0 16px 40px rgba(0,0,0,.1)}
+.plan-card h3{font-size:1.2rem;font-weight:900;color:var(--purple);margin-bottom:12px}
+.plan-card .plan-desc{font-size:.8rem;color:var(--text-light);margin-bottom:28px}
+.plan-card .plan-list{list-style:none;text-align:left;margin-bottom:28px}
+.plan-card .plan-list li{
+  padding:7px 0;font-size:.8rem;color:var(--text-light);
+  display:flex;align-items:center;gap:8px;
+  border-bottom:1px solid var(--border);
+}
+.plan-card .plan-list li:last-child{border:none}
+.plan-card .plan-list .dot{color:var(--red);font-weight:700}
 
-/* ========== SAKURA PARALLAX IMAGES ========== */
-.parallax-section {
-  position: relative; height: 60vh; overflow: hidden;
-  display: flex; align-items: center; justify-content: center;
+/* ===== CTA ===== */
+.section-cta{
+  padding:100px 0;background:var(--purple);text-align:center;position:relative;overflow:hidden;
 }
-.parallax-bg {
-  position: absolute; top: -20%; left: 0; width: 100%; height: 140%;
-  object-fit: cover;
-  will-change: transform;
+.section-cta::before{
+  content:'';position:absolute;top:-50%;right:-20%;width:600px;height:600px;
+  border-radius:50%;background:rgba(216,1,0,.15);
 }
-.parallax-overlay {
-  position: absolute; inset: 0;
-  background: linear-gradient(180deg, rgba(10,0,20,0.7) 0%, rgba(10,0,20,0.3) 40%, rgba(10,0,20,0.7) 100%);
-}
-.parallax-text {
-  position: relative; z-index: 2; text-align: center; padding: 0 24px;
-}
-.parallax-text h2 {
-  font-size: clamp(1.8rem, 4vw, 3.2rem); font-weight: 900; color: white;
-  text-shadow: 0 4px 20px rgba(0,0,0,0.5);
-  margin-bottom: 16px; line-height: 1.3;
-}
-.parallax-text p {
-  font-size: 1.1rem; color: rgba(255,255,255,0.8); max-width: 600px; margin: 0 auto;
-}
+.cta-inner{position:relative;z-index:1}
+.cta-inner h2{font-size:clamp(1.6rem,3.5vw,2.5rem);font-weight:900;color:#fff;margin-bottom:16px;line-height:1.4}
+.cta-inner p{font-size:1rem;color:rgba(255,255,255,.7);margin-bottom:36px;max-width:550px;margin-left:auto;margin-right:auto}
+.cta-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
 
-/* ========== MOBILE RESPONSIVE ========== */
-@media (max-width: 1024px) {
-  .features-grid { grid-template-columns: repeat(2, 1fr); }
-  .tech-stack { grid-template-columns: repeat(2, 1fr); }
-  .plans-grid { grid-template-columns: 1fr; max-width: 480px; margin: 0 auto; }
+/* ===== FOOTER ===== */
+.footer{
+  padding:48px 0 24px;background:#1a1a1a;color:rgba(255,255,255,.5);
+  border-top:3px solid var(--red);
 }
-@media (max-width: 768px) {
-  .nav-links { display: none; }
-  .nav-hamburger { display: flex; }
-  .nav-links.open {
-    display: flex; flex-direction: column;
-    position: absolute; top: 100%; left: 0; right: 0;
-    background: rgba(10, 0, 20, 0.95); backdrop-filter: blur(20px);
-    padding: 24px; gap: 20px;
-    border-bottom: 1px solid var(--glass-border);
+.footer-inner{
+  display:flex;justify-content:space-between;align-items:center;
+  padding-bottom:24px;border-bottom:1px solid rgba(255,255,255,.08);margin-bottom:24px;
+}
+.footer-brand h3{font-size:1rem;font-weight:700;color:#fff;margin-bottom:4px}
+.footer-brand p{font-size:.8rem}
+.footer-links{display:flex;gap:24px}
+.footer-links a{font-size:.8rem;transition:color .3s}
+.footer-links a:hover{color:var(--red)}
+.footer-copy{text-align:center;font-size:.7rem;color:rgba(255,255,255,.3)}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:1024px){
+  .features-grid{grid-template-columns:repeat(2,1fr)}
+  .tech-grid{grid-template-columns:repeat(2,1fr)}
+  .plans-grid{grid-template-columns:1fr;max-width:420px;margin:0 auto}
+  .metahuman-grid{grid-template-columns:1fr}
+  .mh-video-card.large{grid-column:auto;aspect-ratio:16/9}
+}
+@media(max-width:768px){
+  .nav-links{display:none}
+  .hamburger{display:flex}
+  .nav-links.open{
+    display:flex;flex-direction:column;position:absolute;top:100%;left:0;right:0;
+    background:#fff;padding:20px 32px;gap:16px;border-bottom:1px solid var(--border);
+    box-shadow:0 8px 24px rgba(0,0,0,.08);
   }
-  .intro-grid, .usecase-item, .usecase-item.reverse { grid-template-columns: 1fr; gap: 40px; }
-  .usecase-item.reverse { direction: ltr; }
-  .features-grid { grid-template-columns: 1fr; }
-  .tech-stack { grid-template-columns: 1fr; }
-  .intro-stats { grid-template-columns: repeat(3, 1fr); gap: 12px; }
-  .stat-number { font-size: 1.5rem; }
-  .arch-flow { flex-direction: column; }
-  .arch-arrow { transform: rotate(90deg); }
-  .hero-video-bg iframe { width: 300vw; height: 300vh; }
-  .parallax-section { height: 50vh; }
-  .footer-content { flex-direction: column; gap: 24px; text-align: center; }
-  .footer-links { flex-wrap: wrap; justify-content: center; }
+  .about-grid,.uc-item,.uc-item.reverse{grid-template-columns:1fr;gap:32px}
+  .uc-item.reverse{direction:ltr}
+  .features-grid,.tech-grid{grid-template-columns:1fr}
+  .about-stats{grid-template-columns:repeat(3,1fr);gap:8px}
+  .arch-flow{flex-direction:column}
+  .arch-arrow{transform:rotate(90deg)}
+  .footer-inner{flex-direction:column;gap:20px;text-align:center}
+  .footer-links{flex-wrap:wrap;justify-content:center}
+  .hero-content{padding:120px 20px 80px}
 }
 </style>
 </head>
 <body>
 
-<!-- ========== NAVIGATION ========== -->
+<!-- NAV -->
 <nav class="nav" id="nav">
   <div class="nav-inner">
-    <a href="#" class="nav-logo">
-      <div class="logo-icon">S</div>
-      AI Concierge SAKURA
-    </a>
+    <a href="#" class="nav-logo"><span class="bar"></span>AI Concierge SAKURA</a>
     <div class="nav-links" id="navLinks">
       <a href="#about">SAKURAとは</a>
       <a href="#demo">デモ動画</a>
       <a href="#features">機能</a>
+      <a href="#metahuman">MetaHuman</a>
       <a href="#usecases">活用事例</a>
       <a href="#technology">技術</a>
       <a href="#flow">導入の流れ</a>
-      <a href="#plans">プラン</a>
       <a href="#contact" class="nav-cta">お問い合わせ</a>
     </div>
-    <div class="nav-hamburger" id="hamburger" onclick="document.getElementById('navLinks').classList.toggle('open')">
+    <div class="hamburger" onclick="document.getElementById('navLinks').classList.toggle('open')">
       <span></span><span></span><span></span>
     </div>
   </div>
 </nav>
 
-<!-- ========== HERO ========== -->
+<!-- HERO -->
 <section class="hero" id="top">
-  <div class="hero-video-bg">
-    <iframe src="https://www.youtube.com/embed/jPRWTZCZ6GI?autoplay=1&mute=1&loop=1&playlist=jPRWTZCZ6GI&controls=0&showinfo=0&modestbranding=1&rel=0&playsinline=1&enablejsapi=1"
-      allow="autoplay; encrypted-media" allowfullscreen></iframe>
-  </div>
+  <video class="hero-video" autoplay muted loop playsinline>
+    <source src="assets/videos/Sakura_Body_1920.mp4" type="video/mp4">
+  </video>
   <div class="hero-overlay"></div>
   <div class="hero-content">
-    <div class="hero-badge reveal"><span class="pulse"></span>NEXT-GENERATION AI CONCIERGE</div>
-    <h1 class="hero-title reveal delay-1">
-      会話が、<span class="accent">体験</span>になる。
-    </h1>
-    <p class="hero-subtitle reveal delay-2">
-      フォトリアルな3DキャラクターとリアルタイムAI音声会話。<br>
-      ホテル・商業施設・イベントの接客を、次のステージへ。
+    <div class="hero-label reveal">NEXT-GENERATION AI CONCIERGE</div>
+    <h1 class="reveal d1">会話が、<span class="accent">体験</span>になる。</h1>
+    <p class="hero-sub reveal d2">
+      フォトリアルな3Dキャラクターが、リアルタイムの音声AIで<br>
+      お客様をおもてなし。ホテル・商業施設・イベントの接客を変える。
     </p>
-    <div class="hero-buttons reveal delay-3">
-      <a href="#demo" class="btn-primary">▶ デモを見る</a>
-      <a href="#contact" class="btn-secondary">お問い合わせ</a>
+    <div class="hero-btns reveal d3">
+      <a href="#demo" class="btn btn-red">▶ デモを見る</a>
+      <a href="#contact" class="btn btn-white">お問い合わせ</a>
     </div>
   </div>
-  <div class="hero-scroll-indicator">
-    SCROLL
-    <div class="arrow"></div>
-  </div>
+  <div class="hero-scroll">SCROLL</div>
 </section>
 
-<!-- ========== ABOUT ========== -->
-<section class="section-intro" id="about">
+<!-- ABOUT -->
+<section class="section" id="about">
   <div class="container-wide">
-    <div class="intro-grid">
-      <div class="intro-visual reveal-left">
-        <img src="assets/images/ai_concierge_visual.png" alt="AI Concierge SAKURA - フロントビュー" loading="lazy">
+    <div class="about-grid">
+      <div class="about-visual reveal-left">
+        <img src="assets/images/ai_concierge_visual.png" alt="AI Concierge SAKURA" loading="lazy">
       </div>
-      <div class="intro-text reveal-right">
-        <div class="section-label">ABOUT SAKURA</div>
-        <h2>まるで人と話しているような、<br><em>AIコンシェルジュ</em></h2>
+      <div class="about-text reveal-right">
+        <div class="label">ABOUT SAKURA</div>
+        <h2>まるで人と話しているような<br>AIコンシェルジュ</h2>
         <p>
-          AI Concierge SAKURAは、Unreal Engine 5で描かれるフォトリアルなMetaHumanキャラクターと、
-          Google Gemini・Amazon Nova Sonic 2・OpenAIの最先端AIを組み合わせた、次世代の対話型AIコンシェルジュです。
+          AI Concierge SAKURAは、Unreal Engine 5のMetaHuman技術で描かれるフォトリアルなキャラクターと、
+          Google Gemini・Amazon Nova Sonic 2・OpenAIの最先端AIを統合した、次世代の対話型AIコンシェルジュです。
         </p>
         <p>
-          お客様はブラウザを開くだけ。マイクに話しかければ、SAKURAがリアルタイムで音声応答。
-          表情も口の動きも自然に連動し、まるで対面で接客を受けているかのような体験を提供します。
+          お客様はブラウザを開いてマイクに話しかけるだけ。SAKURAがリアルタイムで音声応答し、
+          表情も口元も自然に連動。まるで対面の接客を受けているような体験をお届けします。
         </p>
-        <div class="intro-stats">
-          <div class="stat-item reveal delay-1">
-            <div class="stat-number">24/7</div>
-            <div class="stat-label">対応時間</div>
-          </div>
-          <div class="stat-item reveal delay-2">
-            <div class="stat-number">多言語</div>
-            <div class="stat-label">自動対応</div>
-          </div>
-          <div class="stat-item reveal delay-3">
-            <div class="stat-number">0秒</div>
-            <div class="stat-label">待ち時間</div>
-          </div>
+        <div class="about-stats">
+          <div class="stat reveal d1"><div class="stat-num">24/7</div><div class="stat-lbl">対応時間</div></div>
+          <div class="stat reveal d2"><div class="stat-num">多言語</div><div class="stat-lbl">自動対応</div></div>
+          <div class="stat reveal d3"><div class="stat-num">0秒</div><div class="stat-lbl">待ち時間</div></div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ========== DEMO VIDEO ========== -->
-<section class="section-video" id="demo">
+<!-- DEMO VIDEO -->
+<section class="section section-gray" id="demo">
   <div class="container">
-    <div class="video-title reveal">
-      <div class="section-label" style="justify-content:center; font-size:0.75rem; font-weight:700; letter-spacing:0.2em; color:var(--purple-glow); margin-bottom:16px; display:flex; align-items:center; gap:12px;">
-        DEMO MOVIE
-      </div>
-      <h2>SAKURAが案内する世界をご覧ください</h2>
+    <div class="section-header reveal">
+      <div class="label">DEMO MOVIE</div>
+      <h2>SAKURAが案内する世界</h2>
       <p>実際のAI Concierge SAKURAによるプロモーション映像</p>
     </div>
-    <div class="video-showcase reveal-scale delay-1">
+    <div class="video-wrap reveal-scale d1">
       <iframe src="https://www.youtube.com/embed/jPRWTZCZ6GI?rel=0&modestbranding=1"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         allowfullscreen loading="lazy"></iframe>
@@ -695,51 +526,42 @@ img { max-width: 100%; height: auto; display: block; }
   </div>
 </section>
 
-<!-- ========== PARALLAX ========== -->
-<div class="parallax-section">
-  <img src="assets/images/sakura_wide.png" alt="" class="parallax-bg" loading="lazy">
-  <div class="parallax-overlay"></div>
-  <div class="parallax-text">
-    <h2 class="reveal">人の温もりを持つAIで<br>おもてなしの未来を創る</h2>
-  </div>
-</div>
-
-<!-- ========== FEATURES ========== -->
-<section class="section-features" id="features">
+<!-- FEATURES -->
+<section class="section" id="features">
   <div class="container-wide">
     <div class="section-header reveal">
-      <div class="section-label">FEATURES</div>
+      <div class="label">FEATURES</div>
       <h2>SAKURAができること</h2>
       <p>最先端のAI技術と3Dグラフィックスが生み出す、かつてない接客体験</p>
     </div>
     <div class="features-grid">
-      <div class="feature-card reveal delay-1">
-        <div class="feature-icon">🎙️</div>
+      <div class="feat-card reveal d1">
+        <div class="feat-icon">🎙️</div>
         <h3>リアルタイム音声会話</h3>
-        <p>お客様がマイクに話しかけるだけで、自然な日本語・多言語でリアルタイムに応答。テキスト入力は不要です。</p>
+        <p>マイクに話しかけるだけで、自然な日本語・多言語でリアルタイムに応答。テキスト入力は不要です。</p>
       </div>
-      <div class="feature-card reveal delay-2">
-        <div class="feature-icon">👤</div>
+      <div class="feat-card reveal d2">
+        <div class="feat-icon">👤</div>
         <h3>フォトリアルなキャラクター</h3>
-        <p>Unreal Engine 5 MetaHuman技術により、実写と見紛うほどリアルな3Dキャラクターが接客します。</p>
+        <p>Unreal Engine 5 MetaHuman技術で、実写と見紛うほどリアルな3Dキャラクターが接客します。</p>
       </div>
-      <div class="feature-card reveal delay-3">
-        <div class="feature-icon">💬</div>
+      <div class="feat-card reveal d3">
+        <div class="feat-icon">💬</div>
         <h3>自然なリップシンク</h3>
         <p>AI音声に合わせてキャラクターの口元がリアルタイムで動き、自然な対話感を実現します。</p>
       </div>
-      <div class="feature-card reveal delay-1">
-        <div class="feature-icon">🌐</div>
+      <div class="feat-card reveal d1">
+        <div class="feat-icon">🌐</div>
         <h3>ブラウザだけで利用可能</h3>
-        <p>Pixel Streaming技術により、お客様はアプリ不要。ブラウザを開くだけで高品質な3D体験をお届けします。</p>
+        <p>Pixel Streaming技術により、アプリ不要。ブラウザを開くだけで高品質な3D体験をお届けします。</p>
       </div>
-      <div class="feature-card reveal delay-2">
-        <div class="feature-icon">🧠</div>
+      <div class="feat-card reveal d2">
+        <div class="feat-icon">🧠</div>
         <h3>マルチAIエンジン</h3>
-        <p>Google Gemini、Amazon Nova Sonic 2、OpenAIの3つのAIエンジンに対応。用途に応じて最適なAIを選択できます。</p>
+        <p>Google Gemini、Amazon Nova Sonic 2、OpenAIの3つのAIエンジンに対応。用途に応じて最適なAIを選択可能。</p>
       </div>
-      <div class="feature-card reveal delay-3">
-        <div class="feature-icon">🎨</div>
+      <div class="feat-card reveal d3">
+        <div class="feat-icon">🎨</div>
         <h3>カスタマイズ自由</h3>
         <p>キャラクターの外見・衣装・背景空間・人格設定をお客様の用途に合わせて自由にカスタマイズ可能です。</p>
       </div>
@@ -747,130 +569,119 @@ img { max-width: 100%; height: auto; display: block; }
   </div>
 </section>
 
-<!-- ========== USE CASES ========== -->
-<section class="section-usecases" id="usecases">
+<!-- METAHUMAN SHOWCASE -->
+<section class="metahuman-section" id="metahuman">
+  <div class="container-wide">
+    <div class="metahuman-header reveal">
+      <div class="label">METAHUMAN TECHNOLOGY</div>
+      <h2>実写を超えるフォトリアル</h2>
+      <p>Unreal Engine 5 MetaHumanが描く、圧倒的なリアリティのキャラクター</p>
+    </div>
+    <div class="metahuman-grid">
+      <div class="mh-video-card large reveal-scale">
+        <video autoplay muted loop playsinline>
+          <source src="assets/videos/Sakura_Face_1920.mp4" type="video/mp4">
+        </video>
+        <div class="mh-label">FACE DETAIL — リアルタイムレンダリング</div>
+      </div>
+      <div class="mh-video-card reveal-left d1">
+        <video autoplay muted loop playsinline>
+          <source src="assets/videos/Sakura_Body_Action.mp4" type="video/mp4">
+        </video>
+        <div class="mh-label">BODY ACTION — 自然なジェスチャー</div>
+      </div>
+      <div class="mh-image-card reveal-right d2">
+        <img src="assets/images/metahuman_1.png" alt="MetaHuman Detail" loading="lazy">
+        <div class="mh-label">SKIN & HAIR — 肌と髪の質感表現</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- USE CASES -->
+<section class="section" id="usecases">
   <div class="container-wide">
     <div class="section-header reveal">
-      <div class="section-label">USE CASES</div>
+      <div class="label">USE CASES</div>
       <h2>あらゆるシーンで活躍</h2>
       <p>SAKURAは業種を問わず、お客様との接点を革新します</p>
     </div>
 
-    <!-- ホテル -->
-    <div class="usecase-item">
-      <div class="usecase-visual reveal-left">
+    <div class="uc-item">
+      <div class="uc-visual reveal-left">
         <img src="assets/images/sakura_front.png" alt="ホテルコンシェルジュ" loading="lazy">
-        <div class="usecase-tag">🏨 HOTEL</div>
+        <div class="uc-tag">🏨 HOTEL</div>
       </div>
-      <div class="usecase-content reveal-right">
+      <div class="uc-content reveal-right">
         <h3>ホテル・旅館<br>フロントコンシェルジュ</h3>
-        <p>
-          チェックイン・チェックアウトの案内から、周辺観光スポット、レストランの予約案内まで。
-          深夜帯やスタッフ不足の時間帯でも、SAKURAが24時間おもてなし対応を行います。
-        </p>
-        <ul class="usecase-features-list">
-          <li><span class="check">✓</span>チェックイン/アウト手順の案内</li>
-          <li><span class="check">✓</span>周辺観光・飲食店のリアルタイム情報提供</li>
-          <li><span class="check">✓</span>多言語対応でインバウンド観光客をサポート</li>
-          <li><span class="check">✓</span>館内施設・アメニティの案内</li>
+        <p>チェックイン・チェックアウトの案内から周辺観光情報まで。深夜帯やスタッフ不足の時間帯でも、SAKURAが24時間おもてなし対応を行います。</p>
+        <ul class="uc-list">
+          <li><span class="uc-check">✓</span>チェックイン/アウト手順の案内</li>
+          <li><span class="uc-check">✓</span>周辺観光・飲食店のリアルタイム情報提供</li>
+          <li><span class="uc-check">✓</span>多言語対応でインバウンド観光客をサポート</li>
+          <li><span class="uc-check">✓</span>館内施設・アメニティの案内</li>
         </ul>
       </div>
     </div>
 
-    <!-- 商業施設 -->
-    <div class="usecase-item reverse">
-      <div class="usecase-visual reveal-right">
+    <div class="uc-item reverse">
+      <div class="uc-visual reveal-right">
         <img src="assets/images/sakura_side.png" alt="商業施設ガイド" loading="lazy">
-        <div class="usecase-tag">🏬 COMMERCIAL</div>
+        <div class="uc-tag">🏬 COMMERCIAL</div>
       </div>
-      <div class="usecase-content reveal-left">
+      <div class="uc-content reveal-left">
         <h3>商業施設・ショールーム<br>インフォメーション</h3>
-        <p>
-          大型商業施設やショールームに設置されたモニターからSAKURAが案内。
-          フロアマップの説明、キャンペーン情報、お探しのショップへの道案内を行います。
-        </p>
-        <ul class="usecase-features-list">
-          <li><span class="check">✓</span>フロアガイド・テナント案内</li>
-          <li><span class="check">✓</span>セール・イベント情報のリアルタイム発信</li>
-          <li><span class="check">✓</span>商品やサービスの詳細説明</li>
-          <li><span class="check">✓</span>来館者データの収集・分析</li>
+        <p>大型商業施設やショールームのモニターからSAKURAが案内。フロアガイド、キャンペーン情報、目的地への道案内を行います。</p>
+        <ul class="uc-list">
+          <li><span class="uc-check">✓</span>フロアガイド・テナント案内</li>
+          <li><span class="uc-check">✓</span>セール・イベント情報のリアルタイム発信</li>
+          <li><span class="uc-check">✓</span>商品やサービスの詳細説明</li>
+          <li><span class="uc-check">✓</span>来館者データの収集・分析</li>
         </ul>
       </div>
     </div>
 
-    <!-- イベント -->
-    <div class="usecase-item">
-      <div class="usecase-visual reveal-left">
-        <img src="assets/images/sakura_closeup.png" alt="イベントガイド" loading="lazy">
-        <div class="usecase-tag">🎪 EVENT</div>
+    <div class="uc-item">
+      <div class="uc-visual reveal-left">
+        <img src="assets/images/sakura_closeup.png" alt="イベントプレゼンター" loading="lazy">
+        <div class="uc-tag">🎪 EVENT</div>
       </div>
-      <div class="usecase-content reveal-right">
+      <div class="uc-content reveal-right">
         <h3>展示会・イベント<br>プレゼンター</h3>
-        <p>
-          展示ブースで製品やサービスを紹介するプレゼンターとして、またイベント会場の総合案内役として。
-          来場者の質問にその場で答え、インパクトあるブース演出を実現します。
-        </p>
-        <ul class="usecase-features-list">
-          <li><span class="check">✓</span>製品・サービスの自動プレゼンテーション</li>
-          <li><span class="check">✓</span>来場者の質問にリアルタイム応答</li>
-          <li><span class="check">✓</span>大画面でのインパクトあるブース演出</li>
-          <li><span class="check">✓</span>リード獲得・アンケート収集</li>
+        <p>展示ブースで製品を紹介するプレゼンターとして、またイベント会場の総合案内役として。来場者の質問にその場で答え、インパクトあるブース演出を実現します。</p>
+        <ul class="uc-list">
+          <li><span class="uc-check">✓</span>製品・サービスの自動プレゼンテーション</li>
+          <li><span class="uc-check">✓</span>来場者の質問にリアルタイム応答</li>
+          <li><span class="uc-check">✓</span>大画面でのインパクトあるブース演出</li>
+          <li><span class="uc-check">✓</span>リード獲得・アンケート収集</li>
         </ul>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ========== PARALLAX 2 ========== -->
-<div class="parallax-section">
-  <img src="assets/images/metahuman_front.png" alt="" class="parallax-bg" style="object-position: center top;">
-  <div class="parallax-overlay"></div>
-  <div class="parallax-text">
-    <h2 class="reveal">Unreal Engine 5が描く<br>フォトリアルの頂点</h2>
-    <p class="reveal delay-1">MetaHuman技術による、実写を超えるリアリティ</p>
-  </div>
-</div>
-
-<!-- ========== TECHNOLOGY ========== -->
-<section class="section-tech" id="technology">
+<!-- TECHNOLOGY -->
+<section class="section section-dark" id="technology">
   <div class="container-wide">
     <div class="section-header reveal">
-      <div class="section-label">TECHNOLOGY</div>
+      <div class="label">TECHNOLOGY</div>
       <h2>最先端技術の融合</h2>
       <p>グラフィックス、AI、クラウドの最先端技術を統合</p>
     </div>
-
-    <div class="tech-stack">
-      <div class="tech-item reveal delay-1">
-        <div class="tech-icon">🎮</div>
-        <h4>Unreal Engine 5</h4>
-        <p>MetaHuman + Nanite + Lumenで<br>フォトリアルな3D描画</p>
-      </div>
-      <div class="tech-item reveal delay-2">
-        <div class="tech-icon">🤖</div>
-        <h4>マルチAI</h4>
-        <p>Gemini / Nova Sonic 2 / OpenAI<br>最適なエンジンを選択</p>
-      </div>
-      <div class="tech-item reveal delay-3">
-        <div class="tech-icon">☁️</div>
-        <h4>AWS Cloud</h4>
-        <p>GPU搭載EC2で高品質な<br>Pixel Streamingを配信</p>
-      </div>
-      <div class="tech-item reveal delay-4">
-        <div class="tech-icon">📡</div>
-        <h4>Pixel Streaming</h4>
-        <p>ブラウザだけで<br>ハイエンド3D体験を提供</p>
-      </div>
+    <div class="tech-grid">
+      <div class="tech-card reveal d1"><div class="icon">🎮</div><h4>Unreal Engine 5</h4><p>MetaHuman + Nanite + Lumen<br>フォトリアルな3D描画</p></div>
+      <div class="tech-card reveal d2"><div class="icon">🤖</div><h4>マルチAI</h4><p>Gemini / Nova Sonic 2 / OpenAI<br>最適なエンジンを選択</p></div>
+      <div class="tech-card reveal d3"><div class="icon">☁️</div><h4>AWS Cloud</h4><p>GPU搭載EC2で高品質な<br>Pixel Streamingを配信</p></div>
+      <div class="tech-card reveal d4"><div class="icon">📡</div><h4>Pixel Streaming</h4><p>ブラウザだけで<br>ハイエンド3D体験を提供</p></div>
     </div>
-
-    <div class="tech-arch reveal">
+    <div class="arch-box reveal">
       <h3>システムアーキテクチャ</h3>
       <div class="arch-flow">
         <div class="arch-node">👤 お客様<br><small>ブラウザ</small></div>
         <div class="arch-arrow">→</div>
         <div class="arch-node">🎙️ 音声入力<br><small>WebRTC</small></div>
         <div class="arch-arrow">→</div>
-        <div class="arch-node highlight">🧠 AI Engine<br><small>Gemini / Nova / GPT</small></div>
+        <div class="arch-node hl">🧠 AI Engine<br><small>Gemini / Nova / GPT</small></div>
         <div class="arch-arrow">→</div>
         <div class="arch-node">🔊 音声合成<br><small>リアルタイム</small></div>
         <div class="arch-arrow">→</div>
@@ -882,134 +693,123 @@ img { max-width: 100%; height: auto; display: block; }
   </div>
 </section>
 
-<!-- ========== DEPLOYMENT FLOW ========== -->
-<section class="section-flow" id="flow">
+<!-- FLOW -->
+<section class="section" id="flow">
   <div class="container">
     <div class="section-header reveal">
-      <div class="section-label">DEPLOYMENT</div>
+      <div class="label">DEPLOYMENT</div>
       <h2>導入の流れ</h2>
       <p>既存のSAKURAをベースに、短期間でリリースが可能です</p>
     </div>
-
     <div class="flow-timeline">
       <div class="flow-step reveal">
-        <div class="flow-number">1</div>
+        <div class="flow-num">1</div>
         <h4>ヒアリング・要件定義</h4>
-        <p>導入先の業種・利用シーン・必要な機能をヒアリング。SAKURAの標準機能で対応できる範囲と、カスタマイズが必要な箇所を明確にします。</p>
-        <span class="flow-duration">約1週間</span>
+        <p>導入先の業種・利用シーン・必要な機能をヒアリング。標準機能とカスタマイズ範囲を明確にします。</p>
+        <span class="flow-dur">約1週間</span>
       </div>
-      <div class="flow-step reveal delay-1">
-        <div class="flow-number">2</div>
+      <div class="flow-step reveal d1">
+        <div class="flow-num">2</div>
         <h4>キャラクター & 空間デザイン</h4>
-        <p>既存SAKURAをそのまま利用する場合はスキップ可能。オリジナルキャラクター制作や、Unreal Engineベースの3D空間デザインにも対応します。</p>
-        <span class="flow-duration">2〜4週間（カスタム時）</span>
+        <p>既存SAKURAを利用する場合はスキップ可能。オリジナルキャラクター制作やUnreal Engineベースの3D空間デザインにも対応。</p>
+        <span class="flow-dur">2〜4週間（カスタム時）</span>
       </div>
-      <div class="flow-step reveal delay-2">
-        <div class="flow-number">3</div>
+      <div class="flow-step reveal d2">
+        <div class="flow-num">3</div>
         <h4>AI人格設定 & ナレッジ構築</h4>
-        <p>施設情報・FAQ・接客トーンなど、AIの応答内容をカスタマイズ。お客様の施設に最適化された知識ベースを構築します。</p>
-        <span class="flow-duration">1〜2週間</span>
+        <p>施設情報・FAQ・接客トーンなど、AIの応答内容をカスタマイズ。施設に最適化された知識ベースを構築します。</p>
+        <span class="flow-dur">1〜2週間</span>
       </div>
-      <div class="flow-step reveal delay-3">
-        <div class="flow-number">4</div>
+      <div class="flow-step reveal d3">
+        <div class="flow-num">4</div>
         <h4>テスト & チューニング</h4>
-        <p>実際の利用シナリオでテスト運用。音声認識精度・応答品質・リップシンクの微調整を行い、品質を磨き上げます。</p>
-        <span class="flow-duration">1〜2週間</span>
+        <p>実際の利用シナリオでテスト運用。音声認識精度・応答品質・リップシンクの微調整を行います。</p>
+        <span class="flow-dur">1〜2週間</span>
       </div>
-      <div class="flow-step reveal delay-4">
-        <div class="flow-number">5</div>
+      <div class="flow-step reveal d4">
+        <div class="flow-num">5</div>
         <h4>本番リリース & 運用サポート</h4>
-        <p>AWS環境のセットアップから運用開始まで一気通貫でサポート。リリース後のチューニングや機能追加にも柔軟に対応します。</p>
-        <span class="flow-duration">継続サポート</span>
+        <p>AWS環境セットアップから運用開始まで一気通貫でサポート。リリース後のチューニングや機能追加にも柔軟に対応。</p>
+        <span class="flow-dur">継続サポート</span>
       </div>
     </div>
-
-    <div style="text-align:center; margin-top:60px;" class="reveal">
-      <p style="color:var(--gold-light); font-size:1.1rem; font-weight:600; margin-bottom:8px;">
-        ✨ 既存SAKURAベースなら最短2週間でリリース可能
-      </p>
-      <p style="color:var(--gray-light); font-size:0.9rem;">
-        複数台同時接続や大規模導入もお見積りの上対応いたします
-      </p>
+    <div class="flow-highlight reveal">
+      <p>✨ 既存SAKURAベースなら最短2週間でリリース可能</p>
+      <p>複数台同時接続や大規模導入もお見積りの上対応いたします</p>
     </div>
   </div>
 </section>
 
-<!-- ========== PLANS ========== -->
-<section class="section-plans" id="plans">
+<!-- PLANS -->
+<section class="section section-gray" id="plans">
   <div class="container">
     <div class="section-header reveal">
-      <div class="section-label">PLANS</div>
+      <div class="label">PLANS</div>
       <h2>導入プラン</h2>
       <p>お客様のニーズに合わせた3つのプラン</p>
     </div>
-
     <div class="plans-grid">
-      <div class="plan-card reveal delay-1">
+      <div class="plan-card reveal d1">
         <h3>スタンダード</h3>
-        <p class="plan-desc">SAKURAをそのまま活用。最短2週間で導入可能な手軽なプラン。</p>
-        <ul class="plan-features">
-          <li><span class="icon">✦</span>既存SAKURAキャラクター</li>
-          <li><span class="icon">✦</span>AI人格 & ナレッジカスタマイズ</li>
-          <li><span class="icon">✦</span>マルチAI対応（Gemini / Nova / GPT）</li>
-          <li><span class="icon">✦</span>多言語対応</li>
-          <li><span class="icon">✦</span>1接続</li>
-          <li><span class="icon">✦</span>運用サポート</li>
+        <p class="plan-desc">SAKURAをそのまま活用。<br>最短2週間で導入可能。</p>
+        <ul class="plan-list">
+          <li><span class="dot">●</span>既存SAKURAキャラクター</li>
+          <li><span class="dot">●</span>AI人格 & ナレッジカスタマイズ</li>
+          <li><span class="dot">●</span>マルチAI対応</li>
+          <li><span class="dot">●</span>多言語対応</li>
+          <li><span class="dot">●</span>1接続</li>
+          <li><span class="dot">●</span>運用サポート</li>
         </ul>
-        <a href="#contact" class="btn-secondary" style="width:100%; justify-content:center;">お問い合わせ</a>
+        <a href="#contact" class="btn btn-outline" style="width:100%;justify-content:center">お問い合わせ</a>
       </div>
-      <div class="plan-card featured reveal delay-2">
+      <div class="plan-card featured reveal d2">
         <h3>プレミアム</h3>
-        <p class="plan-desc">オリジナルキャラクターと3D空間で、ブランド体験を最大化。</p>
-        <ul class="plan-features">
-          <li><span class="icon">✦</span>オリジナルキャラクター制作</li>
-          <li><span class="icon">✦</span>3D空間デザイン</li>
-          <li><span class="icon">✦</span>ブランドに合わせた衣装 & 演出</li>
-          <li><span class="icon">✦</span>AI人格の完全カスタマイズ</li>
-          <li><span class="icon">✦</span>複数台同時接続対応</li>
-          <li><span class="icon">✦</span>優先サポート</li>
+        <p class="plan-desc">オリジナルキャラクターと<br>3D空間でブランド体験を最大化。</p>
+        <ul class="plan-list">
+          <li><span class="dot">●</span>オリジナルキャラクター制作</li>
+          <li><span class="dot">●</span>3D空間デザイン</li>
+          <li><span class="dot">●</span>ブランドに合わせた衣装 & 演出</li>
+          <li><span class="dot">●</span>AI人格の完全カスタマイズ</li>
+          <li><span class="dot">●</span>複数台同時接続対応</li>
+          <li><span class="dot">●</span>優先サポート</li>
         </ul>
-        <a href="#contact" class="btn-primary" style="width:100%; justify-content:center;">お問い合わせ</a>
+        <a href="#contact" class="btn btn-red" style="width:100%;justify-content:center">お問い合わせ</a>
       </div>
-      <div class="plan-card reveal delay-3">
+      <div class="plan-card reveal d3">
         <h3>エンタープライズ</h3>
-        <p class="plan-desc">大規模導入や特殊要件に対応するフルカスタムプラン。</p>
-        <ul class="plan-features">
-          <li><span class="icon">✦</span>複数キャラクター / 複数拠点</li>
-          <li><span class="icon">✦</span>既存システム連携（PMS / CRM等）</li>
-          <li><span class="icon">✦</span>専用インフラ構築</li>
-          <li><span class="icon">✦</span>SLA付きサポート</li>
-          <li><span class="icon">✦</span>オンプレミス対応可</li>
-          <li><span class="icon">✦</span>カスタム開発</li>
+        <p class="plan-desc">大規模導入や特殊要件に<br>対応するフルカスタムプラン。</p>
+        <ul class="plan-list">
+          <li><span class="dot">●</span>複数キャラクター / 複数拠点</li>
+          <li><span class="dot">●</span>既存システム連携（PMS / CRM等）</li>
+          <li><span class="dot">●</span>専用インフラ構築</li>
+          <li><span class="dot">●</span>SLA付きサポート</li>
+          <li><span class="dot">●</span>オンプレミス対応可</li>
+          <li><span class="dot">●</span>カスタム開発</li>
         </ul>
-        <a href="#contact" class="btn-secondary" style="width:100%; justify-content:center;">お問い合わせ</a>
+        <a href="#contact" class="btn btn-outline" style="width:100%;justify-content:center">お問い合わせ</a>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ========== CTA ========== -->
+<!-- CTA -->
 <section class="section-cta" id="contact">
   <div class="container">
-    <div class="cta-content reveal">
+    <div class="cta-inner reveal">
       <h2>SAKURAと一緒に、<br>おもてなしの未来を始めませんか？</h2>
       <p>デモンストレーションのご依頼やお見積りなど、お気軽にお問い合わせください。</p>
-      <div class="cta-buttons">
-        <a href="https://ncinc.jp/#contact" class="btn-primary" target="_blank">
-          ✉ お問い合わせ
-        </a>
-        <a href="https://ncinc.jp" class="btn-secondary" target="_blank">
-          NATIVE CREATION について
-        </a>
+      <div class="cta-btns">
+        <a href="https://ncinc.jp/#contact" class="btn btn-red" target="_blank">✉ お問い合わせ</a>
+        <a href="https://ncinc.jp" class="btn btn-white" target="_blank">NATIVE CREATION について</a>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ========== FOOTER ========== -->
+<!-- FOOTER -->
 <footer class="footer">
   <div class="container">
-    <div class="footer-content">
+    <div class="footer-inner">
       <div class="footer-brand">
         <h3>AI Concierge SAKURA</h3>
         <p>NATIVE CREATION, Inc.</p>
@@ -1017,54 +817,27 @@ img { max-width: 100%; height: auto; display: block; }
       <div class="footer-links">
         <a href="https://ncinc.jp" target="_blank">会社概要</a>
         <a href="https://ncinc.jp/#contact" target="_blank">お問い合わせ</a>
-        <a href="manual/" target="_blank">管理者マニュアル</a>
+        <a href="manual/">管理者マニュアル</a>
       </div>
     </div>
-    <div class="footer-bottom">
-      &copy; 2026 NATIVE CREATION, Inc. All rights reserved.
-    </div>
+    <div class="footer-copy">&copy; 2026 NATIVE CREATION, Inc. All rights reserved.</div>
   </div>
 </footer>
 
-<!-- ========== SCRIPTS ========== -->
 <script>
 // Scroll Reveal
-const revealElements = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale');
-const revealObserver = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('visible');
-    }
-  });
-}, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
-revealElements.forEach(el => revealObserver.observe(el));
+const ro=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')})},{threshold:.12,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.reveal,.reveal-left,.reveal-right,.reveal-scale').forEach(el=>ro.observe(el));
 
-// Nav scroll effect
-const nav = document.getElementById('nav');
-window.addEventListener('scroll', () => {
-  nav.classList.toggle('scrolled', window.scrollY > 80);
-});
+// Nav scroll
+window.addEventListener('scroll',()=>{document.getElementById('nav').classList.toggle('scrolled',scrollY>60)});
 
-// Parallax scroll
-const parallaxBgs = document.querySelectorAll('.parallax-bg');
-window.addEventListener('scroll', () => {
-  parallaxBgs.forEach(bg => {
-    const section = bg.parentElement;
-    const rect = section.getBoundingClientRect();
-    const scrollPercent = rect.top / window.innerHeight;
-    bg.style.transform = `translateY(${scrollPercent * 40}px)`;
-  });
-});
-
-// Smooth scroll for nav links
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-  anchor.addEventListener('click', function(e) {
+// Smooth scroll
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',function(e){
     e.preventDefault();
-    const target = document.querySelector(this.getAttribute('href'));
-    if (target) {
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      document.getElementById('navLinks').classList.remove('open');
-    }
+    const t=document.querySelector(this.getAttribute('href'));
+    if(t){t.scrollIntoView({behavior:'smooth',block:'start'});document.getElementById('navLinks').classList.remove('open')}
   });
 });
 </script>
