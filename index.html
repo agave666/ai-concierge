@@ -306,6 +306,7 @@ img,video{max-width:100%;height:auto;display:block}
   pointer-events:none;
 }
 .uc-block:nth-child(odd) .uc-scene-label{color:rgba(0,0,0,.1)}
+.uc-scene-label-mobile{display:none}
 .uc-row{
   display:grid;grid-template-columns:22% 1fr 1fr;gap:32px;align-items:center;
   width:100%;margin:0 auto;
@@ -449,13 +450,15 @@ img,video{max-width:100%;height:auto;display:block}
   }
   .about-grid{grid-template-columns:1fr;gap:32px}
   .uc-block{min-height:auto}
-  .uc-scene-label{
-    position:static;font-size:1.6rem;margin-bottom:12px;
-    color:rgba(255,255,255,.35);
+  .uc-scene-label{display:none}
+  .uc-scene-label-mobile{
+    display:block;font-size:1.4rem;font-weight:900;letter-spacing:.2em;
+    text-transform:uppercase;margin-bottom:8px;line-height:1;
+    color:rgba(255,255,255,.4);
   }
-  .uc-block:nth-child(odd) .uc-scene-label{color:rgba(0,0,0,.15)}
+  .uc-block:nth-child(odd) .uc-scene-label-mobile{color:rgba(0,0,0,.18)}
   .uc-content{padding:28px 20px}
-  .uc-row{grid-template-columns:1fr;gap:16px}
+  .uc-row{grid-template-columns:1fr;gap:12px}
   .features-grid{grid-template-columns:1fr}
   .feat-card{min-height:200px}
   .tech-grid{grid-template-columns:1fr}
@@ -650,6 +653,7 @@ img,video{max-width:100%;height:auto;display:block}
     <div class="uc-bg-overlay"></div>
     <div class="uc-scene-label">HOTEL</div>
     <div class="uc-content reveal">
+      <div class="uc-scene-label-mobile">HOTEL</div>
       <div class="uc-row">
         <h3>ホテル・旅館<br>フロントコンシェルジュ</h3>
         <div class="uc-desc">
@@ -673,6 +677,7 @@ img,video{max-width:100%;height:auto;display:block}
     <div class="uc-bg-overlay"></div>
     <div class="uc-scene-label">EVENT</div>
     <div class="uc-content reveal">
+      <div class="uc-scene-label-mobile">EVENT</div>
       <div class="uc-row">
         <h3>展示会・イベント<br>AIプレゼンター</h3>
         <div class="uc-desc">
@@ -696,6 +701,7 @@ img,video{max-width:100%;height:auto;display:block}
     <div class="uc-bg-overlay"></div>
     <div class="uc-scene-label">COMMERCIAL</div>
     <div class="uc-content reveal">
+      <div class="uc-scene-label-mobile">COMMERCIAL</div>
       <div class="uc-row">
         <h3>商業施設・ショールーム<br>インフォメーション</h3>
         <div class="uc-desc">
@@ -719,6 +725,7 @@ img,video{max-width:100%;height:auto;display:block}
     <div class="uc-bg-overlay"></div>
     <div class="uc-scene-label">OFFICE</div>
     <div class="uc-content reveal">
+      <div class="uc-scene-label-mobile">OFFICE</div>
       <div class="uc-row">
         <h3>企業受付・医療機関<br>スマート受付</h3>
         <div class="uc-desc">
@@ -742,6 +749,7 @@ img,video{max-width:100%;height:auto;display:block}
     <div class="uc-bg-overlay"></div>
     <div class="uc-scene-label">INTERVIEW</div>
     <div class="uc-content reveal">
+      <div class="uc-scene-label-mobile">INTERVIEW</div>
       <div class="uc-row">
         <h3>リモート面談・採用面接<br>AI面接官</h3>
         <div class="uc-desc">
@@ -765,6 +773,7 @@ img,video{max-width:100%;height:auto;display:block}
     <div class="uc-bg-overlay"></div>
     <div class="uc-scene-label">EDUCATION</div>
     <div class="uc-content reveal">
+      <div class="uc-scene-label-mobile">EDUCATION</div>
       <div class="uc-row">
         <h3>ミュージアム・教育施設<br>インタラクティブガイド</h3>
         <div class="uc-desc">
