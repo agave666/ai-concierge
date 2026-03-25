@@ -65,9 +65,15 @@ img,video{max-width:100%;height:auto;display:block}
   height:64px;
 }
 .nav-logo{
-  display:flex;align-items:center;gap:12px;
+  display:flex;align-items:baseline;gap:12px;
+  font-family:Georgia,'Times New Roman',serif;
 }
-.nav-logo img{height:32px;width:auto}
+.nav-logo .nc-name{
+  font-size:1.1rem;font-weight:700;color:#494949;letter-spacing:.02em;
+}
+.nav-logo .nc-sub{
+  font-size:.7rem;font-weight:400;color:#999;letter-spacing:.05em;
+}
 .nav-links{display:flex;gap:28px;align-items:center}
 .nav-links a{
   font-size:.8rem;font-weight:500;color:var(--text);
@@ -460,7 +466,7 @@ img,video{max-width:100%;height:auto;display:block}
 <!-- NAV -->
 <nav class="nav" id="nav">
   <div class="nav-inner">
-    <a href="https://ncinc.jp" class="nav-logo" target="_blank"><img src="https://ncinc.jp/wp-content/uploads/2023/06/NC-LOGO-2020-1.png" alt="NATIVE CREATION, Inc."></a>
+    <a href="https://ncinc.jp" class="nav-logo" target="_blank"><span class="nc-name">NATIVE CREATION, Inc.</span><span class="nc-sub">Integrated Digital Agency</span></a>
     <div class="nav-links" id="navLinks">
       <a href="#about">SAKURAとは</a>
       <a href="#demo">デモ動画</a>
