@@ -251,49 +251,30 @@ img,video{max-width:100%;height:auto;display:block}
 .feat-card p{font-size:.88rem;color:var(--text-light);line-height:1.8}
 
 /* ===== METAHUMAN SHOWCASE ===== */
-.metahuman-section{
-  padding:100px 0;background:var(--bg-dark);position:relative;overflow:hidden;
+/* ===== METAHUMAN (full-width video bg) ===== */
+.mh-section{position:relative;overflow:hidden}
+.mh-block{position:relative;width:100%;overflow:hidden}
+.mh-block video,.mh-block img{width:100%;display:block}
+.mh-block .mh-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(0deg,rgba(0,0,0,.7) 0%,rgba(0,0,0,.1) 40%,rgba(0,0,0,.3) 100%);
 }
-.metahuman-header{text-align:center;margin-bottom:60px;color:#fff}
-.metahuman-header .label{
-  font-size:.7rem;font-weight:700;letter-spacing:.2em;color:var(--red);
-  margin-bottom:12px;display:inline-flex;align-items:center;gap:10px;
+.mh-block .mh-text{
+  position:absolute;bottom:0;left:0;right:0;z-index:2;
+  padding:32px 48px;
 }
-.metahuman-header h2{
-  font-size:clamp(1.6rem,3vw,2.4rem);font-weight:900;color:#fff;margin-bottom:14px;line-height:1.4;
+.mh-block .mh-text h3{
+  font-size:clamp(1.4rem,2.5vw,2rem);font-weight:900;color:#fff;margin-bottom:8px;
 }
-.metahuman-header h2::after{
-  content:'';display:block;width:60px;height:3px;background:var(--red);margin:16px auto 0;
-}
-.metahuman-header p{font-size:.95rem;color:rgba(255,255,255,.6);max-width:600px;margin:0 auto}
-.metahuman-grid{
-  display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:1100px;margin:0 auto;padding:0 24px;
-}
-.mh-video-card{
-  position:relative;border-radius:12px;overflow:hidden;
-  box-shadow:0 12px 40px rgba(0,0,0,.4);aspect-ratio:16/9;
-}
-.mh-video-card video{width:100%;height:100%;object-fit:cover}
-.mh-video-card .mh-label{
-  position:absolute;bottom:16px;left:16px;padding:6px 14px;
-  background:rgba(0,0,0,.6);backdrop-filter:blur(8px);
-  border-radius:4px;font-size:.75rem;font-weight:600;color:#fff;
+.mh-block .mh-text p{font-size:.9rem;color:rgba(255,255,255,.7)}
+.mh-block .mh-label{
+  position:absolute;top:24px;left:24px;z-index:2;
+  padding:6px 16px;background:rgba(0,0,0,.5);backdrop-filter:blur(8px);
+  border-radius:4px;font-size:.7rem;font-weight:600;color:#fff;
   letter-spacing:.08em;border:1px solid rgba(255,255,255,.15);
 }
-.mh-video-card.large{grid-column:1/3;aspect-ratio:2.5/1}
-.mh-image-card{
-  position:relative;border-radius:12px;overflow:hidden;
-  box-shadow:0 12px 40px rgba(0,0,0,.4);
-  aspect-ratio:16/9;
-}
-.mh-image-card img{width:100%;height:100%;object-fit:cover;object-position:center top;transition:transform 6s ease}
-.mh-image-card:hover img{transform:scale(1.05)}
-.mh-image-card .mh-label{
-  position:absolute;bottom:16px;left:16px;padding:6px 14px;
-  background:rgba(0,0,0,.6);backdrop-filter:blur(8px);
-  border-radius:4px;font-size:.75rem;font-weight:600;color:#fff;
-  letter-spacing:.08em;border:1px solid rgba(255,255,255,.15);
-}
+.mh-sub-grid{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.mh-sub-grid .mh-block video,.mh-sub-grid .mh-block img{height:100%;object-fit:cover;min-height:300px}
 
 /* ===== USE CASES (full-width bg) ===== */
 .uc-block{
@@ -455,8 +436,7 @@ img,video{max-width:100%;height:auto;display:block}
   .features-grid{grid-template-columns:repeat(2,1fr)}
   .tech-grid{grid-template-columns:repeat(2,1fr)}
   .plans-grid{grid-template-columns:1fr;max-width:420px;margin:0 auto}
-  .metahuman-grid{grid-template-columns:1fr}
-  .mh-video-card.large{grid-column:auto;aspect-ratio:16/9}
+  .mh-sub-grid{grid-template-columns:1fr}
 }
 @media(max-width:768px){
   .nav-links{display:none}
@@ -634,33 +614,33 @@ img,video{max-width:100%;height:auto;display:block}
 </section>
 
 <!-- METAHUMAN SHOWCASE -->
-<section class="metahuman-section" id="metahuman">
-  <div class="container-wide">
-    <div class="metahuman-header reveal">
-      <div class="label">METAHUMAN TECHNOLOGY</div>
-      <h2>実写を超えるフォトリアル</h2>
+<div class="mh-section" id="metahuman">
+  <div class="mh-block reveal-scale">
+    <video autoplay muted loop playsinline>
+      <source src="assets/videos/Sakura_Face_1920.mp4" type="video/mp4">
+    </video>
+    <div class="mh-overlay"></div>
+    <div class="mh-label">METAHUMAN TECHNOLOGY</div>
+    <div class="mh-text">
+      <h3>実写を超えるフォトリアル</h3>
       <p>Unreal Engine 5 MetaHumanが描く、圧倒的なリアリティのキャラクター</p>
     </div>
-    <div class="metahuman-grid">
-      <div class="mh-video-card large reveal-scale">
-        <video autoplay muted loop playsinline>
-          <source src="assets/videos/Sakura_Face_1920.mp4" type="video/mp4">
-        </video>
-        <div class="mh-label">FACE DETAIL — リアルタイムレンダリング</div>
-      </div>
-      <div class="mh-video-card reveal-left d1">
-        <video autoplay muted loop playsinline>
-          <source src="assets/videos/Sakura_Body_Action.mp4" type="video/mp4">
-        </video>
-        <div class="mh-label">BODY ACTION — 自然なジェスチャー</div>
-      </div>
-      <div class="mh-image-card reveal-right d2">
-        <img src="assets/images/metahuman_1.png" alt="MetaHuman Detail" loading="lazy">
-        <div class="mh-label">SKIN & HAIR — 肌と髪の質感表現</div>
-      </div>
+  </div>
+  <div class="mh-sub-grid">
+    <div class="mh-block reveal-left">
+      <video autoplay muted loop playsinline>
+        <source src="assets/videos/Sakura_Body_Action.mp4" type="video/mp4">
+      </video>
+      <div class="mh-overlay"></div>
+      <div class="mh-label">BODY ACTION</div>
+    </div>
+    <div class="mh-block reveal-right">
+      <img src="assets/images/metahuman_1.png" alt="MetaHuman Detail" loading="lazy">
+      <div class="mh-overlay"></div>
+      <div class="mh-label">SKIN & HAIR</div>
     </div>
   </div>
-</section>
+</div>
 
 <!-- USE CASES -->
 <div id="usecases">
