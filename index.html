@@ -164,37 +164,41 @@ img,video{max-width:100%;height:auto;display:block}
 .section-purple .section-header h2::after{background:rgba(255,255,255,.4)}
 .section-dark .section-header h2::after{background:var(--red)}
 
-/* ===== ABOUT ===== */
-.about-grid{
-  display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:stretch;
+/* ===== ABOUT (full-width bg image) ===== */
+.about-section{
+  position:relative;overflow:hidden;
+  background:#000;
 }
-.about-visual{
-  position:relative;border-radius:8px;overflow:hidden;
-  box-shadow:0 20px 60px rgba(0,0,0,.12);
-  min-height:420px;
+.about-bg{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  opacity:.4;
 }
-.about-visual img{
-  width:100%;height:100%;object-fit:cover;
-  transition:transform 6s ease;
+.about-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(90deg,rgba(47,0,75,.85) 0%,rgba(47,0,75,.6) 50%,rgba(0,0,0,.3) 100%);
 }
-.about-visual:hover img{transform:scale(1.04)}
-.about-text .label{
-  font-size:.7rem;font-weight:700;letter-spacing:.15em;color:var(--red);
+.about-inner{
+  position:relative;z-index:2;
+  max-width:800px;padding:80px 32px;
+}
+.about-inner .label{
+  font-size:.7rem;font-weight:700;letter-spacing:.15em;color:var(--red-light);
   margin-bottom:12px;display:flex;align-items:center;gap:8px;
 }
-.about-text .label::before{content:'';width:24px;height:2px;background:var(--red)}
-.about-text h2{
-  font-size:clamp(1.5rem,2.8vw,2.2rem);font-weight:900;line-height:1.4;
-  color:var(--purple);margin-bottom:20px;
+.about-inner .label::before{content:'';width:24px;height:2px;background:var(--red)}
+.about-inner h2{
+  font-size:clamp(1.8rem,3.5vw,2.6rem);font-weight:900;line-height:1.4;
+  color:#fff;margin-bottom:24px;
 }
-.about-text p{font-size:.92rem;color:var(--text-light);margin-bottom:14px}
+.about-inner p{font-size:1rem;color:rgba(255,255,255,.8);margin-bottom:16px;line-height:2}
 .about-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:32px}
 .stat{
-  text-align:center;padding:16px 8px;border-radius:8px;
-  background:var(--purple-pale);border:1px solid #e4daf0;
+  text-align:center;padding:20px 8px;border-radius:8px;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);
+  backdrop-filter:blur(8px);
 }
-.stat-num{font-size:1.6rem;font-weight:900;color:var(--purple);line-height:1}
-.stat-lbl{font-size:.7rem;color:var(--text-light);margin-top:6px}
+.stat-num{font-size:1.8rem;font-weight:900;color:#fff;line-height:1}
+.stat-lbl{font-size:.75rem;color:rgba(255,255,255,.6);margin-top:8px}
 
 /* ===== DEMO VIDEO (Apple-style scroll autoplay) ===== */
 .demo-section{padding:80px 0;background:var(--bg-gray);overflow:hidden}
@@ -230,25 +234,28 @@ img,video{max-width:100%;height:auto;display:block}
 .demo-poster-inner p{font-size:.85rem;letter-spacing:.1em;opacity:.7}
 
 /* ===== FEATURES ===== */
-.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
 .feat-card{
-  background:#fff;border:1px solid var(--border);border-radius:8px;
-  padding:36px 28px;transition:transform .3s,box-shadow .3s,border-color .3s;
+  border-radius:12px;padding:0;
+  transition:transform .3s,box-shadow .3s;
   position:relative;overflow:hidden;
+  min-height:320px;display:flex;flex-direction:column;justify-content:flex-end;
 }
-.feat-card::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:3px;
-  background:var(--red);transform:scaleX(0);transform-origin:left;transition:transform .4s;
+.feat-card:hover{transform:translateY(-6px);box-shadow:0 16px 40px rgba(0,0,0,.2)}
+.feat-card .feat-bg{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  transition:transform 4s ease;
 }
-.feat-card:hover{transform:translateY(-6px);box-shadow:0 16px 40px rgba(0,0,0,.1);border-color:var(--purple)}
-.feat-card:hover::before{transform:scaleX(1)}
-.feat-icon{
-  width:48px;height:48px;border-radius:8px;margin-bottom:20px;
-  display:flex;align-items:center;justify-content:center;
-  background:var(--purple-pale);font-size:1.4rem;
+.feat-card:hover .feat-bg{transform:scale(1.05)}
+.feat-card .feat-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(0deg,rgba(47,0,75,.92) 0%,rgba(47,0,75,.5) 50%,rgba(0,0,0,.2) 100%);
 }
-.feat-card h3{font-size:1.05rem;font-weight:700;color:var(--purple);margin-bottom:10px}
-.feat-card p{font-size:.85rem;color:var(--text-light);line-height:1.8}
+.feat-card .feat-text{
+  position:relative;z-index:2;padding:28px 24px;
+}
+.feat-card h3{font-size:1.15rem;font-weight:700;color:#fff;margin-bottom:8px}
+.feat-card p{font-size:.9rem;color:rgba(255,255,255,.75);line-height:1.8}
 
 /* ===== METAHUMAN SHOWCASE ===== */
 .metahuman-section{
@@ -449,11 +456,14 @@ img,video{max-width:100%;height:auto;display:block}
     background:#fff;padding:20px 32px;gap:16px;border-bottom:1px solid var(--border);
     box-shadow:0 8px 24px rgba(0,0,0,.08);
   }
-  .about-grid,.uc-item,.uc-item.reverse{grid-template-columns:1fr;gap:32px}
+  .uc-item,.uc-item.reverse{grid-template-columns:1fr;gap:32px}
+  .features-grid{grid-template-columns:1fr 1fr}
+  .feat-card{min-height:240px}
   .uc-item.reverse{direction:ltr}
-  .about-visual{min-height:240px}
   .uc-visual{min-height:280px}
-  .features-grid,.tech-grid{grid-template-columns:1fr}
+  .features-grid{grid-template-columns:1fr}
+  .feat-card{min-height:200px}
+  .tech-grid{grid-template-columns:1fr}
   .about-stats{grid-template-columns:repeat(3,1fr);gap:8px}
   .footer-inner{flex-direction:column;gap:20px;text-align:center}
   .footer-links{flex-wrap:wrap;justify-content:center}
@@ -485,7 +495,7 @@ img,video{max-width:100%;height:auto;display:block}
 <!-- HERO -->
 <section class="hero" id="top">
   <video class="hero-video" autoplay muted loop playsinline>
-    <source src="assets/videos/Sakura_Body_1920.mp4" type="video/mp4">
+    <source src="assets/videos/Sakura_Face_Up.mp4" type="video/mp4">
   </video>
   <div class="hero-overlay"></div>
   <div class="hero-content">
@@ -503,29 +513,24 @@ img,video{max-width:100%;height:auto;display:block}
 </section>
 
 <!-- ABOUT -->
-<section class="section" id="about">
-  <div class="container-wide">
-    <div class="about-grid">
-      <div class="about-visual reveal-left">
-        <img src="assets/images/ai_concierge_visual.png" alt="AI Concierge SAKURA" loading="lazy">
-      </div>
-      <div class="about-text reveal-right">
-        <div class="label">ABOUT SAKURA</div>
-        <h2>まるで人と話しているような<br>AIコンシェルジュ</h2>
-        <p>
-          AI Concierge SAKURAは、Unreal Engine 5のMetaHuman技術で描かれるフォトリアルなキャラクターと、
-          Google Gemini・Amazon Nova Sonic 2・OpenAIの最先端AIを統合した、次世代の対話型AIコンシェルジュです。
-        </p>
-        <p>
-          お客様はブラウザを開いてマイクに話しかけるだけ。SAKURAがリアルタイムで音声応答し、
-          表情も口元も自然に連動。まるで対面の接客を受けているような体験をお届けします。
-        </p>
-        <div class="about-stats">
-          <div class="stat reveal d1"><div class="stat-num">24/7</div><div class="stat-lbl">対応時間</div></div>
-          <div class="stat reveal d2"><div class="stat-num">多言語</div><div class="stat-lbl">自動対応</div></div>
-          <div class="stat reveal d3"><div class="stat-num">0秒</div><div class="stat-lbl">待ち時間</div></div>
-        </div>
-      </div>
+<section class="about-section" id="about">
+  <img src="assets/images/sakura_wide.png" alt="" class="about-bg" loading="lazy">
+  <div class="about-overlay"></div>
+  <div class="about-inner reveal">
+    <div class="label">ABOUT SAKURA</div>
+    <h2>まるで人と話しているような<br>AIコンシェルジュ</h2>
+    <p>
+      AI Concierge SAKURAは、Unreal Engine 5のMetaHuman技術で描かれるフォトリアルなキャラクターと、
+      Google Gemini・Amazon Nova Sonic 2・OpenAIの最先端AIを統合した、次世代の対話型AIコンシェルジュです。
+    </p>
+    <p>
+      お客様はブラウザを開いてマイクに話しかけるだけ。SAKURAがリアルタイムで音声応答し、
+      表情も口元も自然に連動。まるで対面の接客を受けているような体験をお届けします。
+    </p>
+    <div class="about-stats">
+      <div class="stat reveal d1"><div class="stat-num">24/7</div><div class="stat-lbl">対応時間</div></div>
+      <div class="stat reveal d2"><div class="stat-num">多言語</div><div class="stat-lbl">自動対応</div></div>
+      <div class="stat reveal d3"><div class="stat-num">0秒</div><div class="stat-lbl">待ち時間</div></div>
     </div>
   </div>
 </section>
@@ -562,34 +567,52 @@ img,video{max-width:100%;height:auto;display:block}
     </div>
     <div class="features-grid">
       <div class="feat-card reveal d1">
-        <div class="feat-icon">🎙️</div>
-        <h3>リアルタイム音声会話</h3>
-        <p>マイクに話しかけるだけで、自然な日本語・多言語でリアルタイムに応答。テキスト入力は不要です。</p>
+        <img class="feat-bg" src="assets/images/sakura_front.png" alt="" loading="lazy">
+        <div class="feat-overlay"></div>
+        <div class="feat-text">
+          <h3>🎙️ リアルタイム音声会話</h3>
+          <p>マイクに話しかけるだけで、自然な日本語・多言語でリアルタイムに応答。テキスト入力は一切不要です。</p>
+        </div>
       </div>
       <div class="feat-card reveal d2">
-        <div class="feat-icon">👤</div>
-        <h3>フォトリアルなキャラクター</h3>
-        <p>Unreal Engine 5 MetaHuman技術で、実写と見紛うほどリアルな3Dキャラクターが接客します。</p>
+        <img class="feat-bg" src="assets/images/metahuman_front.png" alt="" loading="lazy">
+        <div class="feat-overlay"></div>
+        <div class="feat-text">
+          <h3>👤 フォトリアルなキャラクター</h3>
+          <p>Unreal Engine 5 MetaHuman技術で、実写と見紛うほどリアルな3Dキャラクターが接客します。</p>
+        </div>
       </div>
       <div class="feat-card reveal d3">
-        <div class="feat-icon">💬</div>
-        <h3>自然なリップシンク</h3>
-        <p>AI音声に合わせてキャラクターの口元がリアルタイムで動き、自然な対話感を実現します。</p>
+        <img class="feat-bg" src="assets/images/sakura_closeup.png" alt="" loading="lazy">
+        <div class="feat-overlay"></div>
+        <div class="feat-text">
+          <h3>💬 自然なリップシンク</h3>
+          <p>AI音声に合わせてキャラクターの口元がリアルタイムで動き、自然な対話感を実現します。</p>
+        </div>
       </div>
       <div class="feat-card reveal d1">
-        <div class="feat-icon">🌐</div>
-        <h3>ブラウザだけで利用可能</h3>
-        <p>Pixel Streaming技術により、アプリ不要。ブラウザを開くだけで高品質な3D体験をお届けします。</p>
+        <img class="feat-bg" src="assets/images/sakura_side.png" alt="" loading="lazy">
+        <div class="feat-overlay"></div>
+        <div class="feat-text">
+          <h3>🌐 ブラウザだけで利用可能</h3>
+          <p>Pixel Streaming技術でアプリ不要。ブラウザを開くだけで高品質な3D体験をお届けします。</p>
+        </div>
       </div>
       <div class="feat-card reveal d2">
-        <div class="feat-icon">🧠</div>
-        <h3>マルチAIエンジン</h3>
-        <p>Google Gemini、Amazon Nova Sonic 2、OpenAIの3つのAIエンジンに対応。用途に応じて最適なAIを選択可能。</p>
+        <img class="feat-bg" src="assets/images/ai_concierge_visual.png" alt="" loading="lazy">
+        <div class="feat-overlay"></div>
+        <div class="feat-text">
+          <h3>🧠 マルチAIエンジン</h3>
+          <p>Google Gemini、Amazon Nova Sonic 2、OpenAIの3つのAIエンジンに対応。用途に応じて最適なAIを選択。</p>
+        </div>
       </div>
       <div class="feat-card reveal d3">
-        <div class="feat-icon">🎨</div>
-        <h3>カスタマイズ自由</h3>
-        <p>キャラクターの外見・衣装・背景空間・人格設定をお客様の用途に合わせて自由にカスタマイズ可能です。</p>
+        <img class="feat-bg" src="assets/images/metahuman_1.png" alt="" loading="lazy">
+        <div class="feat-overlay"></div>
+        <div class="feat-text">
+          <h3>🎨 カスタマイズ自由</h3>
+          <p>キャラクターの外見・衣装・背景空間・人格設定をお客様の用途に合わせて自由にカスタマイズ。</p>
+        </div>
       </div>
     </div>
   </div>
@@ -926,42 +949,38 @@ document.querySelectorAll('a[href^="#"]').forEach(a=>{
   });
 });
 
-// Demo video: Apple-style scroll autoplay (muted) + click for sound
+// Demo video: scroll autoplay (muted, 1 time only) + click for sound replay
 (function(){
   const video=document.getElementById('demoVideo');
   const poster=document.getElementById('demoPoster');
   if(!video)return;
-  let userClicked=false;
+  let hasPlayed=false;
 
-  // Scroll into view → auto-play muted
+  // Scroll into view → auto-play muted (once)
   const vObs=new IntersectionObserver(entries=>{
     entries.forEach(e=>{
-      if(e.isIntersecting && e.intersectionRatio>=0.6){
+      if(e.isIntersecting && e.intersectionRatio>=0.6 && !hasPlayed){
+        hasPlayed=true;
         video.play().then(()=>{video.classList.add('playing')}).catch(()=>{});
-      }else if(!e.isIntersecting){
-        if(!userClicked){video.pause();video.classList.remove('playing')}
       }
     });
   },{threshold:[0,0.6]});
   vObs.observe(document.getElementById('demoVideoWrap'));
 
-  // Click poster → unmute + play with sound
+  // When video ends → show poster again for replay
+  video.addEventListener('ended',function(){
+    video.classList.remove('playing');
+    poster.classList.remove('hidden');
+  });
+
+  // Click poster → replay with sound
   poster.addEventListener('click',function(){
-    userClicked=true;
     video.muted=false;
     video.currentTime=0;
     video.play().then(()=>{
       video.classList.add('playing');
       poster.classList.add('hidden');
     }).catch(()=>{});
-  });
-
-  // When video ends, reset
-  video.addEventListener('ended',function(){
-    if(!userClicked){
-      video.classList.remove('playing');
-      video.currentTime=0;
-    }
   });
 })();
 </script>
