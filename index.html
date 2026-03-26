@@ -89,6 +89,7 @@ img,video{max-width:100%;height:auto;display:block}
 .hamburger{display:none;cursor:pointer;flex-direction:column;gap:5px}
 .hamburger span{width:22px;height:2px;background:var(--text);transition:.3s}
 
+.hero-break{display:none}
 /* ===== HERO ===== */
 .hero{
   position:relative;display:flex;align-items:center;
@@ -438,13 +439,24 @@ img,video{max-width:100%;height:auto;display:block}
 .footer-col a:hover{color:var(--red)}
 .footer-copy{text-align:center;font-size:.7rem;color:rgba(255,255,255,.7);background:#2f004b;padding:16px 0;margin:0 -24px -24px}
 
+
+/* ===== MULTI AI GRID ===== */
+.ai-engine-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:1100px;margin:0 auto}
+.ai-engine-card{background:#fff;border-radius:12px;padding:32px 28px;text-align:center;border:1px solid var(--border);transition:transform .3s;position:relative}
+.ai-engine-card:hover{transform:translateY(-4px)}
+.ai-engine-card.featured{border:2px solid var(--red);box-shadow:0 8px 32px rgba(216,1,0,.08)}
+.ai-engine-card img{height:48px;margin-bottom:16px;object-fit:contain}
+.ai-engine-card h3{font-size:1.1rem;color:var(--purple);margin-bottom:4px}
+.ai-engine-card p{font-size:.85rem;color:var(--text-light);line-height:1.7;text-align:left}
+
 /* ===== RESPONSIVE ===== */
 @media(max-width:1024px){
   .features-grid{grid-template-columns:repeat(2,1fr)}
   .tech-grid{grid-template-columns:repeat(2,1fr)}
-  .plans-grid{grid-template-columns:1fr;max-width:420px;margin:0 auto
+  .plans-grid{grid-template-columns:1fr;max-width:420px;margin:0 auto}
   .mh-bottom{grid-template-columns:1fr}
   .flow-grid{grid-template-columns:repeat(3,1fr)}
+  .ai-engine-grid{grid-template-columns:1fr;max-width:420px;margin:0 auto}
 }
 @media(max-width:768px){
   .nav-links{display:none}
@@ -472,6 +484,10 @@ img,video{max-width:100%;height:auto;display:block}
   .flow-grid{grid-template-columns:1fr 1fr}
   .footer-grid{grid-template-columns:1fr 1fr;gap:24px}
   .hero-content{padding:100px 20px 48px}
+  .hero h1 .hero-break{display:block}
+  .ai-engine-grid{grid-template-columns:1fr;max-width:100%}
+  .ai-engine-card{padding:24px 20px}
+  .ai-engine-card img{height:40px}
 }
 </style>
 </head>
@@ -504,7 +520,7 @@ img,video{max-width:100%;height:auto;display:block}
   <div class="hero-overlay"></div>
   <div class="hero-content">
     <div class="hero-label reveal">NEXT-GENERATION AI CONCIERGE</div>
-    <h1 class="reveal d1"><span class="accent">AICA</span> — 会話が、<span class="accent">体験</span>になる。</h1>
+    <h1 class="reveal d1"><span class="accent">AICA</span> — 会話が、<span class="hero-break"></span><span class="accent">体験</span>になる。</h1>
     <p class="hero-sub reveal d2">
       フォトリアルな3Dキャラクターが、リアルタイムの音声AIでお客様をおもてなし。ホテル・商業施設・イベントの接客を変える。
     </p>
@@ -650,25 +666,25 @@ img,video{max-width:100%;height:auto;display:block}
       <h2>3つのAIエンジンを選択可能</h2>
       <p style="max-width:800px">AICAは用途やご予算に合わせて、世界トップクラスの3つの音声AIエンジンから最適なものを選択できます。すべてのAIがSpeech-to-Speech（音声直接変換）に対応し、テキスト変換を介さない超低遅延のリアルタイム会話を実現します。</p>
     </div>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:1100px;margin:0 auto">
-      <div class="reveal d1" style="background:#fff;border-radius:12px;padding:32px 28px;text-align:center;border:1px solid var(--border);transition:transform .3s;position:relative">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Google_Gemini_logo.svg/120px-Google_Gemini_logo.svg.png" alt="Google Gemini" style="height:48px;margin-bottom:16px" loading="lazy">
-        <h3 style="font-size:1.1rem;color:var(--purple);margin-bottom:4px">Google Gemini</h3>
+    <div class="ai-engine-grid">
+      <div class="ai-engine-card reveal d1">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Google_Gemini_logo.svg/120px-Google_Gemini_logo.svg.png" alt="Google Gemini" loading="lazy">
+        <h3 >Google Gemini</h3>
         <span style="display:inline-block;padding:2px 10px;border-radius:3px;background:#e8f5e9;color:#2e7d32;font-size:.7rem;font-weight:700;margin-bottom:12px">コスト最安</span>
-        <p style="font-size:.85rem;color:var(--text-light);line-height:1.7;text-align:left">日本語の自然さと品質で最高評価。Google検索連携によるリアルタイム情報取得にも対応。圧倒的な低コストで長時間運用に最適です。</p>
+        <p >日本語の自然さと品質で最高評価。Google検索連携によるリアルタイム情報取得にも対応。圧倒的な低コストで長時間運用に最適です。</p>
       </div>
-      <div class="reveal d2" style="background:#fff;border-radius:12px;padding:32px 28px;text-align:center;border:2px solid var(--red);box-shadow:0 8px 32px rgba(216,1,0,.08);transition:transform .3s;position:relative">
+      <div class="ai-engine-card featured reveal d2">
         <span style="position:absolute;top:-11px;left:50%;transform:translateX(-50%);padding:3px 14px;border-radius:3px;background:var(--red);font-size:.65rem;font-weight:700;color:#fff">おすすめ</span>
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/120px-Amazon_logo.svg.png" alt="Amazon Nova Sonic" style="height:36px;margin-bottom:24px" loading="lazy">
-        <h3 style="font-size:1.1rem;color:var(--purple);margin-bottom:4px">Amazon Nova Sonic 2</h3>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/120px-Amazon_logo.svg.png" alt="Amazon Nova Sonic" loading="lazy">
+        <h3 >Amazon Nova Sonic 2</h3>
         <span style="display:inline-block;padding:2px 10px;border-radius:3px;background:#fff3e0;color:#e65100;font-size:.7rem;font-weight:700;margin-bottom:12px">応答速度 No.1</span>
-        <p style="font-size:.85rem;color:var(--text-light);line-height:1.7;text-align:left">東京リージョン直結で1秒未満の超高速応答。面談やデモなど、テンポの良い対話が求められるシーンに最適。コストパフォーマンスにも優れています。</p>
+        <p >東京リージョン直結で1秒未満の超高速応答。面談やデモなど、テンポの良い対話が求められるシーンに最適。コストパフォーマンスにも優れています。</p>
       </div>
-      <div class="reveal d3" style="background:#fff;border-radius:12px;padding:32px 28px;text-align:center;border:1px solid var(--border);transition:transform .3s">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/OpenAI_Logo.svg/120px-OpenAI_Logo.svg.png" alt="OpenAI" style="height:48px;margin-bottom:16px" loading="lazy">
-        <h3 style="font-size:1.1rem;color:var(--purple);margin-bottom:4px">OpenAI Realtime</h3>
+      <div class="ai-engine-card reveal d3">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/OpenAI_Logo.svg/120px-OpenAI_Logo.svg.png" alt="OpenAI" loading="lazy">
+        <h3 >OpenAI Realtime</h3>
         <span style="display:inline-block;padding:2px 10px;border-radius:3px;background:#e3f2fd;color:#1565c0;font-size:.7rem;font-weight:700;margin-bottom:12px">最高品質</span>
-        <p style="font-size:.85rem;color:var(--text-light);line-height:1.7;text-align:left">GPT-4oベースの最先端モデル。複雑な質問への的確な応答や、高度な文脈理解が必要なハイエンドユースケースに対応します。</p>
+        <p >GPT-4oベースの最先端モデル。複雑な質問への的確な応答や、高度な文脈理解が必要なハイエンドユースケースに対応します。</p>
       </div>
     </div>
   </div>
