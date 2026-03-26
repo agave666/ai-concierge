@@ -372,7 +372,7 @@ img,video{max-width:100%;height:auto;display:block}
 }
 
 /* ===== PLANS ===== */
-.plans-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.plans-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
 .plan-card{
   background:#fff;border:1px solid var(--border);border-radius:8px;
   padding:40px 28px;text-align:center;transition:transform .3s,box-shadow .3s;
@@ -442,7 +442,10 @@ img,video{max-width:100%;height:auto;display:block}
 @media(max-width:1024px){
   .features-grid{grid-template-columns:repeat(2,1fr)}
   .tech-grid{grid-template-columns:repeat(2,1fr)}
-  .plans-grid{grid-template-columns:1fr;max-width:420px;margin:0 auto}
+  .plans-grid{grid-template-columns:repeat(2,1fr);max-width:700px;margin:0 auto}
+}
+@media(max-width:560px){
+  .plans-grid{grid-template-columns:1fr;max-width:420px;margin:0 auto
   .mh-bottom{grid-template-columns:1fr}
   .flow-grid{grid-template-columns:repeat(3,1fr)}
 }
@@ -852,54 +855,63 @@ img,video{max-width:100%;height:auto;display:block}
     </div>
     <div class="plans-grid">
       <div class="plan-card reveal d1">
-        <h3>スタンダード</h3>
+        <h3>ライト</h3>
         <div class="plan-pricing">
           <div class="price-row"><span class="price-label">初期</span><span class="price-value">¥300,000</span><span class="price-unit">（税抜）</span></div>
           <div class="price-row"><span class="price-label">月額</span><span class="price-value monthly">¥98,000</span><span class="price-unit">～/月（税抜）</span></div>
         </div>
         <span class="plan-period">導入目安：約2週間</span>
-        <p class="plan-desc">まずは効果を実感したい方に最適。既存AICAキャラクターをそのまま利用し、AI人格と応答内容をお客様の施設に合わせてカスタマイズ。約2週間でリリース可能なエントリープランです。</p>
+        <p class="plan-desc">まずは効果を実感したい方に最適。既存AICAキャラクターをそのまま利用し、AI人格と応答内容をカスタマイズ。約2週間でリリース可能なエントリープランです。</p>
         <ul class="plan-list">
           <li><span class="dot">●</span>既存AICAキャラクター利用</li>
           <li><span class="dot">●</span>AI人格・ナレッジのカスタマイズ</li>
-          <li><span class="dot">●</span>マルチAIエンジン対応</li>
-          <li><span class="dot">●</span>多言語自動対応</li>
-          <li><span class="dot">●</span>1接続</li>
-          <li><span class="dot">●</span>運用サポート</li>
+          <li><span class="dot">●</span>1接続 / 多言語対応</li>
+          <li><span class="dot">●</span>メールサポート</li>
         </ul>
       </div>
-      <div class="plan-card featured reveal d2">
+      <div class="plan-card reveal d2">
+        <h3>スタンダード</h3>
+        <div class="plan-pricing">
+          <div class="price-row"><span class="price-label">初期</span><span class="price-value">¥500,000</span><span class="price-unit">（税抜）</span></div>
+          <div class="price-row"><span class="price-label">月額</span><span class="price-value monthly">¥198,000</span><span class="price-unit">～/月（税抜）</span></div>
+        </div>
+        <span class="plan-period">導入目安：約2週間</span>
+        <p class="plan-desc">本格運用に最適。マルチAIエンジン対応で用途に合わせたAI選択が可能。LINE制御やGoogle検索連携など、業務効率を高める機能が充実しています。</p>
+        <ul class="plan-list">
+          <li><span class="dot">●</span>マルチAIエンジン対応</li>
+          <li><span class="dot">●</span>LINE遠隔制御</li>
+          <li><span class="dot">●</span>Google検索連携</li>
+          <li><span class="dot">●</span>メール+Slackサポート</li>
+        </ul>
+      </div>
+      <div class="plan-card featured reveal d3">
         <h3>プレミアム</h3>
         <div class="plan-pricing">
           <div class="price-row"><span class="price-label">初期</span><span class="price-value">¥1,000,000</span><span class="price-unit">（税抜）</span></div>
           <div class="price-row"><span class="price-label">月額</span><span class="price-value monthly">¥398,000</span><span class="price-unit">～/月（税抜）</span></div>
         </div>
         <span class="plan-period">導入目安：約1ヶ月</span>
-        <p class="plan-desc">ブランドの世界観を最大限に表現したい方へ。御社専用のオリジナル3Dキャラクターをゼロから制作し、UE5ベースの3D空間で施設を再現。衣装・髪型・声のトーンまでフルカスタマイズ。複数台の同時接続にも対応します。</p>
+        <p class="plan-desc">ブランドの世界観を最大限に表現。御社専用のオリジナル3Dキャラクターをゼロから制作し、UE5ベースの3D空間で施設を再現。複数台の同時接続にも対応します。</p>
         <ul class="plan-list">
-          <li><span class="dot">●</span>オリジナルキャラクターをゼロから制作</li>
-          <li><span class="dot">●</span>UE5ベースの3D空間デザイン</li>
-          <li><span class="dot">●</span>衣装・声・演出のブランド最適化</li>
-          <li><span class="dot">●</span>AI人格の完全カスタマイズ</li>
+          <li><span class="dot">●</span>オリジナルキャラクター制作</li>
+          <li><span class="dot">●</span>UE5 3D空間デザイン</li>
           <li><span class="dot">●</span>複数台同時接続対応</li>
-          <li><span class="dot">●</span>優先サポート</li>
+          <li><span class="dot">●</span>24時間優先サポート</li>
         </ul>
       </div>
-      <div class="plan-card reveal d3">
+      <div class="plan-card reveal d4">
         <h3>エンタープライズ</h3>
         <div class="plan-pricing">
           <div class="price-row"><span class="price-label">初期</span><span class="price-value">¥2,000,000</span><span class="price-unit">～（税抜）</span></div>
           <div class="price-row"><span class="price-label">月額</span><span class="price-value monthly">¥500,000</span><span class="price-unit">～/月（税抜）</span></div>
         </div>
         <span class="plan-period">導入目安：2ヶ月～</span>
-        <p class="plan-desc">全国チェーンや大規模施設向けのフルカスタムプラン。モーションキャプチャによる高品質アニメーション、複数キャラクターの同時運用、既存のPMS・CRMとの連携など、あらゆる要件に対応します。</p>
+        <p class="plan-desc">全国チェーンや大規模施設向け。モーションキャプチャによる高品質アニメーション、複数拠点運用、PMS・CRM連携など、あらゆる要件に対応します。</p>
         <ul class="plan-list">
-          <li><span class="dot">●</span>モーションキャプチャによる高品質アニメーション</li>
-          <li><span class="dot">●</span>インタラクティブなキャラクター動作</li>
-          <li><span class="dot">●</span>複数キャラクター・複数拠点運用</li>
-          <li><span class="dot">●</span>PMS・CRM等の既存システム連携</li>
-          <li><span class="dot">●</span>専用インフラ構築・オンプレミス対応</li>
-          <li><span class="dot">●</span>専任担当による手厚いサポート</li>
+          <li><span class="dot">●</span>モーキャプ高品質アニメーション</li>
+          <li><span class="dot">●</span>複数キャラクター・複数拠点</li>
+          <li><span class="dot">●</span>PMS・CRM等システム連携</li>
+          <li><span class="dot">●</span>専任担当サポート</li>
         </ul>
       </div>
     </div>
