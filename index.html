@@ -385,7 +385,13 @@ img,video{max-width:100%;height:auto;display:block}
   font-size:.65rem;font-weight:700;color:#fff;letter-spacing:.1em;
 }
 .plan-card:hover{transform:translateY(-6px);box-shadow:0 16px 40px rgba(0,0,0,.1)}
-.plan-card h3{font-size:1.2rem;font-weight:900;color:var(--purple);margin-bottom:8px}
+.plan-card h3{font-size:1.1rem;font-weight:900;color:var(--purple);margin-bottom:12px;letter-spacing:.05em}
+.plan-pricing{text-align:center;margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--border)}
+.plan-pricing .price-row{display:flex;align-items:baseline;justify-content:center;gap:6px;margin:4px 0}
+.plan-pricing .price-label{font-size:.75rem;color:#999;min-width:48px;text-align:right}
+.plan-pricing .price-value{font-size:1.5rem;font-weight:900;color:var(--navy)}
+.plan-pricing .price-value.monthly{font-size:1.8rem;color:var(--purple)}
+.plan-pricing .price-unit{font-size:.7rem;color:#999}
 .plan-period{
   display:inline-block;padding:3px 12px;border-radius:3px;margin-bottom:14px;
   background:var(--purple);font-size:.7rem;font-weight:600;color:#fff;
@@ -847,8 +853,10 @@ img,video{max-width:100%;height:auto;display:block}
     <div class="plans-grid">
       <div class="plan-card reveal d1">
         <h3>スタンダード</h3>
-        <div style="margin:12px 0 4px"><span style="font-size:.85rem;color:var(--text-light)">初期費用</span><br><span style="font-size:1.4rem;font-weight:900;color:var(--purple)">¥300,000</span><span style="font-size:.8rem;color:var(--text-light)">（税抜）</span></div>
-        <div style="margin-bottom:16px"><span style="font-size:.85rem;color:var(--text-light)">月額</span><br><span style="font-size:1.8rem;font-weight:900;color:var(--red)">¥98,000</span><span style="font-size:.8rem;color:var(--text-light)">～/月（税抜）</span></div>
+        <div class="plan-pricing">
+          <div class="price-row"><span class="price-label">初期</span><span class="price-value">¥300,000</span><span class="price-unit">（税抜）</span></div>
+          <div class="price-row"><span class="price-label">月額</span><span class="price-value monthly">¥98,000</span><span class="price-unit">～/月（税抜）</span></div>
+        </div>
         <span class="plan-period">導入目安：約2週間</span>
         <p class="plan-desc">まずは効果を実感したい方に最適。既存AICAキャラクターをそのまま利用し、AI人格と応答内容をお客様の施設に合わせてカスタマイズ。約2週間でリリース可能なエントリープランです。</p>
         <ul class="plan-list">
@@ -862,8 +870,10 @@ img,video{max-width:100%;height:auto;display:block}
       </div>
       <div class="plan-card featured reveal d2">
         <h3>プレミアム</h3>
-        <div style="margin:12px 0 4px"><span style="font-size:.85rem;color:var(--text-light)">初期費用</span><br><span style="font-size:1.4rem;font-weight:900;color:var(--purple)">¥1,000,000</span><span style="font-size:.8rem;color:var(--text-light)">（税抜）</span></div>
-        <div style="margin-bottom:16px"><span style="font-size:.85rem;color:var(--text-light)">月額</span><br><span style="font-size:1.8rem;font-weight:900;color:var(--red)">¥398,000</span><span style="font-size:.8rem;color:var(--text-light)">～/月（税抜）</span></div>
+        <div class="plan-pricing">
+          <div class="price-row"><span class="price-label">初期</span><span class="price-value">¥1,000,000</span><span class="price-unit">（税抜）</span></div>
+          <div class="price-row"><span class="price-label">月額</span><span class="price-value monthly">¥398,000</span><span class="price-unit">～/月（税抜）</span></div>
+        </div>
         <span class="plan-period">導入目安：約1ヶ月</span>
         <p class="plan-desc">ブランドの世界観を最大限に表現したい方へ。御社専用のオリジナル3Dキャラクターをゼロから制作し、UE5ベースの3D空間で施設を再現。衣装・髪型・声のトーンまでフルカスタマイズ。複数台の同時接続にも対応します。</p>
         <ul class="plan-list">
@@ -877,8 +887,10 @@ img,video{max-width:100%;height:auto;display:block}
       </div>
       <div class="plan-card reveal d3">
         <h3>エンタープライズ</h3>
-        <div style="margin:12px 0 4px"><span style="font-size:.85rem;color:var(--text-light)">初期費用</span><br><span style="font-size:1.4rem;font-weight:900;color:var(--purple)">¥2,000,000</span><span style="font-size:.8rem;color:var(--text-light)">～（税抜）</span></div>
-        <div style="margin-bottom:16px"><span style="font-size:.85rem;color:var(--text-light)">月額</span><br><span style="font-size:1.8rem;font-weight:900;color:var(--red)">¥500,000</span><span style="font-size:.8rem;color:var(--text-light)">～/月（税抜）</span></div>
+        <div class="plan-pricing">
+          <div class="price-row"><span class="price-label">初期</span><span class="price-value">¥2,000,000</span><span class="price-unit">～（税抜）</span></div>
+          <div class="price-row"><span class="price-label">月額</span><span class="price-value monthly">¥500,000</span><span class="price-unit">～/月（税抜）</span></div>
+        </div>
         <span class="plan-period">導入目安：2ヶ月～</span>
         <p class="plan-desc">全国チェーンや大規模施設向けのフルカスタムプラン。モーションキャプチャによる高品質アニメーション、複数キャラクターの同時運用、既存のPMS・CRMとの連携など、あらゆる要件に対応します。</p>
         <ul class="plan-list">
