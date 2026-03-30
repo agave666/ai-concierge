@@ -1855,33 +1855,35 @@ document.querySelectorAll('a[href^="#"]').forEach(a=>{
     if (!qText || qText === _currentHighlightQ) return;
     _currentHighlightQ = qText;
     var items = document.querySelectorAll('.faq-item');
-    var matched = false;
+    var bestEl = null, bestScore = 0;
+    // 全FAQアイテムとスコアリングで最高一致を選択
+    var qNorm = qText.replace(/？/g,'').replace(/。/g,'').replace(/\s/g,'');
     items.forEach(function(el) {
-      // Q文テキストの先頭20文字で部分一致
-      var elQ = el.getAttribute('data-faq-q') || '';
-      if (elQ && qText.indexOf(elQ.substring(0, 20)) >= 0 || elQ.indexOf(qText.substring(0, 20)) >= 0) {
-        el.style.background = 'rgba(201,168,76,.18)';
-        el.style.borderLeftColor = 'var(--gold)';
-        el.scrollIntoView({behavior:'smooth', block:'nearest'});
-        matched = true;
-      } else {
-        el.style.background = 'rgba(255,255,255,.06)';
-        el.style.borderLeftColor = 'transparent';
+      var elQ = (el.getAttribute('data-faq-q') || '').replace(/？/g,'').replace(/。/g,'').replace(/\s/g,'');
+      if (!elQ) return;
+      var score = 0;
+      // 完全一致チェック
+      if (elQ === qNorm) { score = 100; }
+      else {
+        // 先頭15文字一致
+        if (qNorm.length >= 10 && elQ.indexOf(qNorm.substring(0, 15)) >= 0) score += 20;
+        if (elQ.length >= 10 && qNorm.indexOf(elQ.substring(0, 15)) >= 0) score += 20;
+        // キーワードマッチ
+        var particles = ['の','を','は','が','に','で','と','も','か','へ','から','まで','です','ます','ない'];
+        var elClean = elQ;
+        particles.forEach(function(p) { elClean = elClean.split(p).join(' '); });
+        var words = elClean.split(/\s+/).filter(function(w){return w.length>=2;});
+        words.forEach(function(w) { if (qNorm.indexOf(w) >= 0) score += 3; });
       }
+      // ハイライト解除
+      el.style.background = 'rgba(255,255,255,.06)';
+      el.style.borderLeftColor = 'transparent';
+      if (score > bestScore) { bestScore = score; bestEl = el; }
     });
-    if (!matched) {
-      // フォールバック: 全FAQアイテムのQテキスト内をキーワード検索
-      var keywords = qText.replace(/？/g,'').split(/[\s、。]/g).filter(function(w){return w.length>=2});
-      items.forEach(function(el) {
-        var elQ = el.getAttribute('data-faq-q') || '';
-        var score = 0;
-        keywords.forEach(function(kw) { if (elQ.indexOf(kw) >= 0) score++; });
-        if (score >= 2) {
-          el.style.background = 'rgba(201,168,76,.18)';
-          el.style.borderLeftColor = 'var(--gold)';
-          el.scrollIntoView({behavior:'smooth', block:'nearest'});
-        }
-      });
+    if (bestEl && bestScore >= 3) {
+      bestEl.style.background = 'rgba(201,168,76,.18)';
+      bestEl.style.borderLeftColor = 'var(--gold)';
+      bestEl.scrollIntoView({behavior:'smooth', block:'nearest'});
     }
   }
 
