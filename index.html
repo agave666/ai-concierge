@@ -1835,8 +1835,18 @@ document.querySelectorAll('a[href^="#"]').forEach(a=>{
     ],
   };
 
-  function buildFaqList(industry) {
-    var faqs = INDUSTRY_FAQ[industry] || INDUSTRY_FAQ['その他'];
+  var _dynamicFaqData = null; // API取得FAQデータ（1ソース管理）
+  async function fetchFaqData(industry) {
+    try {
+      var res = await fetch(LP_API_BASE + '/faq?industry=' + encodeURIComponent(industry));
+      var data = await res.json();
+      if (data.faqs) { _dynamicFaqData = data.faqs; return data.faqs; }
+    } catch(e) { console.warn('[FAQ] API取得失敗、ローカルデータ使用', e); }
+    // フォールバック: ローカルデータ
+    _dynamicFaqData = INDUSTRY_FAQ[industry] || INDUSTRY_FAQ['その他'];
+    return _dynamicFaqData;
+  }
+  function buildFaqListFromData(faqs) {
     var html = '';
     faqs.forEach(function(faq, idx) {
       html += '<div class="faq-item" data-faq-idx="' + idx + '" data-faq-q="' + faq.q.replace(/"/g,'&quot;') + '" style="margin-bottom:8px;padding:8px 10px;background:rgba(255,255,255,.06);border-radius:8px;transition:all .4s;border-left:3px solid transparent">'
@@ -1845,6 +1855,11 @@ document.querySelectorAll('a[href^="#"]').forEach(a=>{
         + '</div>';
     });
     return html;
+  }
+  function buildFaqList(industry) {
+    // 同期フォールバック（fetchFaqData未完了時）
+    var faqs = _dynamicFaqData || INDUSTRY_FAQ[industry] || INDUSTRY_FAQ['その他'];
+    return buildFaqListFromData(faqs);
   }
 
   var _currentHighlightQ = '';
@@ -1987,7 +2002,8 @@ document.querySelectorAll('a[href^="#"]').forEach(a=>{
         if ((data.status === 'connected' || data.status === 'verified') && !shownConnected) {
           shownConnected = true;
           if (_pinCountdownTimer) { clearInterval(_pinCountdownTimer); _pinCountdownTimer = null; }
-          // ★ 通話中: FAQ付き画面に切替
+          // ★ 通話中: API経由でFAQデータ取得→画面切替（1ソース管理）
+          await fetchFaqData(_phoneIndustry);
           showPhoneCallWithFaq(name, _phoneIndustry);
         }
         // ★ FAQリアルタイムハイライト
