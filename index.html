@@ -1854,32 +1854,31 @@ document.querySelectorAll('a[href^="#"]').forEach(a=>{
   function highlightFaqByText(qText) {
     if (!qText || qText === _currentHighlightQ) return;
     _currentHighlightQ = qText;
+    console.log('[FAQ-HL] 検索:', qText);
     var items = document.querySelectorAll('.faq-item');
     var bestEl = null, bestScore = 0;
-    // 全FAQアイテムとスコアリングで最高一致を選択
     var qNorm = qText.replace(/？/g,'').replace(/。/g,'').replace(/\s/g,'');
-    items.forEach(function(el) {
+    items.forEach(function(el, idx) {
       var elQ = (el.getAttribute('data-faq-q') || '').replace(/？/g,'').replace(/。/g,'').replace(/\s/g,'');
       if (!elQ) return;
       var score = 0;
-      // 完全一致チェック
       if (elQ === qNorm) { score = 100; }
       else {
-        // 先頭15文字一致
-        if (qNorm.length >= 10 && elQ.indexOf(qNorm.substring(0, 15)) >= 0) score += 20;
-        if (elQ.length >= 10 && qNorm.indexOf(elQ.substring(0, 15)) >= 0) score += 20;
+        // 先頭10文字で部分一致
+        if (qNorm.length >= 8 && elQ.indexOf(qNorm.substring(0, Math.min(qNorm.length, 12))) >= 0) score += 30;
+        if (elQ.length >= 8 && qNorm.indexOf(elQ.substring(0, Math.min(elQ.length, 12))) >= 0) score += 30;
         // キーワードマッチ
-        var particles = ['の','を','は','が','に','で','と','も','か','へ','から','まで','です','ます','ない'];
+        var particles = ['の','を','は','が','に','で','と','も','か','へ','から','まで','です','ます','ない','たい','のですが','ですが'];
         var elClean = elQ;
         particles.forEach(function(p) { elClean = elClean.split(p).join(' '); });
         var words = elClean.split(/\s+/).filter(function(w){return w.length>=2;});
         words.forEach(function(w) { if (qNorm.indexOf(w) >= 0) score += 3; });
       }
-      // ハイライト解除
       el.style.background = 'rgba(255,255,255,.06)';
       el.style.borderLeftColor = 'transparent';
       if (score > bestScore) { bestScore = score; bestEl = el; }
     });
+    console.log('[FAQ-HL] best score:', bestScore, bestEl ? bestEl.getAttribute('data-faq-q').substring(0,20) : 'none');
     if (bestEl && bestScore >= 3) {
       bestEl.style.background = 'rgba(201,168,76,.18)';
       bestEl.style.borderLeftColor = 'var(--gold)';
