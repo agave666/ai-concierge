@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AI Concierge AICA | 次世代AIコンシェルジュ - NATIVE CREATION</title>
 <meta name="description" content="リアルタイム音声AI × フォトリアル3Dキャラクター。ホテル・商業施設・イベントに、24時間対応のAIコンシェルジュを。">
+<link rel="icon" type="image/png" href="assets/images/aica_face.png">
+<link rel="apple-touch-icon" href="assets/images/aica_face.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&display=swap" rel="stylesheet">
@@ -198,13 +200,21 @@ img,video{max-width:100%;height:auto;display:block}
 .demo-section .section-header{margin-bottom:40px}
 .demo-video-full{
   width:100%;max-width:100%;overflow:hidden;
-  position:relative;background:#000;
+  position:relative;background:#000;margin:0 auto;
+  aspect-ratio:16/9;
+  transition:max-width .6s ease;
 }
-.demo-video-full video{
-  width:100%;display:block;
-  opacity:0;transition:opacity .8s ease;
+.demo-video-full.media-active{
+  max-width:1100px;
 }
-.demo-video-full video.playing{opacity:1}
+.demo-video-full video#demoVideo{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  opacity:0;transition:opacity .8s ease;z-index:1;
+}
+.demo-video-full video#demoVideo.playing{opacity:1}
+.demo-video-full video#expVideo{
+  /* expVideoはinline styleでposition:absoluteが設定済み */
+}
 .demo-video-full .demo-poster{
   position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
   background:linear-gradient(135deg,rgba(47,0,75,.8),rgba(26,26,46,.7));
@@ -372,6 +382,84 @@ img,video{max-width:100%;height:auto;display:block}
   background:var(--purple);font-size:.65rem;font-weight:600;color:#fff;
 }
 
+/* ===== EXPERIENCE DEMO (動画→AICA統合・全幅) ===== */
+/* 動画終了後にフォームオーバーレイ → 入力完了で会話開始 */
+.exp-form-overlay{
+  position:absolute;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;color:#fff;z-index:5;
+  background:rgba(47,0,75,.75);backdrop-filter:blur(6px);
+  opacity:0;pointer-events:none;transition:opacity 1s ease;
+}
+.exp-form-overlay.visible{opacity:1;pointer-events:auto}
+.exp-form-overlay h2{font-size:2rem;font-weight:900;margin-bottom:10px;letter-spacing:.05em;text-shadow:0 2px 8px rgba(0,0,0,.5)}
+.exp-form-overlay p.sub{color:rgba(255,255,255,.95);font-size:1rem;margin-bottom:24px;text-shadow:0 1px 4px rgba(0,0,0,.5)}
+.exp-industry-row{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:20px}
+.exp-industry-row button{
+  padding:8px 20px;border:1px solid rgba(255,255,255,.6);border-radius:20px;
+  background:transparent;color:#fff;font-size:.95rem;cursor:pointer;
+  transition:all .3s;font-family:inherit;text-shadow:0 1px 3px rgba(0,0,0,.4);
+}
+.exp-industry-row button.selected{background:var(--gold);color:#fff;border-color:var(--gold)}
+.exp-industry-row button:hover{border-color:var(--gold);color:#fff}
+.exp-form-row{
+  display:flex;flex-wrap:wrap;gap:16px;justify-content:center;align-items:flex-start;
+  max-width:700px;margin:0 auto;
+}
+.exp-field{text-align:left;flex:1;min-width:200px}
+.exp-field label{display:block;font-size:.8rem;font-weight:600;color:rgba(255,255,255,.85);margin-bottom:5px}
+.exp-field .required::after{content:' *';color:var(--red-light);font-size:.7rem}
+.exp-field input{
+  padding:12px 16px;border:1px solid rgba(255,255,255,.3);border-radius:6px;
+  background:rgba(255,255,255,.12);color:#fff;font-size:.9rem;font-family:inherit;
+  width:100%;box-sizing:border-box;transition:border-color .3s;
+}
+.exp-field input::placeholder{color:rgba(255,255,255,.4)}
+.exp-field input:focus{outline:none;border-color:var(--gold)}
+.exp-field-hint{display:block;font-size:.7rem;color:rgba(255,255,255,.55);margin-top:5px;line-height:1.5}
+.exp-mode-toggle{display:flex;flex-direction:column;align-items:center;gap:8px;margin-top:8px;width:100%;grid-column:1/-1}
+.exp-mode-label{color:rgba(255,255,255,.8);font-size:.85rem;font-weight:600;white-space:nowrap}
+.exp-mode-btns{display:flex;gap:10px;width:100%}
+.exp-mode-btn{flex:1;padding:14px 20px;border:2px solid rgba(255,255,255,.3);border-radius:10px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);font-size:1rem;font-weight:700;cursor:pointer;transition:all .3s;font-family:inherit;text-align:center}
+.exp-mode-btn.selected{background:var(--gold);color:#fff;border-color:var(--gold);box-shadow:0 2px 12px rgba(201,168,76,.3)}
+.exp-mode-btn:hover{border-color:var(--gold);color:#fff}
+.exp-start-btn{
+  padding:16px 60px;border:none;border-radius:8px;
+  background:var(--gold);color:#fff;font-size:1.15rem;font-weight:700;
+  cursor:pointer;transition:all .3s;font-family:inherit;letter-spacing:.08em;
+  white-space:nowrap;width:100%;max-width:400px;margin-top:8px;
+}
+.exp-start-btn:hover{background:#b8972e;transform:translateY(-2px)}
+.exp-start-btn:disabled{background:rgba(255,255,255,.2);color:rgba(255,255,255,.4);cursor:not-allowed;transform:none}
+.exp-status{text-align:center;padding:8px;font-size:1rem;color:#fff;min-height:28px;margin-top:10px;text-shadow:0 1px 4px rgba(0,0,0,.5);font-weight:500}
+.exp-mic-btn{
+  position:absolute;bottom:20px;right:20px;width:56px;height:56px;
+  border-radius:50%;border:2px solid #fff;background:var(--red);color:#fff;
+  cursor:pointer;font-size:1.5rem;display:none;transition:background .3s;z-index:10;
+}
+.exp-mic-btn.muted{background:#666}
+.exp-timer{
+  position:absolute;top:20px;right:20px;padding:6px 16px;
+  background:rgba(0,0,0,.7);color:#fff;border-radius:16px;
+  font-size:.85rem;font-weight:500;display:none;z-index:10;
+}
+@media(max-width:768px){
+  .demo-video-full,.demo-video-full.media-active{aspect-ratio:9/14;max-width:100%}
+  .exp-form-overlay{justify-content:flex-start;padding:16px 16px 0;overflow-y:auto}
+  .exp-form-overlay h2{font-size:1.1rem;margin-bottom:2px}
+  .exp-form-overlay p.sub{font-size:.75rem;margin-bottom:4px;line-height:1.4}
+  .exp-industry-row{gap:4px;margin-bottom:10px}
+  .exp-industry-row button{padding:5px 12px;font-size:.8rem}
+  .exp-form-row{flex-direction:column;align-items:center;gap:8px}
+  .exp-field{min-width:unset;width:100%;max-width:320px}
+  .exp-field label{font-size:.75rem;margin-bottom:2px}
+  .exp-field input{padding:8px 12px;font-size:.85rem;width:100%}
+  .exp-field-hint{display:none}
+  .exp-mode-btn{padding:12px 10px;font-size:.9rem}
+  .exp-start-btn{padding:14px 40px;font-size:1.05rem;margin-top:4px}
+  .exp-status{padding:4px;font-size:.85rem;min-height:20px;margin-top:4px}
+  .exp-industry-label{font-size:.85rem!important;margin-bottom:6px!important}
+}
+
 /* ===== PLANS ===== */
 .plans-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
 .plan-card{
@@ -413,12 +501,12 @@ img,video{max-width:100%;height:auto;display:block}
 }
 .section-cta .cta-bg{
   position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
-  object-position:center 8%;
+  object-position:center 8%;z-index:0;
 }
 .section-cta .cta-bg-overlay{
-  position:absolute;inset:0;background:rgba(0,0,0,.6);
+  position:absolute;inset:0;background:rgba(0,0,0,.6);z-index:1;
 }
-.cta-inner{position:relative;z-index:1}
+.cta-inner{position:relative;z-index:2}
 .cta-inner h2{font-size:clamp(1.6rem,3.5vw,2.5rem);font-weight:900;color:#fff;margin-bottom:16px;line-height:1.4}
 .cta-inner p{font-size:1rem;color:rgba(255,255,255,.7);margin-bottom:36px}
 .cta-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
@@ -445,7 +533,7 @@ img,video{max-width:100%;height:auto;display:block}
 .ai-engine-card{background:#fff;border-radius:12px;padding:32px 28px;text-align:center;border:1px solid var(--border);transition:transform .3s;position:relative}
 .ai-engine-card:hover{transform:translateY(-4px)}
 .ai-engine-card.featured{border:2px solid var(--red);box-shadow:0 8px 32px rgba(216,1,0,.08)}
-.ai-engine-card img{height:48px;margin-bottom:16px;object-fit:contain}
+.ai-engine-card img{height:48px;margin-bottom:16px;object-fit:contain;display:block;margin-left:auto;margin-right:auto}
 .ai-engine-card h3{font-size:1.1rem;color:var(--purple);margin-bottom:4px}
 .ai-engine-card p{font-size:.85rem;color:var(--text-light);line-height:1.7;text-align:left}
 
@@ -503,8 +591,9 @@ img,video{max-width:100%;height:auto;display:block}
       <a href="#features">機能</a>
       <a href="#usecases">活用事例</a>
       <a href="#flow">導入の流れ</a>
+      <a href="#demo" style="color:var(--red);font-weight:700">体験デモ</a>
       <a href="#plans">プラン</a>
-      <a href="https://ncinc.jp/aica-contact/" class="nav-cta">お問い合わせ</a>
+      <a href="#demo" class="nav-cta">デモ体験</a>
     </div>
     <div class="hamburger" onclick="document.getElementById('navLinks').classList.toggle('open')">
       <span></span><span></span><span></span>
@@ -514,7 +603,7 @@ img,video{max-width:100%;height:auto;display:block}
 
 <!-- HERO -->
 <section class="hero" id="top">
-  <video class="hero-video" autoplay muted loop playsinline>
+  <video class="hero-video" autoplay muted loop playsinline preload="metadata">
     <source src="assets/videos/Aica_Face_Up.mp4" type="video/mp4">
   </video>
   <div class="hero-overlay"></div>
@@ -525,8 +614,7 @@ img,video{max-width:100%;height:auto;display:block}
       フォトリアルな3Dキャラクターが、リアルタイムの音声AIでお客様をおもてなし。ホテル・商業施設・イベントの接客を変える。
     </p>
     <div class="hero-btns reveal d3">
-      <a href="#demo" class="btn btn-red">▶ デモを見る</a>
-      <a href="https://ncinc.jp/aica-contact/" class="btn btn-white">お問い合わせ</a>
+      <a href="#demo" class="btn btn-red">▶ AICAと話してみる</a>
     </div>
   </div>
 </section>
@@ -541,30 +629,95 @@ img,video{max-width:100%;height:auto;display:block}
       <div class="label">ABOUT AICA</div>
       <h2>まるで人と話しているようなAIコンシェルジュ</h2>
       <p>
-        AI Concierge AICAは、ただ会話するだけのチャットAIではありません。フォトリアルな3Dキャラクターが音声でお客様と対話し、その場で「次のアクション」まで実行する——それがAICAの最大の特長です。
+        AI Concierge AICA（AIコンシェルジュ アイカ）は、ただ会話するだけのチャットAIではありません。フォトリアルな3Dキャラクターが音声でお客様と対話し、その場で「次のアクション」まで実行する——それがAICAの最大の特長です。
       </p>
       <p>
         レストランの予約、ルームサービスの注文、買い物の代行、顧客データベースと連携したパーソナルな対応。AICAは会話の中からお客様の意図を読み取り、予約システムや在庫管理、決済サービスと直接つながって、リアルタイムにアクションを完了させます。会話ログは自動で集約・分析され、チームへの共有やマーケティング戦略にも活用可能です。
       </p>
       <p>
-        スマートフォン、タブレット、PC、大型サイネージ——あらゆるデバイスからブラウザひとつでアクセスでき、24時間365日、多言語で対応。深夜でも休日でも、AICAはプロフェッショナルな笑顔でお客様をお迎えします。
+        AICAはビデオ通話だけではありません。AI電話受付機能により、お客様からの電話にもAICAが24時間対応。予約受付、問い合わせ対応、クレーム処理、緊急連絡の振り分けまで、人間のオペレーターと同等の品質で自動化します。映像AIと電話AIを統合した唯一のソリューションです。
+      </p>
+      <p>
+        スマートフォン、タブレット、PC、大型サイネージ、そして電話——あらゆるデバイスとチャネルからアクセスでき、24時間365日、多言語で対応。深夜でも休日でも、AICAはプロフェッショナルな笑顔と声でお客様をお迎えします。
       </p>
     </div>
   </div>
 </section>
 
-<!-- DEMO VIDEO -->
+<!-- DEMO VIDEO + EXPERIENCE（統合: 動画→ディゾルブ→AICA画面+フォームオーバーレイ） -->
 <section class="demo-section" id="demo">
   <div class="demo-video-full reveal-scale" id="demoVideoWrap">
+    <!-- Promo動画（初期表示・再生後ディゾルブで消える） -->
     <video id="demoVideo" muted playsinline preload="metadata">
-      <source src="assets/videos/Promo.mp4" type="video/mp4">
+      <source src="AICA-Promo.mp4" type="video/mp4">
     </video>
+    <!-- クリック再生ポスター -->
     <div class="demo-poster" id="demoPoster">
       <div class="demo-poster-inner">
         <div class="play-circle"></div>
         <p>CLICK TO PLAY WITH SOUND</p>
       </div>
     </div>
+    <!-- AICA Pixel Streaming映像（動画終了後に表示） -->
+    <video id="expVideo" autoplay playsinline muted style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1.5s ease;z-index:1"></video>
+    <!-- フォームオーバーレイ（動画終了後にディゾルブで出現、AICA画面の上に重なる） -->
+    <div class="exp-form-overlay" id="expFormOverlay">
+      <h2>今すぐAICAと話してみる</h2>
+      <p class="sub">情報を入力するだけで、AICAがあなたの業種に合わせたご案内をリアルタイムでお届けします</p>
+      <p class="exp-note" style="color:rgba(255,255,255,.4);font-size:.65rem;margin:-2px 0 4px;line-height:1.3">※ ビデオは初回起動に約1分（実導入は24時間即応答）／電話は常時稼働</p>
+      <p class="exp-industry-label" style="color:#fff;font-size:1rem;margin-bottom:10px;font-weight:700;text-shadow:0 1px 4px rgba(0,0,0,.5)">お客様の業界をお選びください</p>
+      <div class="exp-industry-row" id="expIndustry">
+        <button type="button" data-val="飲食">飲食</button>
+        <button type="button" data-val="美容">美容</button>
+        <button type="button" data-val="宿泊">宿泊</button>
+        <button type="button" data-val="医療">医療</button>
+        <button type="button" data-val="不動産">不動産</button>
+        <button type="button" data-val="小売">小売</button>
+        <button type="button" data-val="物流">物流</button>
+        <button type="button" data-val="士業">士業</button>
+        <button type="button" data-val="IT">IT</button>
+        <button type="button" data-val="教育">教育</button>
+        <button type="button" data-val="介護・福祉">介護・福祉</button>
+        <button type="button" data-val="製造">製造</button>
+        <button type="button" data-val="その他">その他</button>
+      </div>
+      <div class="exp-form-row">
+        <div class="exp-field">
+          <label class="required">お名前 / 法人名</label>
+          <input type="text" id="expName" placeholder="山田太郎 or 株式会社○○">
+          <span class="exp-field-hint">AICAがお名前でお呼びします</span>
+        </div>
+        <div class="exp-field">
+          <label class="required">メールアドレス</label>
+          <input type="email" id="expEmail" placeholder="info@example.com" style="width:220px">
+          <span class="exp-field-hint">会話内容のレポートをお届けします。後から内容を振り返ることができます</span>
+        </div>
+        <div class="exp-field" id="expPhoneField">
+          <label id="expPhoneLabel">電話番号（任意）</label>
+          <input type="tel" id="expPhone" placeholder="09012345678">
+          <span class="exp-field-hint" id="expPhoneHint">担当者からのご連絡時に使用いたします</span>
+        </div>
+        <div class="exp-mode-toggle" id="expModeToggle">
+          <span class="exp-mode-label">体験方法</span>
+          <div class="exp-mode-btns">
+            <button type="button" class="exp-mode-btn selected" data-mode="video" id="expModeVideo">&#x1f3ac; ビデオ</button>
+            <button type="button" class="exp-mode-btn" data-mode="phone" id="expModePhone">&#x1f4de; 電話</button>
+          </div>
+        </div>
+        <button class="exp-start-btn" id="expStartBtn" disabled>AICAと話す</button>
+      </div>
+    </div>
+    <div class="exp-status" id="expStatus"></div>
+    <!-- 動画再生中メッセージ（フォームオーバーレイ外に配置） -->
+    <div id="expVideoMsg" style="display:none;position:absolute;bottom:24px;left:0;right:0;text-align:center;z-index:10;padding:14px 20px;margin:0 20px;background:rgba(0,0,0,.6);border-radius:10px;backdrop-filter:blur(4px)">
+      <p style="color:#fff;font-size:1.05rem;margin:0;font-weight:600;text-shadow:0 1px 4px rgba(0,0,0,.5)">AICAと話す準備をしています</p>
+      <p style="color:rgba(255,255,255,.7);font-size:.85rem;margin:6px 0 0">会話開始まで <span id="expVideoCountdown" style="color:#d4af37;font-weight:700"></span></p>
+    </div>
+    <!-- セッション中UI -->
+    <div class="exp-visitor-info" id="expVisitorInfo" style="display:none;position:absolute;top:16px;left:16px;z-index:10;background:rgba(0,0,0,.4);color:#fff;padding:16px 24px;border-radius:12px;font-size:1.1rem;line-height:1.8;backdrop-filter:blur(6px);max-width:360px"></div>
+    <div class="exp-timer" id="expTimer">10:00</div>
+    <button class="exp-mic-btn" id="expMicBtn" title="マイク ON/OFF">🎤</button>
+    <button class="exp-end-btn" id="expEndBtn" style="display:none;position:absolute;bottom:16px;left:50%;transform:translateX(-50%);z-index:10;padding:10px 24px;border:1px solid rgba(255,255,255,.5);border-radius:8px;background:rgba(0,0,0,.4);color:#fff;font-size:.85rem;cursor:pointer;backdrop-filter:blur(4px);font-family:inherit;transition:all .3s">会話を終了する</button>
   </div>
 </section>
 
@@ -594,8 +747,8 @@ img,video{max-width:100%;height:auto;display:block}
       <div class="feat-card reveal d3">
         <div class="feat-img-wrap"><img class="feat-bg" src="assets/images/feat_browser.png" alt="" loading="lazy"></div>
         <div class="feat-text">
-          <h3>あらゆる端末からアクセス</h3>
-          <p>スマートフォン、タブレット、PC、大型サイネージ——ブラウザさえあればどこからでもアクセス可能。アプリのインストールは一切不要。古いスマホでも最新PCと同じ高品質な3D映像体験をお届けします。</p>
+          <h3>映像も電話も、あらゆるチャネルに対応</h3>
+          <p>スマートフォン、タブレット、PC、大型サイネージでの映像接客に加え、電話回線にも対応。お客様からの電話にAICAが直接応答し、予約受付・問い合わせ対応・クレーム処理・緊急連絡の振り分けまで自動化。映像と電話を統合した唯一のAIコンシェルジュです。</p>
         </div>
       </div>
       <div class="feat-card reveal d1">
@@ -626,7 +779,7 @@ img,video{max-width:100%;height:auto;display:block}
 <!-- METAHUMAN SHOWCASE -->
 <div class="mh-section" id="metahuman">
   <div class="mh-top reveal-scale">
-    <video autoplay muted loop playsinline>
+    <video class="lazy-video" muted loop playsinline preload="none">
       <source src="assets/videos/Aica_Face_1920.mp4" type="video/mp4">
     </video>
     <div class="mh-overlay"></div>
@@ -637,7 +790,7 @@ img,video{max-width:100%;height:auto;display:block}
   </div>
   <div class="mh-bottom">
     <div class="mh-cell reveal-left">
-      <video autoplay muted loop playsinline>
+      <video class="lazy-video" muted loop playsinline preload="none">
         <source src="assets/videos/Aica_Body_Action.mp4" type="video/mp4">
       </video>
       <div class="mh-overlay"></div>
@@ -668,17 +821,17 @@ img,video{max-width:100%;height:auto;display:block}
     </div>
     <div class="ai-engine-grid">
       <div class="ai-engine-card reveal d1">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Google_Gemini_logo.svg/120px-Google_Gemini_logo.svg.png" alt="Google Gemini" loading="lazy">
-        <h3 >Google Gemini</h3>
-        <span style="display:inline-block;padding:2px 10px;border-radius:3px;background:#e8f5e9;color:#2e7d32;font-size:.7rem;font-weight:700;margin-bottom:12px">コスト最安</span>
-        <p >日本語の自然さと品質で最高評価。Google検索連携によるリアルタイム情報取得にも対応。圧倒的な低コストで長時間運用に最適です。</p>
-      </div>
-      <div class="ai-engine-card featured reveal d2">
-        <span style="position:absolute;top:-11px;left:50%;transform:translateX(-50%);padding:3px 14px;border-radius:3px;background:var(--red);font-size:.65rem;font-weight:700;color:#fff">おすすめ</span>
         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/120px-Amazon_logo.svg.png" alt="Amazon Nova Sonic" loading="lazy">
         <h3 >Amazon Nova Sonic 2</h3>
         <span style="display:inline-block;padding:2px 10px;border-radius:3px;background:#fff3e0;color:#e65100;font-size:.7rem;font-weight:700;margin-bottom:12px">応答速度 No.1</span>
         <p >東京リージョン直結で1秒未満の超高速応答。面談やデモなど、テンポの良い対話が求められるシーンに最適。コストパフォーマンスにも優れています。</p>
+      </div>
+      <div class="ai-engine-card featured reveal d2">
+        <span style="position:absolute;top:-11px;left:50%;transform:translateX(-50%);padding:3px 14px;border-radius:3px;background:var(--red);font-size:.65rem;font-weight:700;color:#fff">おすすめ</span>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Google_Gemini_logo.svg/120px-Google_Gemini_logo.svg.png" alt="Google Gemini" loading="lazy">
+        <h3 >Google Gemini</h3>
+        <span style="display:inline-block;padding:2px 10px;border-radius:3px;background:#e8f5e9;color:#2e7d32;font-size:.7rem;font-weight:700;margin-bottom:12px">コスト最安</span>
+        <p >日本語の自然さと品質で最高評価。Google検索連携によるリアルタイム情報取得にも対応。圧倒的な低コストで長時間運用に最適です。</p>
       </div>
       <div class="ai-engine-card reveal d3">
         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/OpenAI_Logo.svg/120px-OpenAI_Logo.svg.png" alt="OpenAI" loading="lazy">
@@ -703,7 +856,7 @@ img,video{max-width:100%;height:auto;display:block}
   </section>
 
   <div class="uc-block">
-    <video class="uc-bg uc-bg-video" autoplay muted loop playsinline style="object-position:center 40%"><source src="assets/videos/uc_hotel.mp4" type="video/mp4"></video>
+    <video class="uc-bg uc-bg-video lazy-video" muted loop playsinline preload="none" style="object-position:center 40%"><source src="assets/videos/uc_hotel.mp4" type="video/mp4"></video>
     <img class="uc-bg uc-bg-img" src="assets/images/uc_hotel.png" alt="" loading="lazy" style="object-position:center 40%">
     <div class="uc-bg-overlay"></div>
     <div class="uc-scene-label">HOTEL</div>
@@ -727,7 +880,7 @@ img,video{max-width:100%;height:auto;display:block}
   </div>
 
   <div class="uc-block">
-    <video class="uc-bg uc-bg-video" autoplay muted loop playsinline style="object-position:center 30%"><source src="assets/videos/uc_event.mp4" type="video/mp4"></video>
+    <video class="uc-bg uc-bg-video lazy-video" muted loop playsinline preload="none" style="object-position:center 30%"><source src="assets/videos/uc_event.mp4" type="video/mp4"></video>
     <img class="uc-bg uc-bg-img" src="assets/images/uc_event.png" alt="" loading="lazy" style="object-position:center 30%">
     <div class="uc-bg-overlay"></div>
     <div class="uc-scene-label">EVENT</div>
@@ -751,7 +904,7 @@ img,video{max-width:100%;height:auto;display:block}
   </div>
 
   <div class="uc-block">
-    <video class="uc-bg uc-bg-video" autoplay muted loop playsinline style="object-position:center 50%"><source src="assets/videos/uc_commercial.mp4" type="video/mp4"></video>
+    <video class="uc-bg uc-bg-video lazy-video" muted loop playsinline preload="none" style="object-position:center 50%"><source src="assets/videos/uc_commercial.mp4" type="video/mp4"></video>
     <img class="uc-bg uc-bg-img" src="assets/images/uc_commercial.png" alt="" loading="lazy" style="object-position:center 50%">
     <div class="uc-bg-overlay"></div>
     <div class="uc-scene-label">COMMERCIAL</div>
@@ -775,7 +928,7 @@ img,video{max-width:100%;height:auto;display:block}
   </div>
 
   <div class="uc-block">
-    <video class="uc-bg uc-bg-video" autoplay muted loop playsinline style="object-position:center 50%"><source src="assets/videos/uc_office.mp4" type="video/mp4"></video>
+    <video class="uc-bg uc-bg-video lazy-video" muted loop playsinline preload="none" style="object-position:center 50%"><source src="assets/videos/uc_office.mp4" type="video/mp4"></video>
     <img class="uc-bg uc-bg-img" src="assets/images/uc_office.png" alt="" loading="lazy" style="object-position:center 50%">
     <div class="uc-bg-overlay"></div>
     <div class="uc-scene-label">OFFICE</div>
@@ -799,7 +952,7 @@ img,video{max-width:100%;height:auto;display:block}
   </div>
 
   <div class="uc-block">
-    <video class="uc-bg uc-bg-video" autoplay muted loop playsinline><source src="assets/videos/uc_interview.mp4" type="video/mp4"></video>
+    <video class="uc-bg uc-bg-video lazy-video" muted loop playsinline preload="none"><source src="assets/videos/uc_interview.mp4" type="video/mp4"></video>
     <img class="uc-bg uc-bg-img" src="assets/images/uc_interview.png" alt="" loading="lazy">
     <div class="uc-bg-overlay"></div>
     <div class="uc-scene-label">INTERVIEW</div>
@@ -823,7 +976,7 @@ img,video{max-width:100%;height:auto;display:block}
   </div>
 
   <div class="uc-block">
-    <video class="uc-bg uc-bg-video" autoplay muted loop playsinline><source src="assets/videos/uc_education.mp4" type="video/mp4"></video>
+    <video class="uc-bg uc-bg-video lazy-video" muted loop playsinline preload="none"><source src="assets/videos/uc_education.mp4" type="video/mp4"></video>
     <img class="uc-bg uc-bg-img" src="assets/images/uc_education.png" alt="" loading="lazy">
     <div class="uc-bg-overlay"></div>
     <div class="uc-scene-label">EDUCATION</div>
@@ -958,14 +1111,14 @@ img,video{max-width:100%;height:auto;display:block}
 
 <!-- CTA -->
 <section class="section-cta" id="contact">
-  <video class="cta-bg" autoplay muted loop playsinline><source src="assets/videos/Promo.mp4" type="video/mp4"></video>
+  <video class="cta-bg lazy-video" muted loop playsinline preload="none"><source src="AICA-Promo.mp4" type="video/mp4"></video>
   <div class="cta-bg-overlay"></div>
   <div class="container">
     <div class="cta-inner reveal">
       <h2>AICAと一緒に、<br>おもてなしの未来を始めませんか？</h2>
-      <p>デモンストレーションのご依頼やお見積りなど、お気軽にお問い合わせください。</p>
+      <p>上のデモ体験で、AICAに直接ご質問・ご相談いただけます。<br>料金やプランについても、AICAがお答えします。</p>
       <div class="cta-btns">
-        <a href="https://ncinc.jp/aica-contact/" class="btn btn-red" target="_blank">✉ お問い合わせ</a>
+        <a href="#demo" class="btn btn-red">AICAと話してみる</a>
         <a href="https://ncinc.jp" class="btn btn-white" target="_blank">NATIVE CREATION について</a>
       </div>
     </div>
@@ -995,7 +1148,7 @@ img,video{max-width:100%;height:auto;display:block}
       </div>
       <div class="footer-col">
         <h4>その他</h4>
-        <a href="https://ncinc.jp/aica-contact/" target="_blank">お問い合わせ</a>
+        <a href="#demo">デモ体験</a>
         <div class="footer-badges">
           <img src="https://ncinc.jp/wp-content/uploads/2025/09/10825173_02_jp.png" alt="ISMS認証" style="height:60px;margin-top:12px">
           <img src="https://ncinc.jp/wp-content/uploads/2023/08/partnership_logo.png" alt="パートナーシップ" style="height:40px;margin-top:8px">
@@ -1017,6 +1170,27 @@ document.querySelectorAll('.uc-block video.uc-bg').forEach(v=>{v.playbackRate=0.
 // Nav scroll
 window.addEventListener('scroll',()=>{document.getElementById('nav').classList.toggle('scrolled',scrollY>60)});
 
+// ★ 遅延ロード: lazy-video要素はビューポートに入った時だけロード・再生
+(function() {
+  var lazyVideos = document.querySelectorAll('video.lazy-video');
+  if ('IntersectionObserver' in window) {
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          var video = entry.target;
+          video.load();
+          video.play().catch(function(){});
+          observer.unobserve(video);
+        }
+      });
+    }, {rootMargin: '200px'});
+    lazyVideos.forEach(function(v) { observer.observe(v); });
+  } else {
+    // fallback: 全部ロード
+    lazyVideos.forEach(function(v) { v.load(); v.play().catch(function(){}); });
+  }
+})();
+
 // Smooth scroll
 document.querySelectorAll('a[href^="#"]').forEach(a=>{
   a.addEventListener('click',function(e){
@@ -1026,39 +1200,1117 @@ document.querySelectorAll('a[href^="#"]').forEach(a=>{
   });
 });
 
-// Demo video: scroll autoplay (muted, 1 time only) + click for sound replay
+// ===== DEMO VIDEO + EXPERIENCE DEMO（統合） =====
+// ★ 新フロー（2026-03-28改修）
+// ページ読込 → 常にフォーム表示
+//   EC2起動済み → Pixel Streaming映像を背景に待機
+//   EC2停止中 → AICA静止画を背景
+// 「AICAと話す」→ EC2起動済みならすぐ接続 / 停止中ならPromo動画+待機メッセージ
 (function(){
-  const video=document.getElementById('demoVideo');
-  const poster=document.getElementById('demoPoster');
-  if(!video)return;
-  let hasPlayed=false;
+  const demoVideo = document.getElementById('demoVideo');
+  const poster = document.getElementById('demoPoster');
+  const formOverlay = document.getElementById('expFormOverlay');
+  const expVideo = document.getElementById('expVideo');
+  const wrapEl = document.getElementById('demoVideoWrap');
+  if(!demoVideo || !formOverlay) return;
 
-  // Scroll into view → auto-play muted (once)
-  const vObs=new IntersectionObserver(entries=>{
-    entries.forEach(e=>{
-      if(e.isIntersecting && e.intersectionRatio>=0.6 && !hasPlayed){
-        hasPlayed=true;
-        video.play().then(()=>{video.classList.add('playing')}).catch(()=>{});
+  // LP API設定
+  const LP_API_BASE = 'https://r2tb0x8bs7.execute-api.ap-northeast-1.amazonaws.com/lp';
+  const AUDIO_WS_URL = 'wss://ai.ncinc.jp:8766';
+  const SIGNALING_URL = 'wss://ai.ncinc.jp';
+
+  let psSignalingWs = null;
+  let psPeerConnection = null;
+  let psIceServers = [];
+
+  // --- Pixel Streaming接続（セッション開始時に呼び出し） ---
+  let psVideoReceived = false; // PS映像受信フラグ
+  let psRetryCount = 0;
+  const PS_MAX_RETRIES = 30; // 3秒×30回 = 90秒
+
+  function connectPixelStreaming() {
+    psVideoReceived = false;
+    psRetryCount = 0;
+    try { psSignalingWs = new WebSocket(SIGNALING_URL); } catch(e) {
+      console.log('[LP-PS] WebSocket接続失敗 — 音声のみで続行');
+      return;
+    }
+    psSignalingWs.onerror = function(e) {
+      console.log('[LP-PS] WebSocketエラー — 音声のみで続行');
+    };
+    psSignalingWs.onmessage = async function(event) {
+      try {
+        var msg = JSON.parse(event.data);
+        if (msg.type === 'config') {
+          var pco = msg.peerConnectionOptions || {};
+          if (typeof pco === 'string') try { pco = JSON.parse(pco); } catch(e) { pco = {}; }
+          psIceServers = pco.iceServers || [];
+          psSignalingWs.send(JSON.stringify({ type: 'listStreamers' }));
+        } else if (msg.type === 'streamerList') {
+          var ids = msg.ids || [];
+          if (ids.length > 0) {
+            psSignalingWs.send(JSON.stringify({ type: 'subscribe', streamerId: ids[0] }));
+            console.log('[LP-PS] subscribe:', ids[0]);
+          } else {
+            psRetryCount++;
+            if (psRetryCount < PS_MAX_RETRIES) {
+              console.log('[LP-PS] ストリーマーなし — 3秒後リトライ (' + psRetryCount + '/' + PS_MAX_RETRIES + ')');
+              setTimeout(function() {
+                if (psSignalingWs && psSignalingWs.readyState === 1)
+                  psSignalingWs.send(JSON.stringify({ type: 'listStreamers' }));
+              }, 3000);
+            } else {
+              console.log('[LP-PS] ストリーマー接続タイムアウト — 音声のみで続行');
+            }
+          }
+        } else if (msg.type === 'offer') {
+          if (psPeerConnection) { psPeerConnection.close(); psPeerConnection = null; }
+          psPeerConnection = new RTCPeerConnection({
+            iceServers: psIceServers.length > 0 ? psIceServers : [{ urls: 'stun:stun.l.google.com:19302' }]
+          });
+          psPeerConnection.onicecandidate = function(ev) {
+            if (ev.candidate && psSignalingWs && psSignalingWs.readyState === 1)
+              psSignalingWs.send(JSON.stringify({ type: 'iceCandidate', candidate: ev.candidate }));
+          };
+          psPeerConnection.ontrack = function(ev) {
+            if (ev.track.kind === 'video') {
+              psVideoReceived = true;
+              expVideo.srcObject = ev.streams[0];
+              expVideo.style.opacity = '1';
+              expVideo.style.zIndex = '2';
+              wrapEl.style.backgroundImage = 'none';
+              console.log('[LP-PS] Pixel Streaming映像表示');
+            }
+          };
+          psPeerConnection.ondatachannel = function() {};
+          await psPeerConnection.setRemoteDescription(new RTCSessionDescription({ type: 'offer', sdp: msg.sdp }));
+          var answer = await psPeerConnection.createAnswer();
+          await psPeerConnection.setLocalDescription(answer);
+          if (psSignalingWs && psSignalingWs.readyState === 1)
+            psSignalingWs.send(JSON.stringify({ type: 'answer', sdp: answer.sdp }));
+        } else if (msg.type === 'iceCandidate' && psPeerConnection && msg.candidate) {
+          try { await psPeerConnection.addIceCandidate(new RTCIceCandidate(msg.candidate)); } catch(e) {}
+        }
+      } catch(e) { console.log('[LP-PS] error:', e); }
+    };
+
+    // ★ PS映像タイムアウト: 15秒以内に映像が来なければ静止画背景のまま続行
+    setTimeout(function() {
+      if (!psVideoReceived && sessionActive) {
+        console.log('[LP-PS] 映像タイムアウト（15秒） — 静止画背景のまま会話続行');
+      }
+    }, 15000);
+  }
+
+  function disconnectPixelStreaming() {
+    if (psPeerConnection) { psPeerConnection.close(); psPeerConnection = null; }
+    if (psSignalingWs) { psSignalingWs.close(); psSignalingWs = null; }
+    expVideo.style.opacity = '0';
+    expVideo.srcObject = null;
+  }
+
+  // ★ フレームアウト検出: デモエリアが完全に画面外に出たらセッション終了
+  var demoMediaActive = false; // 動画再生中またはストリーミング中
+  var frameOutObserver = new IntersectionObserver(function(entries) {
+    if (!demoMediaActive) return;
+    if (entries[0].intersectionRatio === 0) {
+      console.log('[LP] デモエリアがフレームアウト — セッション終了');
+      if (typeof cleanup === 'function') cleanup();
+    }
+  }, { threshold: 0 });
+  frameOutObserver.observe(wrapEl);
+
+  // --- ページ読み込み時: AICA静止画+フォーム表示（Pixel Streamingは接続しない） ---
+  demoVideo.style.display = 'none';
+  poster.style.display = 'none';
+  wrapEl.style.backgroundImage = 'url(https://ncinc.jp/wp-content/uploads/2026/03/aica_side.png)';
+  wrapEl.style.backgroundSize = 'cover';
+  wrapEl.style.backgroundPosition = 'center top';
+  wrapEl.style.minHeight = '700px';
+  formOverlay.style.background = 'rgba(47,0,75,.5)';
+  formOverlay.style.backdropFilter = 'blur(3px)';
+  formOverlay.style.webkitBackdropFilter = 'blur(3px)';
+  formOverlay.classList.add('visible');
+
+  // --- LP API + 会話セッション ---
+  const nameInput = document.getElementById('expName');
+  const emailInput = document.getElementById('expEmail');
+  const phoneInput = document.getElementById('expPhone');
+  const industryBtns = document.querySelectorAll('#expIndustry button');
+  const startBtn = document.getElementById('expStartBtn');
+  const statusEl = document.getElementById('expStatus');
+  const timerEl = document.getElementById('expTimer');
+  const micBtn = document.getElementById('expMicBtn');
+
+  let selectedIndustry = '';
+  let lpToken = '';
+  let audioWs = null;
+  let micStream = null;
+  let micProcessor = null;
+  let audioContext = null;
+  let sessionActive = false;
+  let timerInterval = null;
+  let micMuted = false;
+  let expMode = 'video'; // 'video' or 'phone'
+
+  // 体験モード切替
+  const modeVideoBtn = document.getElementById('expModeVideo');
+  const modePhoneBtn = document.getElementById('expModePhone');
+  const phoneLabel = document.getElementById('expPhoneLabel');
+  const phoneHint = document.getElementById('expPhoneHint');
+
+  function setExpMode(mode) {
+    expMode = mode;
+    document.querySelectorAll('.exp-mode-btn').forEach(b => b.classList.remove('selected'));
+    if (mode === 'phone') {
+      modePhoneBtn.classList.add('selected');
+      startBtn.textContent = 'デモを開始する';
+    } else {
+      modeVideoBtn.classList.add('selected');
+      startBtn.textContent = 'AICAと話す';
+    }
+    validateForm();
+  }
+  modeVideoBtn.addEventListener('click', () => setExpMode('video'));
+  modePhoneBtn.addEventListener('click', () => setExpMode('phone'));
+
+  // 業種タップ
+  industryBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      industryBtns.forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      selectedIndustry = btn.dataset.val;
+      validateForm();
+    });
+  });
+
+  function validateForm() {
+    let valid = nameInput.value.trim() && selectedIndustry && emailInput.value.includes('@');
+    // 電話モード(着信方式): 電話番号不要
+    // ビデオモード: 電話番号は任意のまま
+    startBtn.disabled = !valid;
+  }
+  [nameInput, emailInput, phoneInput].forEach(el => el.addEventListener('input', validateForm));
+
+  function setStatus(msg, type) {
+    statusEl.textContent = msg;
+    statusEl.style.color = type === 'error' ? '#ff6b6b' : 'rgba(255,255,255,.6)';
+  }
+
+  // EC2停止中 → Promo動画再生（起動待ち演出）
+  var videoMsgEl = document.getElementById('expVideoMsg');
+
+  var videoCountdownInterval = null;
+  function showWaitingVideo() {
+    // ★ 電話モードで変更されたstatusElのスタイルをリセット
+    statusEl.style.cssText = '';
+    statusEl.innerHTML = '';
+    statusEl.style.display = 'none';
+    // 電話オーバーレイが残っていれば非表示
+    var phoneOv = document.getElementById('phoneOverlayDim');
+    if (phoneOv) phoneOv.style.display = 'none';
+
+    formOverlay.classList.remove('visible');
+    wrapEl.classList.add('media-active');
+    demoMediaActive = true;
+    wrapEl.scrollIntoView({behavior:'smooth',block:'center'});
+
+    // Promo動画のメッセージを初期状態に復元
+    videoMsgEl.innerHTML = '<p style="color:#fff;font-size:1.05rem;margin:0;font-weight:600;text-shadow:0 1px 4px rgba(0,0,0,.5)">AICAと話す準備をしています</p>'
+      + '<p style="color:rgba(255,255,255,.7);font-size:.85rem;margin:6px 0 0">会話開始まで <span id="expVideoCountdown" style="color:#d4af37;font-weight:700"></span></p>';
+
+    demoVideo.style.display = '';
+    demoVideo.loop = false;
+    demoVideo.muted = false;
+    demoVideo.currentTime = 0;
+    demoVideo.play().then(() => { demoVideo.classList.add('playing'); }).catch(() => {
+      demoVideo.muted = true;
+      demoVideo.play().then(() => { demoVideo.classList.add('playing'); }).catch(() => {});
+    });
+    videoMsgEl.style.display = 'block';
+    // カウントダウン表示（duration未ロード時は「準備中...」表示）
+    var cdEl = document.getElementById('expVideoCountdown');
+    if (videoCountdownInterval) clearInterval(videoCountdownInterval);
+    videoCountdownInterval = setInterval(function() {
+      if (!demoVideo.duration || isNaN(demoVideo.duration)) {
+        cdEl.textContent = '準備中...';
+        return;
+      }
+      var remaining = Math.max(0, Math.ceil(demoVideo.duration - demoVideo.currentTime));
+      cdEl.textContent = remaining + '秒';
+    }, 500);
+  }
+
+  function hideWaitingVideo() {
+    demoMediaActive = false;
+    demoVideo.pause();
+    demoVideo.classList.remove('playing');
+    demoVideo.style.display = 'none';
+    videoMsgEl.style.display = 'none';
+    if (videoCountdownInterval) { clearInterval(videoCountdownInterval); videoCountdownInterval = null; }
+  }
+
+  // ★ フロー全体:
+  // 1.「AICAと話す」→ API→ 即Promo動画再生+メッセージ
+  // 2. バックグラウンドでポーリング → 準備完了で音声WS接続（認証のみ）
+  // 3. Promo動画終了 → Pixel Streaming接続 + START_SESSION → 会話開始
+
+  let aicaServerInfo = null; // 準備完了時のサーバー情報
+  let audioWsReady = false;  // 音声WS認証完了フラグ
+  let videoFinished = false; // Promo動画再生完了フラグ
+
+  // Promo動画終了イベント → 会話開始トリガー
+  demoVideo.addEventListener('ended', function() {
+    videoFinished = true;
+    demoVideo.classList.remove('playing');
+    console.log('[LP] Promo動画終了');
+    if (audioWsReady) {
+      // 準備完了済み → 即座に会話開始
+      transitionToSession();
+    } else {
+      // ★ WS未完了 → 動画を隠して待機メッセージを表示
+      demoVideo.style.display = 'none';
+      videoMsgEl.style.display = 'block';
+      var cdEl = document.getElementById('expVideoCountdown');
+      cdEl.textContent = '';
+      videoMsgEl.querySelector('p').textContent = 'AICAの準備をしています...もう少しお待ちください';
+      videoMsgEl.querySelector('p:last-child').textContent = '';
+      console.log('[LP] WS未完了 — 待機メッセージ表示');
+    }
+  });
+
+  function transitionToSession() {
+    // Promo動画+メッセージを非表示 → Pixel Streaming + 会話開始
+    demoVideo.style.display = 'none';
+    videoMsgEl.style.display = 'none';
+    if (videoCountdownInterval) { clearInterval(videoCountdownInterval); videoCountdownInterval = null; }
+    statusEl.style.cssText = '';
+    formOverlay.classList.remove('visible');
+    connectPixelStreaming();
+
+    // ★ START_SESSION送信 — WS死亡時は再接続してから送信
+    function sendStartSession() {
+      if (audioWs && audioWs.readyState === 1) {
+        audioWs.send(JSON.stringify({
+          command: 'START_SESSION',
+          visitor_name: nameInput.value.trim(),
+          visitor_industry: selectedIndustry,
+          visitor_email: emailInput.value.trim(),
+          visitor_phone: phoneInput.value.trim(),
+        }));
+        sessionActive = true;
+        if (wsKeepaliveInterval) { clearInterval(wsKeepaliveInterval); wsKeepaliveInterval = null; }
+        console.log('[LP] START_SESSION送信');
+      } else {
+        console.log('[LP] WS切断検知 — 再接続中...');
+        // 再接続
+        var reconnWs = new WebSocket((wsServerInfo && wsServerInfo.audio_ws_url) || AUDIO_WS_URL);
+        reconnWs.binaryType = 'arraybuffer';
+        reconnWs.onopen = function() {
+          reconnWs.send(JSON.stringify({accesstoken: lpToken}));
+        };
+        reconnWs.onmessage = function(evt) {
+          if (typeof evt.data === 'string') {
+            try {
+              var msg = JSON.parse(evt.data);
+              if (msg.event === 'AUTH_OK') {
+                audioWs = reconnWs;
+                setupMicInput();
+                audioWs.onmessage = function(evt2) {
+                  if (typeof evt2.data === 'string') {
+                    try { var m = JSON.parse(evt2.data); if (m.event === 'SESSION_END') { console.log('[LP] SESSION_END受信'); setTimeout(function(){ cleanup(); }, 3000); } } catch(e) {}
+                  } else {
+                    if (sessionActive) playAudioData(evt2.data);
+                  }
+                };
+                audioWs.onclose = function() {
+                  if (sessionActive) { setStatus('接続が切断されました', 'error'); cleanup(); }
+                };
+                // START_SESSION送信
+                audioWs.send(JSON.stringify({
+                  command: 'START_SESSION',
+                  visitor_name: nameInput.value.trim(),
+                  visitor_industry: selectedIndustry,
+                  visitor_email: emailInput.value.trim(),
+                  visitor_phone: phoneInput.value.trim(),
+                }));
+                sessionActive = true;
+                console.log('[LP] START_SESSION送信（再接続後）');
+              }
+            } catch(e) {}
+          } else {
+            if (sessionActive) playAudioData(evt.data);
+          }
+        };
+        reconnWs.onerror = function() {
+          setStatus('音声接続に失敗しました', 'error');
+        };
+      }
+    }
+    sendStartSession();
+
+    // 訪問者情報パネル表示
+    var infoEl = document.getElementById('expVisitorInfo');
+    infoEl.innerHTML = '<strong>' + nameInput.value.trim() + '</strong> 様<br>業界: ' + selectedIndustry
+      + (emailInput.value.trim() ? '<br>' + emailInput.value.trim() : '')
+      + (phoneInput.value.trim() ? '<br>' + phoneInput.value.trim() : '');
+    infoEl.style.display = 'block';
+    micBtn.style.display = 'block';
+    timerEl.style.display = 'block';
+    document.getElementById('expEndBtn').style.display = 'block';
+    startTimer(600);
+  }
+
+  // ★ 電話モード処理（着信PIN方式）
+  var _phoneOverlayCreated = false;
+  var _pinCountdownTimer = null;
+  function showPhoneStatus(html) {
+    formOverlay.classList.remove('visible');
+    wrapEl.style.backgroundImage = 'url(https://ncinc.jp/wp-content/uploads/2026/03/aica_face.png_202603300135.jpeg)';
+    wrapEl.style.backgroundPosition = 'center center';
+    if (!_phoneOverlayCreated) {
+      _phoneOverlayCreated = true;
+      var overlay = document.createElement('div');
+      overlay.id = 'phoneOverlayDim';
+      overlay.style.cssText = 'position:absolute;inset:0;background:rgba(0,0,0,.45);z-index:1;pointer-events:none';
+      wrapEl.appendChild(overlay);
+    } else {
+      var ov = document.getElementById('phoneOverlayDim');
+      if (ov) ov.style.display = '';
+    }
+    statusEl.style.display = 'flex';
+    statusEl.style.flexDirection = 'column';
+    statusEl.style.position = 'absolute';
+    statusEl.style.top = '4px';
+    statusEl.style.bottom = '4px';
+    statusEl.style.left = '50%';
+    statusEl.style.transform = 'translateX(-50%)';
+    statusEl.style.zIndex = '10';
+    statusEl.style.background = 'rgba(0,0,0,.55)';
+    statusEl.style.borderRadius = '16px';
+    statusEl.style.backdropFilter = 'blur(6px)';
+    statusEl.style.padding = '0';
+    statusEl.style.maxWidth = '800px';
+    statusEl.style.width = '96%';
+    statusEl.style.overflowY = 'auto';
+    statusEl.innerHTML = html;
+  }
+
+  function showPhoneThankYou() {
+    if (_pinCountdownTimer) { clearInterval(_pinCountdownTimer); _pinCountdownTimer = null; }
+    // ★ ビデオと同じデザイン: AICA背景画像 + 暗めオーバーレイ
+    var phoneOv = document.getElementById('phoneOverlayDim');
+    if (phoneOv) phoneOv.style.display = 'none';
+    statusEl.style.cssText = '';
+    statusEl.style.display = 'none';
+    wrapEl.style.backgroundImage = 'url(https://ncinc.jp/wp-content/uploads/2026/03/aica_side.png)';
+    wrapEl.style.backgroundSize = 'cover';
+    wrapEl.style.backgroundPosition = 'center center';
+    formOverlay.style.background = 'rgba(26,26,46,.55)';
+    formOverlay.style.backdropFilter = 'blur(4px)';
+    formOverlay.innerHTML = '<div style="text-align:center;max-width:500px;padding:0 20px">'
+      + '<div style="font-size:3rem;margin-bottom:16px">&#10003;</div>'
+      + '<h2 style="font-size:1.8rem;font-weight:900;margin-bottom:12px;letter-spacing:.05em;text-shadow:0 2px 8px rgba(0,0,0,.5)">ありがとうございました</h2>'
+      + '<p style="color:rgba(255,255,255,.9);font-size:1rem;line-height:1.8;text-shadow:0 1px 4px rgba(0,0,0,.5)">'
+      + '本日はAICAのAI電話受付デモにご参加いただき、<br>誠にありがとうございます。<br><br>'
+      + 'ご入力いただいたメールアドレスに<br>詳しい資料をお送りいたします。<br>'
+      + '担当者より改めてご連絡させていただきます。</p>'
+      + '</div>';
+    formOverlay.classList.add('visible');
+  }
+
+  // 業種別FAQデータ（仮想設定に基づく具体的回答）
+  var INDUSTRY_FAQ = {
+    '飲食': [
+      {q:'今週の土曜日、19時から4名で予約できますか？', a:'テーブル席でしたら19時から4名様、お席ございます。個室ご希望でしたら4名用個室も空いております。お名前とお電話番号をお願いいたします。'},
+      {q:'個室は空いていますか？', a:'4名用と8名用の個室が2室ございます。ご利用日時をお聞かせいただければ空き状況をお調べいたします。'},
+      {q:'アレルギー対応のメニューはありますか？', a:'はい、卵・乳・小麦・えび・かに等のアレルギー対応が可能です。ご来店の前日までにお知らせいただければ、シェフが対応メニューをご準備いたします。'},
+      {q:'コース料理の内容を教えてください', a:'カジュアルコース5,000円、スタンダード8,000円、プレミアム12,000円の3種類でございます。いずれも税込です。'},
+      {q:'ランチメニューは何時までですか？', a:'ランチは11時30分から14時、ラストオーダーは13時30分です。パスタセット1,200円、本日のプレート1,500円がございます。'},
+      {q:'駐車場はありますか？', a:'提携パーキングがございまして、2時間無料券を発行しております。お車でお越しの際はお申し付けください。'},
+      {q:'最寄り駅からの行き方を教えてください', a:'表参道駅から徒歩5分です。B2出口を出て右に進み、2つ目の信号を左折していただくと左手にございます。'},
+      {q:'歓送迎会のプランはありますか？', a:'飲み放題2時間付きでお一人様4,500円からのプランがございます。8名様以上で幹事様1名無料です。'},
+      {q:'貸切はできますか？', a:'20名様以上で貸切のご相談を承っております。金曜・土曜はお早めのご予約をおすすめいたします。'},
+      {q:'テイクアウトの注文をしたいのですが', a:'パスタとピザのテイクアウトが可能です。お受け取りの30分前までにお電話でご注文ください。'},
+      {q:'デリバリーはやっていますか？', a:'当店から3キロ圏内で承っております。3,000円以上のご注文で配達料無料です。'},
+      {q:'先日の料理に髪の毛が入っていたのですが', a:'大変申し訳ございません。深くお詫び申し上げます。ご来店日時とお名前をお聞かせいただけますか？店長より改めてご連絡させていただきます。'},
+      {q:'料理が冷めた状態で提供されたのですが', a:'大変申し訳ございません。ご不快な思いをおかけいたしました。ご来店日時をお聞かせいただければ、店長から改めてお詫びのご連絡をさせていただきます。'},
+      {q:'誕生日のサプライズはお願いできますか？', a:'バースデープレートを無料でご用意できます。キャンドル演出も可能ですので、ご予約時にお申し付けください。'},
+      {q:'年末年始の営業時間を教えてください', a:'12月31日から1月2日まで休業で、1月3日から通常営業いたします。'},
+    ],
+    '美容': [
+      {q:'カット＆カラーの予約をしたいのですが', a:'カット＆カラーですと所要時間は約2時間半です。ご希望の日時をお聞かせください。指名料は550円です。'},
+      {q:'今日、空いている時間はありますか？', a:'本日でしたら14時と16時に空きがございます。メニューは何をご希望でしょうか？'},
+      {q:'カットの料金はいくらですか？', a:'一般5,500円、大学生4,400円、中高生3,850円、小学生以下2,750円です。シャンプー・ブロー込みです。'},
+      {q:'初回割引はありますか？', a:'ご新規のお客様は全メニュー20%OFFです。ご紹介の場合はお互い10%OFFになります。'},
+      {q:'ヘッドスパだけでも予約できますか？', a:'はい、30分コース4,400円と60分コース7,700円がございます。'},
+      {q:'パーマをかけたいのですが、どのくらい持ちますか？', a:'コールドパーマで2〜3ヶ月、デジタルパーマですと3〜4ヶ月持つ方が多いです。デジタルパーマは13,200円です。'},
+      {q:'縮毛矯正とカラーは同時にできますか？', a:'髪の状態によりますので、まずカウンセリングにお越しいただくのをおすすめします。縮毛矯正は16,500円からです。'},
+      {q:'先日のカラーが思っていた色と違うのですが', a:'大変申し訳ございません。施術後1週間以内でしたら無料でお直しいたします。担当の空き時間をお調べしますので、ご都合の良い日時をお聞かせください。'},
+      {q:'予約していた時間に遅れそうなのですが', a:'ご連絡ありがとうございます。15分以内でしたらそのままお越しください。それ以上の場合は次の方との兼ね合いがございますので、時間変更をご相談させてください。'},
+      {q:'子連れでも大丈夫ですか？', a:'はい、キッズスペースがございます。ご予約時にお子様連れとお伝えいただければ、お席を配慮いたします。'},
+      {q:'クレジットカードは使えますか？', a:'はい、VISA・Mastercard・JCB・PayPay・Suica等、各種対応しております。'},
+      {q:'成人式のヘアセットは予約できますか？', a:'早朝5時から対応可能です。事前リハーサルもおすすめしておりますので、お早めにご相談ください。'},
+      {q:'駐車場はありますか？', a:'近隣のコインパーキングをご案内しております。自由が丘駅から徒歩3分ですので、電車でのお越しが便利です。'},
+      {q:'定休日はいつですか？', a:'毎週月曜日と第3火曜日が定休日です。平日は10時〜20時、土日祝は9時〜19時です。'},
+    ],
+    '宿泊': [
+      {q:'来月の連休に2泊で予約したいのですが', a:'ツインルームでしたら1泊18,000円〜、和室22,000円〜でございます。お部屋タイプとご人数をお聞かせください。'},
+      {q:'朝食付きと素泊まりの料金の違いは？', a:'朝食付きプランはお一人様1,800円プラスです。和洋バイキング形式で6時半から9時半までご利用いただけます。'},
+      {q:'大浴場はありますか？', a:'天然温泉の大浴場がございます。6時〜10時と15時〜深夜1時、サウナも併設しております。'},
+      {q:'駅からの送迎はありますか？', a:'箱根湯本駅から無料シャトルバスを運行しております。14時〜20時まで30分間隔です。ご到着時刻をお知らせいただければお迎えも可能です。'},
+      {q:'駐車場は予約が必要ですか？', a:'予約不要です。50台分ございまして、1泊1,000円です。先着順ですのでお早めにお越しください。'},
+      {q:'夕食の時間は何時ですか？', a:'17時半、18時、18時半、19時の4つからお選びいただけます。会席料理でお一人様5,500円です。'},
+      {q:'記念日のサプライズは頼めますか？', a:'ケーキ3,500円〜、花束3,000円〜、シャンパン5,000円〜でご用意できます。ご予約時にお申し付けください。'},
+      {q:'キャンセル料はいつから発生しますか？', a:'3日前から20%、前日50%、当日80%、無連絡100%です。台風等の場合は別途ご相談承ります。'},
+      {q:'チェックアウトを延長できますか？', a:'12時まで+1,000円、14時まで+2,000円です。当日の空室状況によりますので、朝フロントにてお申し付けください。'},
+      {q:'Wi-Fiは使えますか？', a:'全館で無料Wi-Fiをご利用いただけます。パスワードはチェックイン時にお渡しします。'},
+      {q:'車いすでも利用できますか？', a:'1階にバリアフリー対応客室がございます。お風呂にも手すりを設置しております。ご予約時にお申し付けください。'},
+      {q:'お部屋のエアコンが効かないのですが', a:'大変申し訳ございません。すぐにスタッフを向かわせます。お部屋番号をお聞かせいただけますか？'},
+      {q:'近くに観光スポットはありますか？', a:'箱根神社がお車で10分、大涌谷が20分、彫刻の森美術館が15分です。フロントに観光マップもございます。'},
+      {q:'全室禁煙ですか？', a:'はい、全室禁煙でございます。1階ロビー横に喫煙所をご用意しております。'},
+      {q:'コインランドリーはありますか？', a:'2階に24時間ご利用いただけるコインランドリーがございます。洗剤は自動投入式です。'},
+    ],
+    '医療': [
+      {q:'初診で受診したいのですが', a:'予約優先ですが、当日受付も可能です。保険証と、お持ちであれば紹介状をご持参ください。内科・小児科・皮膚科がございます。'},
+      {q:'インフルエンザの予防接種はいつからですか？', a:'10月から開始で、3,500円です。予約制ですのでお電話でご予約ください。ワクチンがなくなり次第終了です。'},
+      {q:'健康診断の予約をしたいのですが', a:'基本健診が8,800円、人間ドックが38,500円です。ご希望の日程をお聞かせください。'},
+      {q:'子どもが発熱しているのですが', a:'お子様の年齢と体温をお聞かせください。小児科は午前9時〜12時半の受付です。38.5度以上の場合はお早めの受診をおすすめします。'},
+      {q:'土曜日は診察していますか？', a:'はい、土曜は9時〜12時半まで診察しております。午後は休診です。日曜・祝日は休診です。'},
+      {q:'薬だけもらうことはできますか？', a:'申し訳ございませんが、処方箋の発行には診察が必要です。再診からはオンライン診療もご利用いただけます。'},
+      {q:'紹介状がないと受診できませんか？', a:'紹介状がなくてもご受診いただけますが、選定療養費5,500円が別途かかります。'},
+      {q:'血液検査の結果はいつわかりますか？', a:'一般的な血液検査は翌営業日です。特殊な検査は1〜2週間かかる場合がございます。'},
+      {q:'胃カメラの検査を受けたいのですが', a:'経鼻と経口が選べまして、鎮静剤の使用も可能です。12,000円からで、前日の食事制限がございます。'},
+      {q:'処方箋はFAXで薬局に送ってもらえますか？', a:'はい、ご指定の薬局名とFAX番号を受付にお伝えください。'},
+      {q:'診断書を書いてもらえますか？', a:'はい、3,300円で3〜5営業日で発行いたします。'},
+      {q:'待ち時間が1時間以上あるのですが', a:'大変申し訳ございません。本日は混雑しております。予約の方を優先しておりますので、次回はご予約をおすすめいたします。'},
+      {q:'オンライン診療はやっていますか？', a:'はい、再診からZoomでの受診が可能です。初診は一度ご来院をお願いしております。'},
+      {q:'夜間に体調が悪くなったら？', a:'当院は18時で診療終了です。夜間は新宿区救急医療センター、電話番号03-5285-8181にご連絡ください。'},
+      {q:'保険は使えますか？', a:'はい、各種健康保険をご利用いただけます。カードでのお支払いも可能です。'},
+    ],
+    '不動産': [
+      {q:'三軒茶屋周辺で2LDKの賃貸を探しています', a:'ご予算と駅からの距離のご希望をお聞かせください。世田谷区・目黒区・渋谷区を中心にお探しいたします。'},
+      {q:'内覧をしたいのですが', a:'当日のご案内も可能です。ご希望の物件とご都合の良い時間をお聞かせください。'},
+      {q:'初期費用はどのくらいかかりますか？', a:'家賃の4〜5ヶ月分が目安です。敷金1・礼金1・仲介手数料1ヶ月分・前家賃・保険料等です。敷金礼金ゼロの物件もございます。'},
+      {q:'入居までにどのくらいかかりますか？', a:'お申し込みから通常2〜3週間です。審査1週間、契約手続き数日、鍵のお渡しまでです。お急ぎの場合はご相談ください。'},
+      {q:'ペット可の物件はありますか？', a:'小型犬・猫を中心にペット可物件もお取り扱いしております。ペットの種類とサイズをお聞かせください。'},
+      {q:'エアコンが故障したのですが', a:'管理物件でしたら修理を手配いたします。お名前と物件名をお聞かせください。緊急の場合は即日対応いたします。'},
+      {q:'隣の部屋の騒音が気になるのですが', a:'申し訳ございません。騒音の時間帯と内容をお聞かせください。まず注意喚起の文書を配布し、改善しない場合は個別にご連絡いたします。'},
+      {q:'水漏れがしているのですが', a:'緊急ですので、まず元栓を閉めてください。お名前と物件名をお聞かせいただければ、即日で修理業者を手配いたします。'},
+      {q:'退去の手続きはどうすればいいですか？', a:'退去予定日の1ヶ月前までにご連絡ください。退去届をお送りし、退去日に立会い点検を行います。'},
+      {q:'売却を考えているのですが', a:'無料査定を承っております。物件の所在地、間取り、築年数をお聞かせください。3営業日以内に訪問査定いたします。'},
+      {q:'住宅ローンの相談はできますか？', a:'みずほ・三井住友・りそなの提携3行をご紹介できます。ご年収と希望借入額をお聞かせいただければシミュレーションをご案内します。'},
+      {q:'法人契約は可能ですか？', a:'はい、登記簿謄本と入居者様の身分証明書で審査可能です。法人契約の必要書類一式をご案内いたします。'},
+      {q:'定休日はいつですか？', a:'毎週水曜日が定休日です。営業時間は10時〜19時です。三軒茶屋駅から徒歩2分です。'},
+    ],
+    '小売': [
+      {q:'○○という商品の在庫はありますか？', a:'型番やカラーをお聞かせいただければ、すぐにお調べいたします。在庫がない場合はお取り寄せも可能です。'},
+      {q:'取り寄せはできますか？', a:'はい、メーカーに在庫があれば3〜5営業日で入荷いたします。入荷次第お電話でお知らせします。'},
+      {q:'取り置きはお願いできますか？', a:'3日間お取り置きいたします。お名前とお電話番号をお願いします。期限を過ぎますと自動キャンセルになります。'},
+      {q:'電話で注文できますか？', a:'はい、商品名・数量・届け先をお聞かせください。お支払いは代金引換またはコンビニ後払いからお選びいただけます。'},
+      {q:'配送日の指定はできますか？', a:'はい、ご注文から3営業日以降で日時指定可能です。ただし北海道・沖縄は+1日、離島は+2日かかります。'},
+      {q:'送料はいくらですか？', a:'5,000円以上で送料無料です。5,000円未満は全国一律660円、離島は+330円です。'},
+      {q:'商品を返品したいのですが', a:'商品到着後7日以内、未使用未開封に限り承ります。お客様都合の場合は返送料をご負担ください。'},
+      {q:'届いた商品が壊れていたのですが', a:'大変申し訳ございません。破損部分のお写真をメールでお送りいただけますか？確認次第、新品を送料当社負担でお送りいたします。'},
+      {q:'注文した商品と違うものが届いた', a:'大変申し訳ございません。ご注文番号をお聞かせください。正しい商品を至急発送し、誤った商品は着払いでご返送ください。'},
+      {q:'ポイントカードの残高を知りたいのですが', a:'会員番号またはお電話番号をお聞かせください。100円で1ポイント、1ポイント1円でご利用いただけます。'},
+      {q:'ギフト包装はお願いできますか？', a:'はい、無料でギフト包装いたします。のし紙やメッセージカードも対応しております。'},
+      {q:'営業時間を教えてください', a:'10時〜20時、年中無休です。年末12月31日は18時閉店、元日は休業、1月2〜3日は10時〜18時の短縮営業です。'},
+      {q:'購入した商品の修理はできますか？', a:'保証期間1年以内の自然故障は無料修理です。保証書とレシートをお持ちください。有償修理は事前にお見積りいたします。'},
+      {q:'法人での大量注文は可能ですか？', a:'はい、10個以上で5%OFF、50個以上で10%OFFです。ご希望の商品と数量をお聞かせください。'},
+      {q:'店員の対応が悪かったのですが', a:'大変申し訳ございません。不快な思いをおかけしたことをお詫びいたします。ご来店日時と状況をお聞かせいただければ、店長から改めてご連絡いたします。'},
+    ],
+    '物流': [
+      {q:'荷物の配達状況を知りたいのですが', a:'12桁の伝票番号をお聞かせください。現在の配送状況と到着予定をお調べいたします。'},
+      {q:'荷物がまだ届かないのですが', a:'お届けが遅れて申し訳ございません。伝票番号をお聞かせいただければ、現在の所在と到着予定を確認いたします。'},
+      {q:'不在で受け取れなかったので再配達をお願いします', a:'伝票番号をお聞かせください。本日18時までのご依頼で当日再配達も可能です。時間帯は午前中〜21時まで6区分からお選びください。'},
+      {q:'集荷を依頼したいのですが', a:'当日集荷は15時までのご依頼で承ります。荷物のサイズとお伺い先のご住所をお聞かせください。'},
+      {q:'東京から大阪まで60サイズだといくらですか？', a:'60サイズで東京から関西ですと1,100円です。クール便の場合は冷蔵+220円、冷凍+330円です。'},
+      {q:'届け先の住所を変更したいのですが', a:'配送中でも変更可能です。伝票番号と新しいお届け先住所をお聞かせください。'},
+      {q:'営業所で受け取ることはできますか？', a:'はい、営業所止めに対応しております。お受け取り時に身分証明書をご提示ください。'},
+      {q:'着払いで送れますか？', a:'はい、送り状の着払い欄にチェックを入れていただければ、配達時にお届け先様にお支払いいただきます。'},
+      {q:'ダンボールはもらえますか？', a:'S(110円)・M(220円)・L(330円)がございます。集荷時にお持ちすることもできます。'},
+      {q:'届いた荷物が破損していたのですが', a:'大変申し訳ございません。お荷物はそのままの状態で保管をお願いいたします。伝票番号をお聞かせいただければ、補償手続きをご案内いたします。申告額30万円まで補償いたします。'},
+      {q:'荷物が紛失したようなのですが', a:'大変申し訳ございません。即日調査を開始いたします。伝票番号と発送日、発送元・届け先の情報をお聞かせください。72時間以内に中間報告いたします。'},
+      {q:'冷蔵品を送りたいのですが', a:'クール便で冷蔵+220円、冷凍+330円です。サイズとお届け先をお聞かせいただければ料金をお出しします。'},
+      {q:'法人契約は可能ですか？', a:'月末締め翌月払いの掛け売りが可能です。月50個以上で15%OFFです。営業担当からご連絡いたしますので、会社名とご連絡先をお聞かせください。'},
+      {q:'国際配送はやっていますか？', a:'EMS対応でアジア3〜5日、欧米5〜10日です。お届け先の国と荷物の内容をお聞かせいただければ料金をご案内します。'},
+      {q:'配達員の態度が悪かったのですが', a:'大変申し訳ございません。不快な思いをおかけいたしました。配達日時とご住所をお聞かせいただければ、担当者から改めてお詫びのご連絡をいたします。'},
+    ],
+    '士業': [
+      {q:'弁護士に相談したいのですが', a:'ご相談内容の概要をお聞かせください。企業法務・労務・相続・不動産等、適切な専門の弁護士をご案内いたします。'},
+      {q:'初回相談は無料ですか？', a:'はい、初回30分は無料です。30分を超える場合は30分ごとに5,500円です。'},
+      {q:'オンラインでの相談は可能ですか？', a:'はい、Zoomでのオンライン相談を承っております。対面と同じ内容でご相談いただけます。'},
+      {q:'顧問契約の費用はいくらですか？', a:'月額30,000円からで、事業規模やご依頼内容によって異なります。まずはご状況をお聞かせください。'},
+      {q:'確定申告をお願いしたいのですが', a:'個人55,000円〜、法人110,000円〜です。事業の種類と売上規模をお聞かせいただければ、正確なお見積りをお出しします。'},
+      {q:'会社設立の登記をお願いしたいのですが', a:'株式会社220,000円〜、合同会社110,000円〜です。必要書類と設立までの流れをご案内いたします。'},
+      {q:'税務調査の通知が来たのですが', a:'すぐに対応いたします。調査日程と対象期間をお聞かせください。準備から当日の立会いまでサポートいたします。立会い日当は55,000円です。'},
+      {q:'契約書のチェックをお願いしたいのですが', a:'33,000円〜で、3〜5営業日でご回答いたします。契約書の種類と分量をお聞かせください。'},
+      {q:'相続の相談はいくらかかりますか？', a:'初回相談は無料です。手続き費用は遺産総額によって異なりますので、まず状況をお聞かせください。'},
+      {q:'至急相談したいことがあるのですが', a:'緊急案件として対応いたします。簡潔にご状況をお聞かせいただければ、担当者の空きを最優先で確認します。'},
+      {q:'不動産の名義変更をしたいのですが', a:'所有権移転登記は55,000円〜です。売買・相続・贈与のいずれでしょうか？それぞれ必要書類が異なります。'},
+      {q:'事務所までのアクセスを教えてください', a:'東京駅丸の内南口から徒歩3分、千代田区丸の内2-4-1の15階です。'},
+      {q:'依頼した件の進捗を知りたいのですが', a:'お名前と案件の内容をお聞かせください。担当者に確認し、折り返しご連絡いたします。'},
+      {q:'書類は郵送でも受け付けていますか？', a:'はい、書留や特定記録郵便でお送りいただくことをおすすめします。メールやFAXでも対応可能です。'},
+      {q:'対応が遅いのですが', a:'大変申し訳ございません。お名前と案件をお聞かせいただければ、担当者の状況を確認し、優先対応いたします。'},
+    ],
+    'IT': [
+      {q:'システムにログインできないのですが', a:'パスワードリセットはメール認証で即時可能です。ご登録のメールアドレスをお聞かせいただければ、リセットリンクをお送りします。'},
+      {q:'システムが遅いのですが', a:'ご不便をおかけして申し訳ございません。いつ頃から遅くなりましたか？status.aica-works.jpでサーバー状況もご確認いただけます。'},
+      {q:'サービスの導入を検討しているのですが', a:'スターター月額5,500円/5ユーザー、ビジネス16,500円/20ユーザーがございます。14日間の無料トライアルもあります。'},
+      {q:'見積書を発行してもらえますか？', a:'当日中にPDFでお送りします。プラン・ユーザー数・契約期間をお聞かせください。宛名はどのようにいたしますか？'},
+      {q:'プランの変更をしたいのですが', a:'アップグレードは即日適用、ダウングレードは次回更新日からです。現在のプランと変更先をお聞かせください。'},
+      {q:'不審なメールが届いたのですが', a:'ご連絡ありがとうございます。そのメールのリンクやファイルは絶対にクリックしないでください。セキュリティチームに報告して調査いたします。'},
+      {q:'アカウントが乗っ取られたかもしれません', a:'緊急対応いたします。まずパスワードを変更し、二段階認証が有効か確認してください。身に覚えのない操作があればお聞かせください。'},
+      {q:'データのバックアップを取りたいのですが', a:'毎日自動バックアップで30日間保持しております。手動エクスポートも管理画面の「設定→データ管理」から可能です。'},
+      {q:'APIの利用は可能ですか？', a:'ビジネスプラン以上でRESTful APIをご利用いただけます。技術ドキュメントをメールでお送りしますので、アドレスをお聞かせください。'},
+      {q:'解約手続きをしたいのですが', a:'月末までにお申し出いただければ翌月末で終了です。契約者名とアカウントIDをお聞かせください。差し支えなければ解約理由もお聞かせいただけると幸いです。'},
+      {q:'請求書が届いていないのですが', a:'毎月1日にメールでお送りしております。迷惑メールフォルダをご確認ください。見つからない場合は再送いたします。'},
+      {q:'障害で業務が止まっているのですが', a:'大変申し訳ございません。至急確認いたします。影響が出ている機能と、いつ頃から発生しているかをお聞かせください。エンタープライズプランでしたら24時間対応いたします。'},
+      {q:'御社のサービスについて資料が欲しいのですが', a:'メールアドレスをお聞かせいただければ、サービス概要・料金表・導入事例集を本日中にお送りします。'},
+    ],
+    '教育': [
+      {q:'体験授業は受けられますか？', a:'はい、無料で随時受付しております。ご希望の科目とお子様の学年、ご都合の良い日時をお聞かせください。'},
+      {q:'月謝はいくらですか？', a:'小学生は週1回11,000円・週2回18,700円、中学生は週2回22,000円・週3回30,800円です。教材費は半期ごと11,000〜16,500円です。'},
+      {q:'兄弟割引はありますか？', a:'はい、2人目以降は月謝20%OFFです。入会金22,000円も2人目以降は無料です。'},
+      {q:'子どもが体調不良で今日の授業を休みます', a:'ご連絡ありがとうございます。お大事になさってください。お子様のお名前とクラスをお聞かせください。振替は月2回まで可能です。'},
+      {q:'授業の振替はできますか？', a:'月2回まで可能です。前日までにご連絡をお願いいたします。空きのあるクラスをご案内します。'},
+      {q:'途中入塾はできますか？', a:'はい、随時受け付けております。無料の入塾テストで現在の学力を確認し、最適なクラスをご案内します。'},
+      {q:'夏期講習の申し込みはいつからですか？', a:'6月1日から受付開始です。外部生の方もご受講いただけます。パンフレットをお送りしますので、ご住所をお聞かせください。'},
+      {q:'子どもの成績が伸びないのですが', a:'担当講師との個別面談をご案内いたします。直近のテスト結果をお持ちいただければ、具体的な学習プランをご提案します。'},
+      {q:'志望校の相談をしたいのですが', a:'無料の進路相談を承っております。面談のご予約をお取りしますので、ご都合の良い日時をお聞かせください。'},
+      {q:'スクールバスはありますか？', a:'阿佐ヶ谷駅と荻窪方面の2路線がございます。ご自宅の最寄りバス停をお調べしますので、ご住所をお聞かせください。'},
+      {q:'入退室の管理はどうなっていますか？', a:'ICカードで入退室を管理しており、保護者の方にメールで自動通知が届きます。教室内には防犯カメラも設置しております。'},
+      {q:'自習室は使えますか？', a:'はい、塾生は無料です。平日15時〜22時、土曜10時〜18時です。自習中も質問があれば講師に聞いていただけます。'},
+      {q:'退会の手続きを教えてください', a:'前月末までに退会届をご提出ください。ご来校いただければ退会届をお渡しします。'},
+      {q:'講師の指導方法に不満があるのですが', a:'申し訳ございません。具体的な状況をお聞かせいただけますか？担当変更も含めて対応いたします。塾長から改めてご連絡いたします。'},
+    ],
+    '介護・福祉': [
+      {q:'施設の見学をしたいのですが', a:'随時受け付けております。所要約1時間です。ご利用予定の方の年齢と介護度をお聞かせいただき、ご都合の良い日時を調整いたします。'},
+      {q:'費用はどのくらいかかりますか？', a:'デイサービスは要介護3の場合、自己負担約1,100円/回＋食費650円＋おやつ100円です。ショートステイは1泊約2,500円＋食費1,800円です。'},
+      {q:'デイサービスの内容を教えてください', a:'9時〜16時で送迎・入浴・食事・レクリエーション・機能訓練を行っています。送迎は施設から車20分圏内です。'},
+      {q:'送迎エリアはどこまでですか？', a:'練馬区と板橋区の一部、車で20分圏内が対象です。ご住所をお聞かせいただければ対応可能かお調べします。'},
+      {q:'ショートステイを利用したいのですが', a:'ご利用期間と要介護度をお聞かせください。現在若干名空きがございます。ご家族の旅行や体調不良等、お気軽にご相談ください。'},
+      {q:'ヘルパーさんに来てもらいたいのですが', a:'訪問介護はケアプランに基づいて提供いたします。担当のケアマネジャーはいらっしゃいますか？いらっしゃらない場合はご紹介も可能です。'},
+      {q:'母の最近の様子はどうですか？', a:'担当のケアスタッフに確認いたします。お母様のお名前をお聞かせください。折り返し詳しい状況をご報告いたします。'},
+      {q:'父が転倒してケガをしたのですが', a:'出血がひどい場合や意識がない場合はすぐに119番に連絡してください。歩ける状態でしたら動かさず安静にしてください。担当看護師に連絡して指示を仰ぎます。'},
+      {q:'母を入所させたいのですが', a:'入所は原則要介護3以上の方が対象です。要介護認定は受けていらっしゃいますか？身体状況とお薬の情報をお聞かせいただければ受入れの可否をご案内します。'},
+      {q:'親の介護でどうすればいいかわからない', a:'お気持ちお察しいたします。まず現在の状況をお聞かせください。要介護認定の申請方法や利用可能なサービスをご案内いたします。無料のご相談を承っております。'},
+      {q:'今日のデイサービスを休みます', a:'ご連絡ありがとうございます。お大事になさってください。お名前を確認させてください。体調が回復されましたらまたご連絡ください。'},
+      {q:'先月の利用料金を教えてください', a:'ご利用者様のお名前をお聞かせください。請求書の内容をご説明いたします。'},
+      {q:'スタッフの対応に問題があったのですが', a:'大変申し訳ございません。具体的にどのような状況でしたかお聞かせいただけますか？施設長から改めてご連絡し、再発防止に努めます。'},
+      {q:'介護スタッフの求人に応募したいのですが', a:'現在、介護福祉士とヘルパーを募集しております。パート時給1,250円からです。ご希望の勤務形態をお聞かせいただければ面接日程を調整いたします。'},
+    ],
+    '製造': [
+      {q:'注文した部品の納期を確認したいのですが', a:'ご注文番号をお聞かせください。生産状況と出荷予定日をお調べいたします。標準品は2〜3週間、特注品は3〜4週間が目安です。'},
+      {q:'納期を早められませんか？', a:'特急対応は+30%の追加料金で納期を半分に短縮できます。ご注文番号とご希望納期をお聞かせください。'},
+      {q:'見積もりをお願いしたいのですが', a:'3営業日以内にお見積りいたします。図面または仕様書と、材質・数量・希望納期をお送りください。'},
+      {q:'試作品の製作はお願いできますか？', a:'図面か3Dデータがあれば2〜3週間で製作可能です。材質と数量をお聞かせください。最小ロットは10個からです。'},
+      {q:'納品された製品に不良品が含まれていたのですが', a:'大変申し訳ございません。不良品の数量と不具合の内容をお聞かせください。代替品を最短3営業日で出荷し、1週間以内に原因調査報告書を提出いたします。'},
+      {q:'検査成績表を送ってもらえますか？', a:'翌営業日にPDFでお送りいたします。ロット番号と製品名をお聞かせください。'},
+      {q:'材質証明書は発行できますか？', a:'はい、2〜3営業日で発行いたします。品番とロット番号をお聞かせください。'},
+      {q:'追加発注をしたいのですが', a:'品番・数量・ご希望納期をお聞かせください。在庫がある場合は即出荷、なければ生産スケジュールを確認いたします。'},
+      {q:'初めて取引をしたいのですが', a:'ありがとうございます。ご検討製品と数量をお聞かせください。営業担当からお見積りとともにご連絡いたします。ステンレス・アルミ・真鍮の精密部品を扱っております。'},
+      {q:'分割納品は可能ですか？', a:'はい、対応可能です。分割回数と各回の数量・納品日をお聞かせください。追加送料が発生する場合がございます。'},
+      {q:'カスタム仕様での製造は可能ですか？', a:'はい、ご要望の仕様と数量をお聞かせいただければ、実現可能性と費用感をご案内いたします。ISO 9001認証取得済みです。'},
+      {q:'出荷日を変更したいのですが', a:'ご注文番号と変更後のご希望日をお聞かせください。生産状況を確認して対応可否をご回答いたします。'},
+      {q:'請求書の再発行をお願いしたいのですが', a:'対象の請求月とお取引先名をお聞かせください。2〜3営業日で再発行いたします。'},
+      {q:'工場見学はできますか？', a:'事前予約で承っております。5名様まで、所要2時間です。ご希望の日程をお聞かせください。'},
+      {q:'前回と同じ品質で納品されなかったのですが', a:'大変申し訳ございません。品番とロット番号をお聞かせいただけますか？品質管理部門で調査し、原因と改善策をご報告いたします。'},
+    ],
+    'その他': [
+      {q:'○○さんはいらっしゃいますか？', a:'少々お待ちください。…申し訳ございません、ただいま○○は席を外しております。30分〜1時間以内に折り返しお電話させていただきましょうか？'},
+      {q:'営業部に用があるのですが', a:'営業部にお繋ぎいたします。ご用件の概要をお聞かせいただければ、適切な担当者にお繋ぎいたします。'},
+      {q:'折り返しの電話をもらいたいのですが', a:'承知いたしました。お名前、お電話番号、ご用件をお聞かせください。担当者から30分〜1時間以内にご連絡いたします。'},
+      {q:'午後3時以降に電話してもらえますか？', a:'15時以降のご連絡ですね。承知いたしました。お名前とお電話番号、簡単なご用件をお聞かせください。'},
+      {q:'御社のサービスについて詳しく聞きたい', a:'ありがとうございます。どのサービスにご関心をお持ちでしょうか？資料をメールでお送りするか、担当者から折り返しご連絡いたします。'},
+      {q:'資料を送ってもらえますか？', a:'メールで当日中にお送りいたします。メールアドレスをお聞かせいただけますか？'},
+      {q:'打ち合わせの日程を調整したいのですが', a:'ご希望の日時をいくつかお聞かせいただけますか？担当者のスケジュールを確認してご連絡いたします。'},
+      {q:'会社までの道順を教えてください', a:'赤坂見附駅から徒歩2分です。B出口を出て右に進み、1つ目の角を右折、港区赤坂3-11-7のビルです。8階の会議室にお通しします。'},
+      {q:'請求書の件でお電話したのですが', a:'経理部門にお繋ぎいたします。請求書番号がおわかりでしたらお聞かせください。'},
+      {q:'求人に応募したいのですが', a:'ありがとうございます。現在、営業職とエンジニアを募集しております。ご希望の職種をお聞かせいただければ、人事担当にお繋ぎいたします。'},
+      {q:'商品について苦情を言いたいのですが', a:'大変申し訳ございません。お名前と商品名、どのような問題が発生しているかをお聞かせください。担当部署に共有し、早急に対応いたします。'},
+      {q:'営業時間を教えてください', a:'平日9時〜18時です。土日祝日は休業しております。メールでのお問い合わせは24時間受け付けております。'},
+      {q:'対応が遅いと聞いているのですが', a:'大変申し訳ございません。ご不快な思いをおかけしているとのこと、深くお詫びいたします。具体的な状況をお聞かせいただければ、担当部署の責任者から改めてご連絡いたします。'},
+    ],
+  };
+
+  function buildFaqList(industry) {
+    var faqs = INDUSTRY_FAQ[industry] || INDUSTRY_FAQ['その他'];
+    var html = '';
+    faqs.forEach(function(faq, idx) {
+      html += '<div class="faq-item" data-faq-idx="' + idx + '" data-faq-q="' + faq.q.replace(/"/g,'&quot;') + '" style="margin-bottom:8px;padding:8px 10px;background:rgba(255,255,255,.06);border-radius:8px;transition:all .4s;border-left:3px solid transparent">'
+        + '<p style="color:#fff;font-size:.82rem;font-weight:600;margin:0 0 3px">Q' + (idx+1) + ': ' + faq.q + '</p>'
+        + '<p style="color:rgba(255,255,255,.55);font-size:.78rem;margin:0;line-height:1.4">A: ' + faq.a + '</p>'
+        + '</div>';
+    });
+    return html;
+  }
+
+  var _currentHighlightQ = '';
+  function highlightFaq(idx) {
+    // インデックスは無視。highlightFaqByTextを使う
+  }
+  function highlightFaqByText(qText) {
+    if (!qText || qText === _currentHighlightQ) return;
+    _currentHighlightQ = qText;
+    var items = document.querySelectorAll('.faq-item');
+    var matched = false;
+    items.forEach(function(el) {
+      // Q文テキストの先頭20文字で部分一致
+      var elQ = el.getAttribute('data-faq-q') || '';
+      if (elQ && qText.indexOf(elQ.substring(0, 20)) >= 0 || elQ.indexOf(qText.substring(0, 20)) >= 0) {
+        el.style.background = 'rgba(201,168,76,.18)';
+        el.style.borderLeftColor = 'var(--gold)';
+        el.scrollIntoView({behavior:'smooth', block:'nearest'});
+        matched = true;
+      } else {
+        el.style.background = 'rgba(255,255,255,.06)';
+        el.style.borderLeftColor = 'transparent';
       }
     });
-  },{threshold:[0,0.6]});
-  vObs.observe(document.getElementById('demoVideoWrap'));
+    if (!matched) {
+      // フォールバック: 全FAQアイテムのQテキスト内をキーワード検索
+      var keywords = qText.replace(/？/g,'').split(/[\s、。]/g).filter(function(w){return w.length>=2});
+      items.forEach(function(el) {
+        var elQ = el.getAttribute('data-faq-q') || '';
+        var score = 0;
+        keywords.forEach(function(kw) { if (elQ.indexOf(kw) >= 0) score++; });
+        if (score >= 2) {
+          el.style.background = 'rgba(201,168,76,.18)';
+          el.style.borderLeftColor = 'var(--gold)';
+          el.scrollIntoView({behavior:'smooth', block:'nearest'});
+        }
+      });
+    }
+  }
 
-  // When video ends → show poster again for replay
-  video.addEventListener('ended',function(){
-    video.classList.remove('playing');
-    poster.classList.remove('hidden');
+  function startPinCountdown(seconds) {
+    var remaining = seconds;
+    var el = document.getElementById('pinTimer');
+    _pinCountdownTimer = setInterval(function() {
+      remaining--;
+      if (remaining <= 0) {
+        clearInterval(_pinCountdownTimer); _pinCountdownTimer = null;
+        if (el) el.textContent = '有効期限切れ — ページを再読み込みしてください';
+        return;
+      }
+      var m = Math.floor(remaining / 60);
+      var s = remaining % 60;
+      if (el) el.textContent = '有効期限: ' + m + ':' + (s < 10 ? '0' : '') + s;
+    }, 1000);
+  }
+
+  // 電話デモで選択された業種を保持（通話中FAQ表示用）
+  var _phoneIndustry = '';
+
+  async function handlePhoneMode() {
+    var name = nameInput.value.trim();
+    var email = emailInput.value.trim();
+    _phoneIndustry = selectedIndustry;
+
+    showPhoneStatus('<div style="text-align:center;padding:40px"><p style="color:rgba(255,255,255,.7);font-size:1rem;margin:0">準備中...</p></div>');
+
+    try {
+      var res = await fetch(LP_API_BASE + '/register', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ name: name, industry: selectedIndustry, email: email }),
+      });
+      var data = await res.json();
+      if (!res.ok) {
+        showPhoneStatus('<div style="text-align:center;padding:40px"><p style="color:#ff6b6b;font-size:1.1rem;font-weight:600;margin:0">' + (data.error || 'エラーが発生しました') + '</p><p style="color:rgba(255,255,255,.6);font-size:.85rem;margin:10px 0 0;cursor:pointer;text-decoration:underline" onclick="location.reload()">もう一度試す</p></div>');
+        return;
+      }
+
+      // ★ PIN画面: 暗証番号と電話番号のみ（FAQなし）
+      var digits = data.pin.split('');
+      var pinHtml = digits.map(function(d) {
+        return '<span style="display:inline-block;width:56px;height:64px;line-height:64px;font-size:2rem;font-weight:800;background:rgba(255,255,255,.1);border:2px solid var(--gold);border-radius:10px;margin:0 6px;color:#fff;text-align:center">' + d + '</span>';
+      }).join('');
+
+      showPhoneStatus(
+        '<div style="padding:40px 28px;text-align:center">'
+        + '<p style="font-size:2.2rem;margin:0 0 20px">&#x1f4de;</p>'
+        + '<p style="color:rgba(255,255,255,.8);font-size:.95rem;margin:0 0 10px">下記の番号にお電話ください</p>'
+        + '<p style="color:#fff;font-size:1.8rem;font-weight:800;margin:0 0 24px;letter-spacing:.08em">' + data.phone_number + '</p>'
+        + '<div style="background:rgba(255,255,255,.06);border-radius:12px;padding:20px;margin:0 0 16px">'
+        + '<p style="color:rgba(255,255,255,.7);font-size:.85rem;margin:0 0 12px">音声ガイダンスに従い、暗証番号を入力してください</p>'
+        + '<div style="margin:0">' + pinHtml + '</div>'
+        + '</div>'
+        + '<p id="pinTimer" style="color:var(--gold);font-size:.85rem;margin:0">有効期限: 10:00</p>'
+        + '</div>'
+      );
+      startPinCountdown(data.expires_in || 600);
+      startInboundStatusPolling(data.token, name);
+
+    } catch(e) {
+      showPhoneStatus('<div style="text-align:center;padding:40px"><p style="color:#ff6b6b;font-size:1.1rem;font-weight:600;margin:0">通信エラーが発生しました</p><p style="color:rgba(255,255,255,.6);font-size:.85rem;margin:10px 0 0;cursor:pointer;text-decoration:underline" onclick="location.reload()">もう一度試す</p></div>');
+    }
+  }
+
+  function showPhoneCallWithFaq(name, industry) {
+    // ★ 通話中画面: 上部に通話中表示 + 下部にFAQ固定表示（業種切替なし）
+    var faqHtml = buildFaqList(industry);
+    showPhoneStatus(
+      '<div style="padding:20px 16px">'
+      // 通話中ヘッダー
+      + '<div style="text-align:center;padding:12px 0 16px;border-bottom:1px solid rgba(255,255,255,.12);margin-bottom:16px">'
+      + '<p style="font-size:1.8rem;margin:0 0 8px">&#x1f4de;</p>'
+      + '<p style="color:#fff;font-size:1.15rem;font-weight:700;margin:0 0 6px">AICAと ' + name + ' 様 通話中</p>'
+      + '<p style="color:rgba(255,255,255,.45);font-size:.78rem;margin:0">通話は約3分で自動終了します</p>'
+      + '</div>'
+      // 業種固定表示
+      + '<div style="text-align:center;margin-bottom:14px">'
+      + '<span style="display:inline-block;background:linear-gradient(135deg,rgba(47,0,75,.85),rgba(26,26,46,.9));border:1.5px solid var(--gold);padding:10px 28px;border-radius:24px;font-size:1.15rem;font-weight:800;letter-spacing:.06em;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.4);box-shadow:0 2px 12px rgba(201,168,76,.2)">' + industry + ' のAI電話受付デモ</span>'
+      + '</div>'
+      // FAQ案内テキスト
+      + '<p style="color:rgba(255,255,255,.6);font-size:.8rem;text-align:center;margin:0 0 14px;line-height:1.5">最初にAICAから簡単なご案内があります。<br>その後、以下のサンプル質問を話しかけてみてください。サンプル以外も自由にどうぞ。</p>'
+      // FAQ固定表示
+      + '<div style="text-align:left">'
+      + faqHtml
+      + '</div>'
+      + '</div>'
+    );
+  }
+
+  function startInboundStatusPolling(token, name) {
+    var pollCount = 0;
+    var shownConnected = false;
+    var pollTimer = setInterval(async function() {
+      pollCount++;
+      if (pollCount > 200) { clearInterval(pollTimer); return; } // 10分
+      try {
+        var res = await fetch(LP_API_BASE + '/pin-status?token=' + encodeURIComponent(token));
+        var data = await res.json();
+        if ((data.status === 'connected' || data.status === 'verified') && !shownConnected) {
+          shownConnected = true;
+          if (_pinCountdownTimer) { clearInterval(_pinCountdownTimer); _pinCountdownTimer = null; }
+          // ★ 通話中: FAQ付き画面に切替
+          showPhoneCallWithFaq(name, _phoneIndustry);
+        }
+        // ★ FAQリアルタイムハイライト
+        if (shownConnected && data.current_faq_q) {
+          highlightFaqByText(data.current_faq_q);
+        } else if (shownConnected && typeof data.current_faq === 'number' && data.current_faq >= 0) {
+          highlightFaqByText('');  // フォールバック
+        }
+        if (data.status === 'completed') {
+          clearInterval(pollTimer);
+          showPhoneThankYou();
+        }
+      } catch(e) {}
+    }, 3000);
+  }
+
+  // ★ AICAと話すボタン
+  startBtn.addEventListener('click', async () => {
+    startBtn.disabled = true;
+
+    // ★ 電話モード: 別フロー
+    if (expMode === 'phone') {
+      await handlePhoneMode();
+      return;
+    }
+
+    videoFinished = false;
+    audioWsReady = false;
+    aicaServerInfo = null;
+
+    // ① 即座にPromo動画再生 + メッセージ表示
+    showWaitingVideo();
+
+    try {
+      // ② API呼び出し（Bridge+MetaHuman起動）
+      const res = await fetch(LP_API_BASE + '/start', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          name: nameInput.value.trim(),
+          industry: selectedIndustry,
+          email: emailInput.value.trim(),
+          phone: phoneInput.value.trim(),
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        if (data.busy) {
+          // ★ 利用中: Promo動画再生 + メッセージ表示
+          formOverlay.classList.remove('visible');
+          demoVideo.style.display = '';
+          demoVideo.muted = false;
+          demoVideo.currentTime = 0;
+          demoVideo.loop = true;
+          demoVideo.play().then(() => { demoVideo.classList.add('playing'); }).catch(() => {
+            demoVideo.muted = true;
+            demoVideo.play().then(() => { demoVideo.classList.add('playing'); }).catch(() => {});
+          });
+          videoMsgEl.style.display = 'block';
+          videoMsgEl.innerHTML = '<p style="color:#fff;font-size:1.05rem;margin:0;font-weight:600;text-shadow:0 1px 4px rgba(0,0,0,.5)">申し訳ございません。ただいま他のお客様がAICAをご利用中です</p>'
+            + '<p style="color:rgba(255,255,255,.7);font-size:.85rem;margin:6px 0 0">お手数をおかけしますが、しばらく経ってからもう一度お試しくださいませ</p>';
+          // 動画終了後にフォームに戻す（loopなので手動閉じボタンも用意）
+          setTimeout(function() {
+            demoVideo.loop = false;
+            demoVideo.pause();
+            demoVideo.classList.remove('playing');
+            demoVideo.style.display = 'none';
+            videoMsgEl.style.display = 'none';
+            formOverlay.classList.add('visible');
+            startBtn.disabled = false;
+          }, 60000); // 60秒後にフォームに戻す
+          startBtn.disabled = false;
+          return;
+        }
+        hideWaitingVideo();
+        formOverlay.classList.add('visible');
+        setStatus(data.error || 'エラーが発生しました', 'error');
+        startBtn.disabled = false;
+        return;
+      }
+      lpToken = data.token;
+
+      // ③ マイク許可を先に取得（動画再生中に）
+      try {
+        micStream = await navigator.mediaDevices.getUserMedia({audio: {
+          echoCancellation: true, noiseSuppression: true, sampleRate: 48000,
+        }});
+      } catch(e) {
+        hideWaitingVideo();
+        setStatus('マイクの許可が必要です', 'error');
+        startBtn.disabled = false;
+        return;
+      }
+
+      // ④ ポーリング: 準備完了待ち（最大5分、5秒間隔）
+      for (let i = 0; i < 60; i++) {
+        await new Promise(r => setTimeout(r, 5000));
+        const sRes = await fetch(LP_API_BASE + '/status?token=' + lpToken);
+        const sData = await sRes.json();
+        if (sData.status === 'ready') {
+          aicaServerInfo = sData;
+          // 準備完了 — メッセージはカウントダウンに任せる
+          // ⑤ 音声WS接続（認証のみ、START_SESSIONはまだ送らない）
+          connectAudioWs(sData);
+          return;
+        }
+      }
+      hideWaitingVideo();
+      formOverlay.classList.add('visible');
+      setStatus('タイムアウトしました。再度お試しください。', 'error');
+      startBtn.disabled = false;
+    } catch (e) {
+      console.error('[LP]', e);
+      hideWaitingVideo();
+      formOverlay.classList.add('visible');
+      setStatus('接続エラーが発生しました', 'error');
+      startBtn.disabled = false;
+    }
   });
 
-  // Click poster → replay with sound
-  poster.addEventListener('click',function(){
-    video.muted=false;
-    video.currentTime=0;
-    video.play().then(()=>{
-      video.classList.add('playing');
-      poster.classList.add('hidden');
-    }).catch(()=>{});
+  // ★ 音声WS接続（認証のみ — START_SESSIONは動画終了後）
+  let wsKeepaliveInterval = null;
+  let wsServerInfo = null; // 再接続用にサーバー情報を保持
+
+  function connectAudioWs(serverInfo) {
+    wsServerInfo = serverInfo;
+    audioWs = new WebSocket(serverInfo.audio_ws_url || AUDIO_WS_URL);
+    audioWs.binaryType = 'arraybuffer';
+
+    audioWs.onopen = () => {
+      audioWs.send(JSON.stringify({accesstoken: lpToken}));
+      // ★ キープアライブ: 10秒ごとにpingを送信（モバイルブラウザのアイドル切断防止）
+      if (wsKeepaliveInterval) clearInterval(wsKeepaliveInterval);
+      wsKeepaliveInterval = setInterval(function() {
+        if (audioWs && audioWs.readyState === 1 && !sessionActive) {
+          try { audioWs.send(JSON.stringify({command: 'KEEPALIVE'})); } catch(e) {}
+        } else if (sessionActive) {
+          clearInterval(wsKeepaliveInterval); wsKeepaliveInterval = null;
+        }
+      }, 10000);
+    };
+
+    audioWs.onmessage = (evt) => {
+      if (typeof evt.data === 'string') {
+        try {
+          const msg = JSON.parse(evt.data);
+          if (msg.event === 'AUTH_OK') {
+            audioWsReady = true;
+            console.log('[LP] 音声WS認証OK — 動画終了待ち');
+            setupMicInput();
+            if (videoFinished) {
+              transitionToSession();
+            }
+          } else if (msg.event === 'AUTH_FAILED') {
+            hideWaitingVideo();
+            setStatus('認証に失敗しました', 'error');
+            cleanup();
+          } else if (msg.event === 'SESSION_END') {
+            // ★ Bridge側からセッション終了通知 → 3秒後にcleanup（挨拶音声再生完了待ち）
+            console.log('[LP] SESSION_END受信');
+            setTimeout(function(){ cleanup(); }, 3000);
+          }
+        } catch(e) {}
+      } else {
+        if (sessionActive) playAudioData(evt.data);
+      }
+    };
+
+    audioWs.onclose = () => {
+      if (wsKeepaliveInterval) { clearInterval(wsKeepaliveInterval); wsKeepaliveInterval = null; }
+      if (sessionActive) {
+        setStatus('接続が切断されました', 'error'); cleanup();
+      } else if (audioWsReady) {
+        // ★ 動画再生中にWS切断 → フラグをリセット（transitionToSessionで再接続）
+        console.log('[LP] 音声WS切断（動画再生中） — transitionToSession時に再接続');
+        audioWsReady = false;
+        audioWs = null;
+      }
+    };
+  }
+
+  function setupMicInput() {
+    if (!micStream) return;
+    audioContext = new AudioContext({sampleRate: 48000});
+    const source = audioContext.createMediaStreamSource(micStream);
+    micProcessor = audioContext.createScriptProcessor(4096, 1, 1);
+    micProcessor.onaudioprocess = (e) => {
+      if (!sessionActive || micMuted || !audioWs || audioWs.readyState !== 1) return;
+      const input = e.inputBuffer.getChannelData(0);
+      const ratio = 48000 / 16000;
+      const outLen = Math.floor(input.length / ratio);
+      const pcm16 = new Int16Array(outLen);
+      for (let i = 0; i < outLen; i++) {
+        pcm16[i] = Math.max(-32768, Math.min(32767, Math.floor(input[Math.floor(i * ratio)] * 32767)));
+      }
+      audioWs.send(pcm16.buffer);
+    };
+    source.connect(micProcessor);
+    micProcessor.connect(audioContext.destination);
+  }
+
+  function startTimer(seconds) {
+    let remaining = seconds;
+    timerEl.textContent = formatTime(remaining);
+    timerInterval = setInterval(() => {
+      remaining--;
+      timerEl.textContent = formatTime(remaining);
+      if (remaining <= 60) timerEl.style.background = 'rgba(216,1,0,.8)';
+      if (remaining <= 0) { clearInterval(timerInterval); cleanup(); }
+    }, 1000);
+  }
+  function formatTime(s) {
+    return String(Math.floor(s/60)).padStart(2,'0') + ':' + String(s%60).padStart(2,'0');
+  }
+
+  micBtn.addEventListener('click', () => {
+    micMuted = !micMuted;
+    micBtn.classList.toggle('muted', micMuted);
+    micBtn.textContent = micMuted ? '🔇' : '🎤';
   });
+
+  // ★ 会話を終了するボタン → 即Slack送信 + AICAお辞儀 → cleanup
+  document.getElementById('expEndBtn').addEventListener('click', () => {
+    var btn = document.getElementById('expEndBtn');
+    btn.disabled = true;
+    btn.textContent = '終了中...';
+    // ① 即座にSlackへ送信 + ACTIVE_SESSION解放（漏れ防止）
+    fetch(LP_API_BASE + '/notify-end', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        token: lpToken,
+        name: nameInput.value.trim(),
+        industry: selectedIndustry,
+        email: emailInput.value.trim(),
+        phone: phoneInput.value.trim(),
+      }),
+    }).catch(function(){});
+    fetch(LP_API_BASE + '/stop', {method:'POST'}).catch(function(){});
+    // ② Bridgeに終了指示（AICAが挨拶+お辞儀）
+    if (audioWs && audioWs.readyState === 1) {
+      try { audioWs.send(JSON.stringify({command: 'END_SESSION_REQUEST'})); } catch(e) {}
+    }
+    // ③ 15秒後に強制cleanup（AICAの挨拶+お辞儀完了を待つ）
+    setTimeout(function() { cleanup(); }, 15000);
+  });
+
+  let playbackCtx = null;
+  let playbackGain = null;
+  let nextPlayTime = 0;
+  function playAudioData(buffer) {
+    if (!playbackCtx) {
+      playbackCtx = new AudioContext({sampleRate: 24000});
+      playbackGain = playbackCtx.createGain();
+      playbackGain.gain.value = 1.0;
+      playbackGain.connect(playbackCtx.destination);
+      nextPlayTime = 0;
+    }
+    const pcm16 = new Int16Array(buffer);
+    const float32 = new Float32Array(pcm16.length);
+    for (let i = 0; i < pcm16.length; i++) float32[i] = pcm16[i] / 32768;
+    const ab = playbackCtx.createBuffer(1, float32.length, 24000);
+    ab.getChannelData(0).set(float32);
+    const src = playbackCtx.createBufferSource();
+    src.buffer = ab;
+    src.connect(playbackGain);
+    // スケジュール再生: チャンクを途切れなく連続再生（音割れ・途切れ防止）
+    const now = playbackCtx.currentTime;
+    if (nextPlayTime < now) nextPlayTime = now + 0.05; // 50msバッファで途切れ防止
+    src.start(nextPlayTime);
+    nextPlayTime += ab.duration;
+  }
+
+  // ★ ブラウザ閉じ・ページ離脱時の安全停止（beforeunloadではfetchが届かないのでsendBeaconを使う）
+  window.addEventListener('beforeunload', function() {
+    if (sessionActive || audioWs) {
+      navigator.sendBeacon(LP_API_BASE + '/stop');
+    }
+  });
+
+  function cleanup() {
+    if (!sessionActive && !audioWs) return; // 二重呼び出し防止
+    sessionActive = false;
+    if (timerInterval) clearInterval(timerInterval);
+
+    // ★ 画面を即座に終了表示に切り替え（ユーザーは待たない）
+    demoMediaActive = false;
+    wrapEl.classList.remove('media-active');
+    disconnectPixelStreaming();
+    document.getElementById('expVisitorInfo').style.display = 'none';
+    document.getElementById('expEndBtn').style.display = 'none';
+    micBtn.style.display = 'none';
+    timerEl.style.display = 'none';
+    wrapEl.style.backgroundImage = 'url(https://ncinc.jp/wp-content/uploads/2026/03/aica_side.png)';
+    formOverlay.style.background = 'rgba(26,26,46,.55)';
+    formOverlay.style.backdropFilter = 'blur(4px)';
+    formOverlay.innerHTML = '<div style="text-align:center;max-width:500px;padding:0 20px">'
+      + '<div style="font-size:3rem;margin-bottom:16px">&#10003;</div>'
+      + '<h2 style="font-size:1.8rem;font-weight:900;margin-bottom:12px;letter-spacing:.05em;text-shadow:0 2px 8px rgba(0,0,0,.5)">ありがとうございました</h2>'
+      + '<p style="color:rgba(255,255,255,.9);font-size:1rem;line-height:1.8;text-shadow:0 1px 4px rgba(0,0,0,.5)">'
+      + '本日はAICAの体験デモにご参加いただき、<br>誠にありがとうございます。<br><br>'
+      + 'ご入力いただいたメールアドレスに<br>詳しい資料をお送りいたします。<br>'
+      + '担当者より改めてご連絡させていただきます。</p>'
+      + '</div>';
+    formOverlay.classList.add('visible');
+
+    // マイク停止
+    if (micProcessor) { micProcessor.disconnect(); micProcessor = null; }
+    if (micStream) { micStream.getTracks().forEach(t => t.stop()); micStream = null; }
+    if (audioContext) { audioContext.close().catch(function(){}); audioContext = null; }
+
+    // ★ Bridge側にセッション終了を通知してからWS切断（Slack+メール送信のため）
+    // audioWSが生きていれば終了シグナルを送り、5秒待ってから切断+プロセス停止
+    if (audioWs && audioWs.readyState === 1) {
+      try { audioWs.send(JSON.stringify({command: 'END_SESSION_REQUEST'})); } catch(e) {}
+      setTimeout(function() {
+        if (audioWs) { audioWs.close(); audioWs = null; }
+        fetch(LP_API_BASE + '/stop', {method:'POST'}).catch(function(){});
+      }, 5000);
+    } else {
+      if (audioWs) { audioWs.close(); audioWs = null; }
+      fetch(LP_API_BASE + '/stop', {method:'POST'}).catch(function(){});
+    }
+  }
 })();
 </script>
 </body>
