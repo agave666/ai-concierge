@@ -1840,10 +1840,15 @@ document.querySelectorAll('a[href^="#"]').forEach(a=>{
     try {
       var res = await fetch(LP_API_BASE + '/faq?industry=' + encodeURIComponent(industry));
       var data = await res.json();
-      if (data.faqs) { _dynamicFaqData = data.faqs; return data.faqs; }
-    } catch(e) { console.warn('[FAQ] API取得失敗、ローカルデータ使用', e); }
+      if (data.faqs && data.faqs.length > 0) {
+        _dynamicFaqData = data.faqs;
+        console.log('[FAQ] ✅ API取得成功:', data.faqs.length, '問');
+        return data.faqs;
+      }
+    } catch(e) { console.warn('[FAQ] API取得失敗:', e); }
     // フォールバック: ローカルデータ
     _dynamicFaqData = INDUSTRY_FAQ[industry] || INDUSTRY_FAQ['その他'];
+    console.log('[FAQ] ⚠️ ローカルデータ使用:', _dynamicFaqData.length, '問');
     return _dynamicFaqData;
   }
   function buildFaqListFromData(faqs) {
