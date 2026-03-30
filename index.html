@@ -1863,8 +1863,23 @@ document.querySelectorAll('a[href^="#"]').forEach(a=>{
   }
 
   var _currentHighlightQ = '';
-  function highlightFaq(idx) {
-    // インデックスは無視。highlightFaqByTextを使う
+  var _currentHighlightIdx = -1;
+  function highlightFaq(idx) { highlightFaqByIndex(idx); }
+  function highlightFaqByIndex(idx) {
+    if (idx === _currentHighlightIdx) return;
+    _currentHighlightIdx = idx;
+    var items = document.querySelectorAll('.faq-item');
+    items.forEach(function(el) {
+      var i = parseInt(el.getAttribute('data-faq-idx'));
+      if (i === idx) {
+        el.style.background = 'rgba(201,168,76,.18)';
+        el.style.borderLeftColor = 'var(--gold)';
+        el.scrollIntoView({behavior:'smooth', block:'nearest'});
+      } else {
+        el.style.background = 'rgba(255,255,255,.06)';
+        el.style.borderLeftColor = 'transparent';
+      }
+    });
   }
   function highlightFaqByText(qText) {
     if (!qText || qText === _currentHighlightQ) return;
@@ -2006,11 +2021,15 @@ document.querySelectorAll('a[href^="#"]').forEach(a=>{
           await fetchFaqData(_phoneIndustry);
           showPhoneCallWithFaq(name, _phoneIndustry);
         }
-        // ★ FAQリアルタイムハイライト
-        if (shownConnected && data.current_faq_q) {
-          highlightFaqByText(data.current_faq_q);
-        } else if (shownConnected && typeof data.current_faq === 'number' && data.current_faq >= 0) {
-          highlightFaqByText('');  // フォールバック
+        // ★ FAQリアルタイムハイライト（API FAQデータ使用時はインデックスで直接ハイライト）
+        if (shownConnected && typeof data.current_faq === 'number' && data.current_faq >= 0) {
+          if (_dynamicFaqData) {
+            // API経由FAQデータ使用中→インデックスで直接ハイライト（100%正確）
+            highlightFaqByIndex(data.current_faq);
+          } else if (data.current_faq_q) {
+            // フォールバック: テキスト照合
+            highlightFaqByText(data.current_faq_q);
+          }
         }
         if (data.status === 'completed') {
           clearInterval(pollTimer);
